@@ -6,6 +6,7 @@ class Header extends Component {
   render() {
     return (
       <div className="header">
+        <h2 className="title">NAD Driving vehicles</h2>
         <Navigation />
         <Routes />
       </div>
