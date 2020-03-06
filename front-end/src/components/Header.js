@@ -5,7 +5,7 @@ import Navigation from "../components/Navigation";
 class Header extends Component {
   render() {
     return (
-      <div>
+      <div className="header">
         <Navigation />
         <Routes />
       </div>

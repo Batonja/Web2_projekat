@@ -1,0 +1,15 @@
+.navigation {
+  width: 100%;
+}
+
+.navigation ul {
+  list-style-type: none;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.navigation ul li {
+  padding-left: 10px;
+}
+/*# sourceMappingURL=styles.css.map */
