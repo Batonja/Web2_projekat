@@ -36,6 +36,7 @@ class Navigation extends Component {
             textColor="primary"
             centered
           >
+            <Tab label="Home" to={"/"} component={Link} />
             <Tab label="Flight" to={"/flights"} component={Link} />
 
             <Tab label="Hotel" to={"/hotels"} component={Link} />

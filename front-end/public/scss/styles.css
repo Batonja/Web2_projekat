@@ -1,20 +1,29 @@
-.title {
+.header .title {
   margin-left: 40%;
   font-size: xx-large;
 }
 
-.navigation {
+.header .navigation {
   width: 100%;
 }
 
-.navigation ul {
+.header .navigation ul {
   list-style-type: none;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
 }
 
-.navigation ul li {
+.header .navigation ul li {
   padding-left: 10px;
+}
+
+.footer {
+  background-color: whitesmoke;
+  margin-bottom: 0px;
+}
+
+.footer .copyright {
+  margin-left: 40%;
 }
 /*# sourceMappingURL=styles.css.map */

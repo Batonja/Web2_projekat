@@ -4,6 +4,7 @@ import Flight from "../components/Flight/Flight";
 import Hotel from "../components/Hotel/Hotel";
 import Car from "../components/Car/Car";
 import Home from "../components/Home";
+import Airlines from "../components/Flight/Airlines";
 
 export function Routes() {
   return (
@@ -11,6 +12,7 @@ export function Routes() {
       <Route path="/flights" component={Flight} />
       <Route path="/hotels" component={Hotel} />
       <Route path="/cars" component={Car} />
+      <Route path="/airlines" component={Airlines} />
       <Route path="/" component={Home} />
     </Switch>
   );
