@@ -60,7 +60,9 @@ class Airlines extends Component {
               <TableRow onClick={() => this.openClose(i)}>
                 <TableCell>{airline.Title}</TableCell>
                 <TableCell>{airline.Address}</TableCell>
+
                 <TableCell>{airline.Description}</TableCell>
+
                 <TableCell>
                   {this.isOpened(i) ? (
                     <KeyboardArrowUpIcon />

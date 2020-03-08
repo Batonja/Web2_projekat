@@ -8,11 +8,22 @@ const initialState = {
       Destinations: ["Kairo", "NYC", "Brazilia"],
       Flights: [
         {
+          From: "Kairo",
+          To: "NYC",
           DepartureDate: "3/7/2020 8:01 PM",
           ArivalDate: "3/9/2020 9:00PM",
           TripLength: 3,
           ChangeOvers: ["London", "Dubai"],
           Price: 400
+        },
+        {
+          From: "Brazilia",
+          To: "Kairo",
+          DepartureDate: "3/10/2020 8:01 PM",
+          ArivalDate: "3/12/2020 9:00PM",
+          TripLength: 3,
+          ChangeOvers: ["Dubai"],
+          Price: 600
         }
       ],
       Tickets: [
@@ -33,11 +44,22 @@ const initialState = {
       Destinations: ["Milan", "Pariz", "Brazilia"],
       Flights: [
         {
+          From: "Milan",
+          To: "Brazillia",
+          DepartureDate: "3/3/2020 8:01 PM",
+          ArivalDate: "3/12/2020 9:00PM",
+          TripLength: 3,
+          ChangeOvers: ["Birmingham", "Georgia"],
+          Price: 400
+        },
+        {
+          From: "Pariz",
+          To: "Milan",
           DepartureDate: "3/5/2020 8:01 PM",
           ArivalDate: "3/11/2020 9:00PM",
           TripLength: 3,
           ChangeOvers: ["Birmingham", "Georgia"],
-          Price: 400
+          Price: 550
         }
       ],
       Tickets: [
