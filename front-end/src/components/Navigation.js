@@ -76,7 +76,7 @@ class Navigation extends Component {
                 keepMounted
                 transformOrigin={{
                   vertical: "top",
-                  horizontal: "right"
+                  horizontal: "center"
                 }}
                 open={Boolean(this.state.anchorEl)}
                 onClose={this.handleClose}
