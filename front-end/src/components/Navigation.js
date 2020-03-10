@@ -4,21 +4,18 @@ import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import IconButton from '@material-ui/core/IconButton';
-
-import AppBar from '@material-ui/core/AppBar';
-
-
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-
+import AccountCircle from "@material-ui/icons/AccountCircle";
+import IconButton from "@material-ui/core/IconButton";
+import AppBar from "@material-ui/core/AppBar";
+import Typography from "@material-ui/core/Typography";
+import Box from "@material-ui/core/Box";
+import Button from "@material-ui/core/Button";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
 
 const useStyles = makeStyles({
   root: {
-    flexGrow: 3,
-
+    flexGrow: 3
   }
 });
 
@@ -27,7 +24,8 @@ class Navigation extends Component {
     super(props);
 
     this.state = {
-      value: 0
+      value: 0,
+      menuOpened: false
     };
   }
 
@@ -35,6 +33,12 @@ class Navigation extends Component {
     this.setState({ value: newValue });
   };
 
+  handleClick = event => {
+    this.setState({ anchorEl: event.target });
+  };
+  handleClose = () => {
+    this.setState({ anchorEl: null });
+  };
   render() {
     const classes = this.props;
 
@@ -53,25 +57,59 @@ class Navigation extends Component {
               <Tab label="Flight" to={"/flights"} component={Link} />
               <Tab label="Hotel" to={"/hotels"} component={Link} />
               <Tab label="Car" to={"/cars"} component={Link} />
-              <IconButton
-                ariaLabel="account of current user"
-                to={"/account"} component={Link}
+
+              <Button
+                aria-controls="simple-menu"
+                aria-haspopup="true"
+                onClick={this.handleClick}
               >
-                <AccountCircle />
-              </IconButton>
-              <Tab label="Sign In" to={"/signin"} component={Link} />
-              <Tab label="Sign Up" to={"/signup"} component={Link} />
-              <IconButton
-                ariaLabel="account of current user"
-                to={"/account"} component={Link}
+                Open Menu
+              </Button>
+
+              <Menu
+                id="menu-appbar"
+                anchorEl={this.state.anchorEl}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right"
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right"
+                }}
+                open={Boolean(this.state.anchorEl)}
+                onClose={this.handleClose}
               >
-                <ShoppingCartIcon />
-              </IconButton>
+                <MenuItem onClick={this.handleClose}>
+                  <IconButton
+                    ariaLabel="account of current user"
+                    to={"/account"}
+                    component={Link}
+                  >
+                    <AccountCircle />
+                  </IconButton>
+                </MenuItem>
+                <MenuItem onClick={this.handleClose}>
+                  <Tab label="Sign In" to={"/signin"} component={Link} />
+                </MenuItem>
+                <MenuItem onClick={this.handleClose}>
+                  <Tab label="Sign Up" to={"/signup"} component={Link} />
+                </MenuItem>
+                <MenuItem onClick={this.handleClose}>
+                  <IconButton
+                    ariaLabel="account of current user"
+                    to={"/account"}
+                    component={Link}
+                  >
+                    {" "}
+                    Account of user
+                  </IconButton>
+                </MenuItem>
+              </Menu>
             </Tabs>
           </Paper>
         </AppBar>
-
-
       </div>
     );
   }
