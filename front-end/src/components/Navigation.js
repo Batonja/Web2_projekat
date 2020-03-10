@@ -63,7 +63,12 @@ class Navigation extends Component {
                 aria-haspopup="true"
                 onClick={this.handleClick}
               >
-                Open Menu
+              <IconButton
+                    ariaLabel="account of current user"
+                  >
+                    <AccountCircle />
+                  </IconButton>
+                Account
               </Button>
 
               <Menu
@@ -82,13 +87,7 @@ class Navigation extends Component {
                 onClose={this.handleClose}
               >
                 <MenuItem onClick={this.handleClose}>
-                  <IconButton
-                    ariaLabel="account of current user"
-                    to={"/account"}
-                    component={Link}
-                  >
-                    <AccountCircle />
-                  </IconButton>
+                  
                 </MenuItem>
                 <MenuItem onClick={this.handleClose}>
                   <Tab label="Sign In" to={"/signin"} component={Link} />
@@ -103,7 +102,7 @@ class Navigation extends Component {
                     component={Link}
                   >
                     {" "}
-                    Account of user
+                    Menage account
                   </IconButton>
                 </MenuItem>
               </Menu>
