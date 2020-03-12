@@ -51,9 +51,7 @@ class Search extends Component {
         id="auto-complete"
         autoComplete
         includeInputInList
-        renderInput={params => (
-          <TextField {...params} label="autoComplete" margin="normal" />
-        )}
+        renderInput={params => <TextField {...params} margin="normal" />}
       />
     );
   }

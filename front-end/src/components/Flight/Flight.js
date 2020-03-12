@@ -19,7 +19,7 @@ class Flight extends Component {
           variant="contained"
           color="primary"
           className={classes.button}
-          to="/airlines"
+          to="/flights/airlines"
           component={Link}
         >
           Airlines

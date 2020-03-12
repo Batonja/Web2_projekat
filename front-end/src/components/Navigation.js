@@ -24,9 +24,22 @@ class Navigation extends Component {
     super(props);
 
     this.state = {
-      value: 0,
+      value: -1,
       menuOpened: false
     };
+  }
+  componentDidMount() {
+    var currentValue = -1;
+
+    if (window.location.href === "http://localhost:3000/") currentValue = 0;
+    else if (window.location.href.includes("http://localhost:3000/flights"))
+      currentValue = 1;
+    else if (window.location.href.includes("http://localhost:3000/hotels"))
+      currentValue = 2;
+    else if (window.location.href.includes("http://localhost:3000/cars"))
+      currentValue = 3;
+
+    this.setState({ value: currentValue });
   }
 
   handleChange = (event, newValue) => {
