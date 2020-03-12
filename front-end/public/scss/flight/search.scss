@@ -1,4 +1,11 @@
-.flightSearch {
-  margin-left: 5%;
-  width: 100px;
+.searchForm {
+  margin-left: 100px;
+
+  .destinationFields {
+    .destinationSelect {
+      width: 200px;
+
+      position: relative;
+    }
+  }
 }

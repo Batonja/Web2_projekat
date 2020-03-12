@@ -45,14 +45,20 @@ class Search extends Component {
       getOptionLabel: option => option
     };
     return (
-      <Autocomplete
-        className="flightSearch"
-        {...defaultProps}
-        id="auto-complete"
-        autoComplete
-        includeInputInList
-        renderInput={params => <TextField {...params} margin="normal" />}
-      />
+      <div className="searchForm">
+        <div className="destinationFields">
+          <label className="destinationLabel">Destination</label>
+          <div className="destinationSelect">
+            <Autocomplete
+              {...defaultProps}
+              id="auto-complete"
+              autoComplete
+              includeInputInList
+              renderInput={params => <TextField {...params} margin="normal" />}
+            />
+          </div>
+        </div>
+      </div>
     );
   }
 }

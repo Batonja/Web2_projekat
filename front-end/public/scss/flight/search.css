@@ -1,5 +1,9 @@
-.flightSearch {
-  margin-left: 5%;
+.searchForm {
+  margin-left: 100px;
+}
+
+.searchForm .destinationFields .destinationSelect {
   width: 200px;
+  position: relative;
 }
 /*# sourceMappingURL=search.css.map */
