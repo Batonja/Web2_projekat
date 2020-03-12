@@ -14,7 +14,7 @@ export function Routes() {
       <Route path="/flights" component={Flight} />
       <Route path="/hotels" component={Hotel} />
       <Route path="/cars" component={Car} />
-      <Route path="/flights/airlines" component={Airlines} />
+      <Route path="/flights-airlines" component={Airlines} />
       {/* <Route path="/account" component={Account}/> */}
       <Route path="/signin" component={LoginForm} />
       <Route path="/signup" component={RegistrationForm} />

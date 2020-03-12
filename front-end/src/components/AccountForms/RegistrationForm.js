@@ -56,19 +56,41 @@ const RegistrationForm = () => {
 
   const handleChange = e => {
     //  reset errors and validation as well
+
+    const regexEmail = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/; // trazi npr ime@provider.com
+    const regexLettersOnly = /[^A-Za-z]+/;
+    const regexNotANumber = /[^0-9]/;
+    const regexLettersSpaceNumbers = /^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/;
     if (e.target.id === "email-form") {
+      if (!regexEmail.test(e.target.value)) {
+        //Trigger error message for email
+      }
+
       setEmail(e.target.value);
     } else if (e.target.id === "password-form") {
       setPassword(e.target.value);
     } else if (e.target.id === "password-form-confirm") {
       setPasswordConfirm(e.target.value);
     } else if (e.target.id === "firstname-form") {
+      if (regexLettersOnly.test(e.target.value)) {
+        //Triger error message for firstName
+      }
       setFirstName(e.target.value);
     } else if (e.target.id === "lastname-form") {
+      if (regexLettersOnly.test(e.target.value)) {
+        //Triger error message for lastName
+      }
       setLastName("e.target.value");
     } else if (e.target.id === "phonenumber-form") {
+      if (regexNotANumber.test(e.target.id)) {
+        //Trigger error messag for phoneNumber
+      }
       setPhoneNumber(e.target.value);
     } else if (e.target.id === "address-form") {
+      if (!regexLettersSpaceNumbers.test(e.target.value)) {
+        //Trigger error message for address
+      }
+
       setAddress(e.target.value);
     } else {
       //MISSED TEXTFIELD
@@ -189,7 +211,12 @@ const RegistrationForm = () => {
         <br />
         <div className="row">
           <div className={classes.centerDiv}>
-            <Button type="submit" variant="contained" color="primary">
+            <Button
+              onClick={handleSubmit}
+              type="submit"
+              variant="contained"
+              color="primary"
+            >
               Register
             </Button>
           </div>
