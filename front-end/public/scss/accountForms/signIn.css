@@ -1,0 +1,19 @@
+.signInForm {
+  margin-left: 40%;
+  width: 305px;
+  margin-bottom: 2%;
+}
+
+.signInForm .signInBtn {
+  margin-left: 40%;
+}
+
+.signInForm .titleSignIn {
+  margin-left: 25%;
+}
+
+.signInForm #email-form,
+.signInForm #password-form {
+  width: 305px;
+}
+/*# sourceMappingURL=signIn.css.map */

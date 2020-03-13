@@ -1,129 +1,78 @@
-import React from "react";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableRow from "@material-ui/core/TableRow";
+import React, { Component } from "react";
+import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
+import Button from "@material-ui/core/Button";
 
-const LoginForm = () => {
-  return (
-    <div>
-      <h1>Sign in</h1>
-      <ValidatorForm
-        onSubmit={handleSubmit}
-        onError={errors => console.log(errors)}
-      >
-        <div className="row">
-          <div className={classes.centerDiv}>
-            <TextValidator
-              className={classes.textField}
-              margin="normal"
-              label="Email"
-              onChange={handleChange}
-              id="email-form"
-              name="email"
-              value={email}
-              validators={["required", "isEmail"]}
-              errorMessages={["this field is required", "email is not valid"]}
-            />
-          </div>
-          <div className={classes.centerDiv}>
-            <TextValidator
-              className={classes.textField}
-              margin="normal"
-              label="Password"
-              type="password"
-              onChange={handleChange}
-              id="password-form"
-              name="password"
-              value={password}
-              validators={["required"]}
-              errorMessages={["this field is required"]}
-            />
-          </div>
-          <div className={classes.centerDiv}>
-            <TextValidator
-              className={classes.textField}
-              margin="normal"
-              label="Repeat Password"
-              type="password"
-              name="repeatPassword"
-              onChange={handleChange}
-              id="password-form-confirm"
-              value={passwordConfirm}
-              validators={["isPasswordMatch", "required"]}
-              errorMessages={["password mismatch", "this field is required"]}
-            />
-          </div>
-          <div className={classes.centerDiv}>
-            <TextValidator
-              className={classes.textField}
-              margin="normal"
-              label="First Name"
-              onChange={handleChange}
-              id="firstname-form"
-              name="firstname"
-              value={firstName}
-              validators={["required"]}
-              errorMessages={["this field is required"]}
-            />
-          </div>
-          <div className={classes.centerDiv}>
-            <TextValidator
-              className={classes.textField}
-              margin="normal"
-              label="Last Name"
-              onChange={handleChange}
-              id="lastname-form"
-              name="lastName"
-              value={lastName}
-              validators={["required"]}
-              errorMessages={["this field is required"]}
-            />
-          </div>
-          <div className={classes.centerDiv}>
-            <TextValidator
-              className={classes.textField}
-              margin="normal"
-              label="Phone Number"
-              onChange={handleChange}
-              id="phonenumber-form"
-              name="phoneNumber"
-              value={phoneNumber}
-              validators={["required"]}
-              errorMessages={["this field is required"]}
-            />
-          </div>
-          <div className={classes.centerDiv}>
-            <TextValidator
-              className={classes.textField}
-              margin="normal"
-              label="Address"
-              onChange={handleChange}
-              id="address-form"
-              name="address"
-              value={address}
-              validators={["required"]}
-              errorMessages={["this field is required"]}
-            />
-          </div>
-        </div>
-        <br />
-        <div className="row">
-          <div className={classes.centerDiv}>
+class LoginForm extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      emailError: false
+    };
+    this.emailRef = React.createRef();
+    this.passwordRef = React.createRef();
+
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleSubmit() {
+    this.setState({ emailError: false });
+
+    const regexEmail = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
+
+    if (!regexEmail.test(this.emailRef.current.value)) {
+      this.setState({ emailError: true });
+      //Trigger error message for email
+    }
+  }
+  render() {
+    return (
+      <div className="signInForm">
+        <h1 className="titleSignIn">Sign in</h1>
+        <ValidatorForm onError={errors => console.log(errors)}>
+          <TextValidator
+            margin="normal"
+            label="Email"
+            id="email-form"
+            name="email"
+            ref={this.emailRef}
+            validators={["required", "isEmail"]}
+            errorMessages={["this field is required", "email is not valid"]}
+          />
+          {this.state.emailError === true ? (
+            <p style={{ color: "red" }}>
+              Email error please provide valid email
+            </p>
+          ) : (
+            ""
+          )}
+          <br />
+
+          <TextValidator
+            margin="normal"
+            label="Password"
+            type="password"
+            id="password-form"
+            name="password"
+            validators={["required"]}
+            errorMessages={["this field is required"]}
+          />
+
+          <br />
+          <div className="signInBtn">
             <Button
-              onClick={handleSubmit}
-              type="submit"
               variant="contained"
+              id="searchButton"
+              onClick={this.handleSubmit}
               color="primary"
             >
-              Register
+              Log In
             </Button>
           </div>
-        </div>
-        <br />
-      </ValidatorForm>
-    </div>
-  );
-};
+        </ValidatorForm>
+      </div>
+    );
+  }
+}
 
 export default LoginForm;
