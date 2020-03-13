@@ -1,11 +1,5 @@
 .searchForm {
-  margin-left: 100px;
-
-  .destinationFields {
-    .destinationSelect {
-      width: 200px;
-
-      position: relative;
-    }
+  .destinationSelect {
+    max-width: 200px;
   }
 }

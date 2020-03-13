@@ -1,9 +1,4 @@
-.searchForm {
-  margin-left: 100px;
-}
-
-.searchForm .destinationFields .destinationSelect {
-  width: 200px;
-  position: relative;
+.searchForm .destinationSelect {
+  max-width: 200px;
 }
 /*# sourceMappingURL=search.css.map */
