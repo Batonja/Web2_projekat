@@ -1,4 +1,33 @@
+.searchForm {
+  margin-left: 10px;
+  margin-top: 0px;
+  max-width: 400px;
+}
+
+.searchForm .searchFormRow {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.searchForm .searchFormRow .searchFormCell {
+  display: inline-block;
+  width: 200px;
+}
+
+.searchForm .searchFormRow .searchFormCell:nth-child(2) {
+  margin-left: 5px;
+}
+
+.searchForm .searchFormRow #ticketPrice {
+  margin-top: 15px;
+}
+
 .searchForm .destinationSelect {
   max-width: 200px;
+}
+
+.searchForm #searchButton {
+  width: 100%;
 }
 /*# sourceMappingURL=search.css.map */

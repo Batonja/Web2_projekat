@@ -15,6 +15,8 @@ class Flight extends Component {
     const classes = this.props;
     return (
       <div>
+        <Search />
+        <br />
         <Button
           variant="contained"
           color="primary"
@@ -24,7 +26,6 @@ class Flight extends Component {
         >
           Airlines
         </Button>
-        <Search />
       </div>
     );
   }
