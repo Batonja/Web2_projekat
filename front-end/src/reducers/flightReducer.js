@@ -8,6 +8,7 @@ const initialState = {
       Destinations: ["Kairo", "NYC", "Brazilia"],
       Flights: [
         {
+          Id: 1,
           From: "Kairo",
           To: "NYC",
           DepartureDate: "3/7/2020 8:01 PM",
@@ -17,6 +18,7 @@ const initialState = {
           Price: 400
         },
         {
+          Id: 2,
           From: "Brazilia",
           To: "Kairo",
           DepartureDate: "3/10/2020 8:01 PM",
@@ -26,10 +28,7 @@ const initialState = {
           Price: 600
         }
       ],
-      Tickets: [
-        ["Economy", 10],
-        ["Business", 0]
-      ],
+      Tickets: { Economy: 10, Business: 0 },
       PlaneSeats: [0, 0],
       Luggage: [
         { Price: 0, Type: "Hand" },
@@ -44,6 +43,7 @@ const initialState = {
       Destinations: ["Milan", "Pariz", "Brazilia"],
       Flights: [
         {
+          Id: 3,
           From: "Milan",
           To: "Brazillia",
           DepartureDate: "3/3/2020 8:01 PM",
@@ -53,6 +53,7 @@ const initialState = {
           Price: 400
         },
         {
+          Id: 4,
           From: "Pariz",
           To: "Milan",
           DepartureDate: "3/5/2020 8:01 PM",
@@ -62,10 +63,7 @@ const initialState = {
           Price: 550
         }
       ],
-      Tickets: [
-        ["Economy", 15],
-        ["Business", 2]
-      ],
+      Tickets: { Economy: 15, Business: 2 },
       PlaneSeats: [0, 0, 0, 0],
       Luggage: [
         { Price: 0, Type: "Hand" },

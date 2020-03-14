@@ -1,0 +1,24 @@
+.flightsTable {
+  margin-left: 20px;
+  margin-top: 10px;
+  border: 1px solid black;
+  .flightWrap {
+    border-bottom: 1px dashed grey;
+  }
+  .flightPresentRow {
+    white-space: nowrap;
+  }
+  .flightItem {
+    padding: 10px;
+    display: inline-block;
+    #luggageLabel {
+      font-size: small;
+    }
+  }
+  .flightItem:nth-child(2) {
+    margin-left: 10px;
+  }
+  .flightsTableTitle {
+    margin-left: 40%;
+  }
+}
