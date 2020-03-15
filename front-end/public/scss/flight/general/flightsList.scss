@@ -1,16 +1,38 @@
 .flightsTable {
   margin-left: 20px;
   margin-top: 10px;
+
   border: 1px solid black;
-  .flightWrap {
+  .flightWrap:not(:last-child) {
     border-bottom: 1px dashed grey;
   }
+
   .flightPresentRow {
     white-space: nowrap;
+    display: flex;
+    align-items: flex-start;
+
+    .flightSeats {
+      white-space: nowrap;
+
+      .leftSideSeats {
+        display: inline-block;
+      }
+      .rightSideSeats {
+        display: inline-block;
+        margin-left: 10px;
+      }
+    }
+  }
+  #flightLuggage {
+    padding-left: 50px;
   }
   .flightItem {
     padding: 10px;
     display: inline-block;
+    .titleSeats {
+      margin-left: 40%;
+    }
     #luggageLabel {
       font-size: small;
     }

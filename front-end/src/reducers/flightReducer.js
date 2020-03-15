@@ -15,7 +15,8 @@ const initialState = {
           ArivalDate: "3/9/2020 9:00PM",
           TripLength: 3,
           ChangeOvers: ["London", "Dubai"],
-          Price: 400
+          Price: 400,
+          Seats: []
         },
         {
           Id: 2,
@@ -25,11 +26,12 @@ const initialState = {
           ArivalDate: "3/12/2020 9:00PM",
           TripLength: 3,
           ChangeOvers: ["Dubai"],
-          Price: 600
+          Price: 600,
+          Seats: []
         }
       ],
       Tickets: { Economy: 10, Business: 0 },
-      PlaneSeats: [0, 0],
+      PlaneSeatsNumber: [8, 6],
       Luggage: [
         { Price: 0, Type: "Hand" },
         { Price: 20, Type: "Checked" }
@@ -50,7 +52,8 @@ const initialState = {
           ArivalDate: "3/12/2020 9:00PM",
           TripLength: 3,
           ChangeOvers: ["Birmingham", "Georgia"],
-          Price: 400
+          Price: 400,
+          Seats: []
         },
         {
           Id: 4,
@@ -60,11 +63,12 @@ const initialState = {
           ArivalDate: "3/11/2020 9:00PM",
           TripLength: 3,
           ChangeOvers: ["Birmingham", "Georgia"],
-          Price: 550
+          Price: 550,
+          Seats: []
         }
       ],
       Tickets: { Economy: 15, Business: 2 },
-      PlaneSeats: [0, 0, 0, 0],
+      PlaneSeatsNumber: [6, 6],
       Luggage: [
         { Price: 0, Type: "Hand" },
         { Price: 40, Type: "Checked" }

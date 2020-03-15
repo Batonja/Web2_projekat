@@ -4,17 +4,44 @@
   border: 1px solid black;
 }
 
-.flightsTable .flightWrap {
+.flightsTable .flightWrap:not(:last-child) {
   border-bottom: 1px dashed grey;
 }
 
 .flightsTable .flightPresentRow {
   white-space: nowrap;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+}
+
+.flightsTable .flightPresentRow .flightSeats {
+  white-space: nowrap;
+}
+
+.flightsTable .flightPresentRow .flightSeats .leftSideSeats {
+  display: inline-block;
+}
+
+.flightsTable .flightPresentRow .flightSeats .rightSideSeats {
+  display: inline-block;
+  margin-left: 10px;
+}
+
+.flightsTable #flightLuggage {
+  padding-left: 50px;
 }
 
 .flightsTable .flightItem {
   padding: 10px;
   display: inline-block;
+}
+
+.flightsTable .flightItem .titleSeats {
+  margin-left: 40%;
 }
 
 .flightsTable .flightItem #luggageLabel {
@@ -33,9 +60,6 @@
   margin-left: 10px;
   margin-top: 0px;
   max-width: 400px;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
 }
 
 .searchForm .searchFormRow {

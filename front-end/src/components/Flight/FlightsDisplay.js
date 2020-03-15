@@ -9,6 +9,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import { ListGroup, ListGroupItem } from "react-bootstrap";
 import { connect } from "react-redux";
 import { Collapse } from "react-collapse";
+import EventSeatIcon from "@material-ui/icons/EventSeat";
 
 class FlightsDisplay extends Component {
   constructor(props) {
@@ -16,10 +17,12 @@ class FlightsDisplay extends Component {
 
     this.state = {
       openedCollapsed: [],
-      luggage: 0
+      luggage: 0,
+      seats: []
     };
     this.openClose = this.openClose.bind(this);
   }
+
   isOpened(index) {
     if (this.state.openedCollapsed.includes(index)) return true;
 
@@ -112,29 +115,128 @@ class FlightsDisplay extends Component {
                     </ListGroup>
 
                     <Collapse isOpened={this.isOpened(flight.Id)}>
-                      <ListGroup className="flightPresentRow">
-                        <ListGroupItem className="flightItem">
-                          <InputLabel id="luggageLabel">
-                            Luggage Type / Price
-                          </InputLabel>
-                          <Select
-                            labelId="luggageLabel"
-                            onChange={this.onHandleLuggageChange}
-                            value={this.state.luggage}
-                          >
-                            <MenuItem value={0}>
-                              {airline.Luggage[0].Type.toString() +
-                                " / " +
-                                airline.Luggage[0].Price.toString()}
-                            </MenuItem>
-                            <MenuItem value={1}>
-                              {airline.Luggage[1].Type.toString() +
-                                " / " +
-                                airline.Luggage[1].Price.toString()}
-                            </MenuItem>
-                          </Select>
-                        </ListGroupItem>
-                      </ListGroup>
+                      <div>
+                        <ListGroup className="flightPresentRow">
+                          <ListGroupItem className="flightItem">
+                            <h3 className="titleSeats">Seats</h3>
+                            {Array.from(
+                              new Array(airline.PlaneSeatsNumber[0])
+                            ).map((seatsRow, seatsRowId) => {
+                              return (
+                                <ListGroup className="flightSeats">
+                                  <ListGroupItem className="leftSideSeats">
+                                    <EventSeatIcon
+                                      value={
+                                        seatsRowId * airline.PlaneSeatsNumber[1]
+                                      }
+                                      color={
+                                        seatsRowId === 0
+                                          ? "disabled"
+                                          : seatsRow === 1
+                                          ? "secondary"
+                                          : "primary"
+                                      }
+                                    />
+                                    <EventSeatIcon
+                                      value={
+                                        seatsRowId *
+                                          airline.PlaneSeatsNumber[1] +
+                                        1
+                                      }
+                                      color={
+                                        seatsRowId === 0
+                                          ? "disabled"
+                                          : seatsRow === 1
+                                          ? "secondary"
+                                          : "primary"
+                                      }
+                                    />
+                                    <EventSeatIcon
+                                      value={
+                                        seatsRowId *
+                                          airline.PlaneSeatsNumber[1] +
+                                        2
+                                      }
+                                      color={
+                                        seatsRowId === 0
+                                          ? "disabled"
+                                          : seatsRow === 1
+                                          ? "secondary"
+                                          : "primary"
+                                      }
+                                    />
+                                  </ListGroupItem>
+                                  <ListGroupItem className="rightSideSeats">
+                                    <EventSeatIcon
+                                      value={
+                                        seatsRowId *
+                                          airline.PlaneSeatsNumber[1] +
+                                        3
+                                      }
+                                      color={
+                                        seatsRowId === 0
+                                          ? "disabled"
+                                          : seatsRow === 1
+                                          ? "secondary"
+                                          : "primary"
+                                      }
+                                    />
+                                    <EventSeatIcon
+                                      value={
+                                        seatsRowId *
+                                          airline.PlaneSeatsNumber[1] +
+                                        4
+                                      }
+                                      color={
+                                        seatsRowId === 0
+                                          ? "disabled"
+                                          : seatsRow === 1
+                                          ? "secondary"
+                                          : "primary"
+                                      }
+                                    />
+                                    <EventSeatIcon
+                                      value={
+                                        seatsRowId *
+                                          airline.PlaneSeatsNumber[1] +
+                                        5
+                                      }
+                                      color={
+                                        seatsRowId === 0
+                                          ? "disabled"
+                                          : seatsRow === 1
+                                          ? "secondary"
+                                          : "primary"
+                                      }
+                                    />
+                                  </ListGroupItem>
+                                </ListGroup>
+                              );
+                            })}
+                          </ListGroupItem>
+                          <ListGroupItem className="flightItem">
+                            <InputLabel id="luggageLabel">
+                              Luggage Type / Price
+                            </InputLabel>
+                            <Select
+                              labelId="luggageLabel"
+                              onChange={this.onHandleLuggageChange}
+                              value={this.state.luggage}
+                            >
+                              <MenuItem value={0}>
+                                {airline.Luggage[0].Type.toString() +
+                                  " / " +
+                                  airline.Luggage[0].Price.toString()}
+                              </MenuItem>
+                              <MenuItem value={1}>
+                                {airline.Luggage[1].Type.toString() +
+                                  " / " +
+                                  airline.Luggage[1].Price.toString()}
+                              </MenuItem>
+                            </Select>
+                          </ListGroupItem>
+                        </ListGroup>
+                      </div>
                     </Collapse>
                   </ListGroup>
                 );
