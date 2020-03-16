@@ -6,6 +6,9 @@
   .flightWrap:not(:last-child) {
     border-bottom: 1px dashed grey;
   }
+  .flightReserveButton {
+    margin: 10px;
+  }
 
   .flightPresentRow {
     white-space: nowrap;

@@ -56,6 +56,10 @@
   border-bottom: 1px dashed grey;
 }
 
+.flightsTable .flightReserveButton {
+  margin: 10px;
+}
+
 .flightsTable .flightPresentRow {
   white-space: nowrap;
   display: -webkit-box;

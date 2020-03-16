@@ -6,10 +6,12 @@ import Button from "@material-ui/core/Button";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import InputLabel from "@material-ui/core/InputLabel";
+import ReservationModal from "./ReservationModal";
 import { ListGroup, ListGroupItem } from "react-bootstrap";
 import { connect } from "react-redux";
 import { Collapse } from "react-collapse";
 import EventSeatIcon from "@material-ui/icons/EventSeat";
+import Modal from "react-modal";
 
 class FlightsDisplay extends Component {
   constructor(props) {
@@ -18,9 +20,11 @@ class FlightsDisplay extends Component {
     this.state = {
       openedCollapsed: [],
       luggage: 0,
-      seats: []
+      openedModal: -1
     };
     this.openClose = this.openClose.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+    this.openModal = this.openModal.bind(this);
   }
 
   isOpened(index) {
@@ -37,12 +41,23 @@ class FlightsDisplay extends Component {
       var filteredArray = this.state.openedCollapsed.filter(
         item => item !== index
       );
+
       this.setState({ openedCollapsed: filteredArray });
       return;
     }
-    this.setState({ openedCollapsed: [...this.state.openedCollapsed, index] });
+
+    this.setState({
+      openedCollapsed: [...this.state.openedCollapsed, index]
+    });
   }
 
+  openModal(flightId) {
+    this.setState({ openedModal: flightId });
+  }
+
+  closeModal() {
+    this.setState({ openedModal: -1 });
+  }
   render() {
     return (
       <div className="flightsTable">
@@ -132,7 +147,10 @@ class FlightsDisplay extends Component {
                                       color={
                                         seatsRowId === 0
                                           ? "disabled"
-                                          : seatsRow === 1
+                                          : flight.Seats[
+                                              seatsRowId *
+                                                airline.PlaneSeatsNumber[1]
+                                            ] === 0
                                           ? "secondary"
                                           : "primary"
                                       }
@@ -146,7 +164,11 @@ class FlightsDisplay extends Component {
                                       color={
                                         seatsRowId === 0
                                           ? "disabled"
-                                          : seatsRow === 1
+                                          : flight.Seats[
+                                              seatsRowId *
+                                                airline.PlaneSeatsNumber[1] +
+                                                1
+                                            ] === 0
                                           ? "secondary"
                                           : "primary"
                                       }
@@ -160,7 +182,11 @@ class FlightsDisplay extends Component {
                                       color={
                                         seatsRowId === 0
                                           ? "disabled"
-                                          : seatsRow === 1
+                                          : flight.Seats[
+                                              seatsRowId *
+                                                airline.PlaneSeatsNumber[1] +
+                                                2
+                                            ] === 0
                                           ? "secondary"
                                           : "primary"
                                       }
@@ -176,7 +202,11 @@ class FlightsDisplay extends Component {
                                       color={
                                         seatsRowId === 0
                                           ? "disabled"
-                                          : seatsRow === 1
+                                          : flight.Seats[
+                                              seatsRowId *
+                                                airline.PlaneSeatsNumber[1] +
+                                                3
+                                            ] === 0
                                           ? "secondary"
                                           : "primary"
                                       }
@@ -190,7 +220,11 @@ class FlightsDisplay extends Component {
                                       color={
                                         seatsRowId === 0
                                           ? "disabled"
-                                          : seatsRow === 1
+                                          : flight.Seats[
+                                              seatsRowId *
+                                                airline.PlaneSeatsNumber[1] +
+                                                4
+                                            ] === 0
                                           ? "secondary"
                                           : "primary"
                                       }
@@ -204,7 +238,11 @@ class FlightsDisplay extends Component {
                                       color={
                                         seatsRowId === 0
                                           ? "disabled"
-                                          : seatsRow === 1
+                                          : flight.Seats[
+                                              seatsRowId *
+                                                airline.PlaneSeatsNumber[1] +
+                                                5
+                                            ] === 0
                                           ? "secondary"
                                           : "primary"
                                       }
@@ -236,6 +274,25 @@ class FlightsDisplay extends Component {
                             </Select>
                           </ListGroupItem>
                         </ListGroup>
+
+                        <Button
+                          className="flightReserveButton"
+                          color="primary"
+                          variant="contained"
+                          onClick={() => this.openModal(flight.Id)}
+                        >
+                          Reserve
+                        </Button>
+                        <Modal
+                          className="modal"
+                          ariaHideApp={false}
+                          isOpen={
+                            flight.Id === this.state.openedModal ? true : false
+                          }
+                          onRequestClose={this.closeModal}
+                        >
+                          <ReservationModal closeModal={this.closeModal} />
+                        </Modal>
                       </div>
                     </Collapse>
                   </ListGroup>
