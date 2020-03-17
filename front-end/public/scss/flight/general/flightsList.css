@@ -17,9 +17,9 @@
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: start;
-      -ms-flex-align: start;
-          align-items: flex-start;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 .flightsTable .flightPresentRow .flightSeats {
@@ -41,11 +41,14 @@
 
 .flightsTable .flightItem {
   padding: 10px;
-  display: inline-block;
+}
+
+.flightsTable .flightItem .flightReservationModal {
+  z-index: -1;
 }
 
 .flightsTable .flightItem .titleSeats {
-  margin-left: 40%;
+  margin-left: 30%;
 }
 
 .flightsTable .flightItem #luggageLabel {

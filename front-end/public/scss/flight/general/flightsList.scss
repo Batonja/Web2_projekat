@@ -13,7 +13,7 @@
   .flightPresentRow {
     white-space: nowrap;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
 
     .flightSeats {
       white-space: nowrap;
@@ -32,9 +32,9 @@
   }
   .flightItem {
     padding: 10px;
-    display: inline-block;
+
     .titleSeats {
-      margin-left: 40%;
+      margin-left: 30%;
     }
     #luggageLabel {
       font-size: small;

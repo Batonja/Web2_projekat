@@ -7,11 +7,15 @@ import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import InputLabel from "@material-ui/core/InputLabel";
 import ReservationModal from "./ReservationModal";
-import { ListGroup, ListGroupItem } from "react-bootstrap";
 import { connect } from "react-redux";
 import { Collapse } from "react-collapse";
 import EventSeatIcon from "@material-ui/icons/EventSeat";
 import Modal from "react-modal";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+
+const modalStyle = { content: { inset: "110px", "margin-left": "12%" } };
 
 class FlightsDisplay extends Component {
   constructor(props) {
@@ -67,58 +71,48 @@ class FlightsDisplay extends Component {
             <div>
               {Array.from(airline.Flights).map((flight, flightIndex) => {
                 return (
-                  <ListGroup className="flightWrap">
-                    <ListGroup className="flightPresentRow">
-                      <ListGroupItem className="flightItem">
+                  <Container fluid className="flightWrap">
+                    <Row className="flightPresentRow">
+                      <Col md="auto" className="flightItem">
                         <TextField
                           label="Company"
-                          onChange={""}
                           value={airline.Title}
                         ></TextField>
-                      </ListGroupItem>
-                      <ListGroupItem className="flightItem">
-                        <TextField
-                          label="From"
-                          onChange={""}
-                          value={flight.From}
-                        ></TextField>
-                      </ListGroupItem>
-                      <ListGroupItem className="flightItem">
+                      </Col>
+                      <Col md="auto" className="flightItem">
+                        <TextField label="From" value={flight.From}></TextField>
+                      </Col>
+                      <Col md="auto" className="flightItem">
                         <TextField
                           label="Destination"
-                          onChange={""}
                           value={flight.To}
                         ></TextField>
-                      </ListGroupItem>
-                      <ListGroupItem className="flightItem">
+                      </Col>
+                      <Col md="auto" className="flightItem">
                         <TextField
                           label="Departure"
-                          onChange={""}
                           value={flight.DepartureDate}
                         ></TextField>
-                      </ListGroupItem>
-                      <ListGroupItem className="flightItem">
+                      </Col>
+                      <Col md="auto" className="flightItem">
                         <TextField
                           label="Arrival"
-                          onChange={""}
                           value={flight.DepartureDate}
                         ></TextField>
-                      </ListGroupItem>
-                      <ListGroupItem className="flightItem">
+                      </Col>
+                      <Col md="auto" className="flightItem">
                         <TextField
                           label="Economy"
-                          onChange={""}
                           value={flight.Price - airline.Tickets.Economy}
                         ></TextField>
-                      </ListGroupItem>
-                      <ListGroupItem className="flightItem">
+                      </Col>
+                      <Col md="auto" className="flightItem">
                         <TextField
                           label="Business"
-                          onChange={""}
                           value={flight.Price - airline.Tickets.Economy + 2}
                         ></TextField>
-                      </ListGroupItem>
-                      <ListGroupItem className="flightItem">
+                      </Col>
+                      <Col md="auto" className="flightArrow">
                         <Button onClick={e => this.openClose(e, flight.Id)}>
                           {this.isOpened(flight.Id) ? (
                             <KeyboardArrowUpIcon />
@@ -126,20 +120,20 @@ class FlightsDisplay extends Component {
                             <KeyboardArrowDownIcon />
                           )}
                         </Button>
-                      </ListGroupItem>
-                    </ListGroup>
+                      </Col>
+                    </Row>
 
                     <Collapse isOpened={this.isOpened(flight.Id)}>
                       <div>
-                        <ListGroup className="flightPresentRow">
-                          <ListGroupItem className="flightItem">
+                        <Row className="flightPresentRow">
+                          <Col md="auto" className="flightItem">
                             <h3 className="titleSeats">Seats</h3>
                             {Array.from(
                               new Array(airline.PlaneSeatsNumber[0])
                             ).map((seatsRow, seatsRowId) => {
                               return (
-                                <ListGroup className="flightSeats">
-                                  <ListGroupItem className="leftSideSeats">
+                                <Container className="flightSeats">
+                                  <Row className="leftSideSeats">
                                     <EventSeatIcon
                                       value={
                                         seatsRowId * airline.PlaneSeatsNumber[1]
@@ -191,8 +185,8 @@ class FlightsDisplay extends Component {
                                           : "primary"
                                       }
                                     />
-                                  </ListGroupItem>
-                                  <ListGroupItem className="rightSideSeats">
+                                  </Row>
+                                  <Col className="rightSideSeats">
                                     <EventSeatIcon
                                       value={
                                         seatsRowId *
@@ -247,12 +241,12 @@ class FlightsDisplay extends Component {
                                           : "primary"
                                       }
                                     />
-                                  </ListGroupItem>
-                                </ListGroup>
+                                  </Col>
+                                </Container>
                               );
                             })}
-                          </ListGroupItem>
-                          <ListGroupItem className="flightItem">
+                          </Col>
+                          <Col className="flightItem">
                             <InputLabel id="luggageLabel">
                               Luggage Type / Price
                             </InputLabel>
@@ -272,30 +266,39 @@ class FlightsDisplay extends Component {
                                   airline.Luggage[1].Price.toString()}
                               </MenuItem>
                             </Select>
-                          </ListGroupItem>
-                        </ListGroup>
-
-                        <Button
-                          className="flightReserveButton"
-                          color="primary"
-                          variant="contained"
-                          onClick={() => this.openModal(flight.Id)}
-                        >
-                          Reserve
-                        </Button>
-                        <Modal
-                          className="modal"
-                          ariaHideApp={false}
-                          isOpen={
-                            flight.Id === this.state.openedModal ? true : false
-                          }
-                          onRequestClose={this.closeModal}
-                        >
-                          <ReservationModal closeModal={this.closeModal} />
-                        </Modal>
+                          </Col>
+                          <Col className="flightItem">
+                            <Button
+                              className="flightReserveButton"
+                              color="primary"
+                              variant="contained"
+                              onClick={() => this.openModal(flight.Id)}
+                            >
+                              Reserve
+                            </Button>
+                            <div className="flightReservationModal">
+                              <Modal
+                                style={modalStyle}
+                                ariaHideApp={false}
+                                isOpen={
+                                  flight.Id === this.state.openedModal
+                                    ? true
+                                    : false
+                                }
+                                onRequestClose={this.closeModal}
+                              >
+                                <ReservationModal
+                                  airline={airline}
+                                  flight={flight}
+                                  closeModal={this.closeModal}
+                                />
+                              </Modal>
+                            </div>
+                          </Col>
+                        </Row>
                       </div>
                     </Collapse>
-                  </ListGroup>
+                  </Container>
                 );
               })}
             </div>
