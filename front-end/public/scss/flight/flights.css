@@ -22,19 +22,6 @@
           align-items: center;
 }
 
-.flightsTable .flightPresentRow .flightSeats {
-  white-space: nowrap;
-}
-
-.flightsTable .flightPresentRow .flightSeats .leftSideSeats {
-  display: inline-block;
-}
-
-.flightsTable .flightPresentRow .flightSeats .rightSideSeats {
-  display: inline-block;
-  margin-left: 10px;
-}
-
 .flightsTable #flightLuggage {
   padding-left: 50px;
 }
@@ -43,16 +30,8 @@
   padding: 10px;
 }
 
-.flightsTable .flightItem .flightReservationModal {
-  z-index: -1;
-}
-
 .flightsTable .flightItem .titleSeats {
   margin-left: 30%;
-}
-
-.flightsTable .flightItem #luggageLabel {
-  font-size: small;
 }
 
 .flightsTable .flightItem:nth-child(2) {
@@ -61,6 +40,23 @@
 
 .flightsTable .flightsTableTitle {
   margin-left: 40%;
+}
+
+.flightSeats {
+  white-space: nowrap;
+}
+
+.flightSeats .leftSideSeats {
+  display: inline-block;
+}
+
+.flightSeats .rightSideSeats {
+  display: inline-block;
+  margin-left: 20px;
+}
+
+#luggageLabel {
+  font-size: smaller;
 }
 
 .searchForm {
