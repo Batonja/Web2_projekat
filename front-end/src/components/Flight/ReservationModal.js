@@ -15,14 +15,32 @@ class ReservationModal extends Component {
     super(props);
 
     this.state = {
-      luggage: 0
+      luggage: 0,
+      seats: []
     };
+  }
+
+  componentDidMount() {
+    this.setState({ seats: this.props.flight.Seats });
   }
 
   onHandleAddSeat(event) {
     event.preventDefault();
     alert(1);
   }
+
+  isClicked = (event, color, seatId) => {
+    var seats = this.state.seats;
+    if (event.button === 0) {
+      if (color === "secondary") {
+        seats[seatId] = 1;
+      } else if (color === "primary") {
+        seats[seatId] = 0;
+      }
+
+      this.setState({ seats: seats });
+    }
+  };
 
   onHandleLuggageChange = event => {
     this.setState({ luggage: event.target.value });
@@ -43,10 +61,7 @@ class ReservationModal extends Component {
               (seatsRow, seatsRowId) => {
                 return (
                   <Container className="flightSeats">
-                    <Row
-                      className="leftSideSeats"
-                      OnClick={this.props.closeModal}
-                    >
+                    <Row className="leftSideSeats">
                       <EventSeatIcon
                         value={
                           seatsRowId * this.props.airline.PlaneSeatsNumber[1]
@@ -54,12 +69,26 @@ class ReservationModal extends Component {
                         color={
                           seatsRowId === 0
                             ? "disabled"
-                            : this.props.flight.Seats[
+                            : this.state.seats[
                                 seatsRowId *
                                   this.props.airline.PlaneSeatsNumber[1]
                               ] === 0
                             ? "secondary"
                             : "primary"
+                        }
+                        onMouseDown={(e, color, seatId) =>
+                          this.isClicked(
+                            e,
+                            seatsRowId === 0
+                              ? "disabled"
+                              : this.state.seats[
+                                  seatsRowId *
+                                    this.props.airline.PlaneSeatsNumber[1]
+                                ] === 0
+                              ? "secondary"
+                              : "primary",
+                            seatsRowId * this.props.airline.PlaneSeatsNumber[1]
+                          )
                         }
                       />
 
@@ -71,13 +100,30 @@ class ReservationModal extends Component {
                         color={
                           seatsRowId === 0
                             ? "disabled"
-                            : this.props.flight.Seats[
+                            : this.state.seats[
                                 seatsRowId *
                                   this.props.airline.PlaneSeatsNumber[1] +
                                   1
                               ] === 0
                             ? "secondary"
                             : "primary"
+                        }
+                        onMouseDown={(e, color, seatId) =>
+                          this.isClicked(
+                            e,
+                            seatsRowId === 0
+                              ? "disabled"
+                              : this.state.seats[
+                                  seatsRowId *
+                                    this.props.airline.PlaneSeatsNumber[1] +
+                                    1
+                                ] === 0
+                              ? "secondary"
+                              : "primary",
+                            seatsRowId *
+                              this.props.airline.PlaneSeatsNumber[1] +
+                              1
+                          )
                         }
                       />
                       <EventSeatIcon
@@ -88,13 +134,30 @@ class ReservationModal extends Component {
                         color={
                           seatsRowId === 0
                             ? "disabled"
-                            : this.props.flight.Seats[
+                            : this.state.seats[
                                 seatsRowId *
                                   this.props.airline.PlaneSeatsNumber[1] +
                                   2
                               ] === 0
                             ? "secondary"
                             : "primary"
+                        }
+                        onMouseDown={(e, color, seatId) =>
+                          this.isClicked(
+                            e,
+                            seatsRowId === 0
+                              ? "disabled"
+                              : this.state.seats[
+                                  seatsRowId *
+                                    this.props.airline.PlaneSeatsNumber[1] +
+                                    2
+                                ] === 0
+                              ? "secondary"
+                              : "primary",
+                            seatsRowId *
+                              this.props.airline.PlaneSeatsNumber[1] +
+                              2
+                          )
                         }
                       />
                     </Row>
@@ -107,13 +170,30 @@ class ReservationModal extends Component {
                         color={
                           seatsRowId === 0
                             ? "disabled"
-                            : this.props.flight.Seats[
+                            : this.state.seats[
                                 seatsRowId *
                                   this.props.airline.PlaneSeatsNumber[1] +
                                   3
                               ] === 0
                             ? "secondary"
                             : "primary"
+                        }
+                        onMouseDown={(e, color, seatId) =>
+                          this.isClicked(
+                            e,
+                            seatsRowId === 0
+                              ? "disabled"
+                              : this.state.seats[
+                                  seatsRowId *
+                                    this.props.airline.PlaneSeatsNumber[1] +
+                                    3
+                                ] === 0
+                              ? "secondary"
+                              : "primary",
+                            seatsRowId *
+                              this.props.airline.PlaneSeatsNumber[1] +
+                              3
+                          )
                         }
                       />
                       <EventSeatIcon
@@ -124,13 +204,30 @@ class ReservationModal extends Component {
                         color={
                           seatsRowId === 0
                             ? "disabled"
-                            : this.props.flight.Seats[
+                            : this.state.seats[
                                 seatsRowId *
                                   this.props.airline.PlaneSeatsNumber[1] +
                                   4
                               ] === 0
                             ? "secondary"
                             : "primary"
+                        }
+                        onMouseDown={(e, color, seatId) =>
+                          this.isClicked(
+                            e,
+                            seatsRowId === 0
+                              ? "disabled"
+                              : this.state.seats[
+                                  seatsRowId *
+                                    this.props.airline.PlaneSeatsNumber[1] +
+                                    4
+                                ] === 0
+                              ? "secondary"
+                              : "primary",
+                            seatsRowId *
+                              this.props.airline.PlaneSeatsNumber[1] +
+                              4
+                          )
                         }
                       />
                       <EventSeatIcon
@@ -141,13 +238,30 @@ class ReservationModal extends Component {
                         color={
                           seatsRowId === 0
                             ? "disabled"
-                            : this.props.flight.Seats[
+                            : this.state.seats[
                                 seatsRowId *
                                   this.props.airline.PlaneSeatsNumber[1] +
                                   5
                               ] === 0
                             ? "secondary"
                             : "primary"
+                        }
+                        onMouseDown={(e, color, seatId) =>
+                          this.isClicked(
+                            e,
+                            seatsRowId === 0
+                              ? "disabled"
+                              : this.state.seats[
+                                  seatsRowId *
+                                    this.props.airline.PlaneSeatsNumber[1] +
+                                    5
+                                ] === 0
+                              ? "secondary"
+                              : "primary",
+                            seatsRowId *
+                              this.props.airline.PlaneSeatsNumber[1] +
+                              5
+                          )
                         }
                       />
                     </Row>
@@ -195,7 +309,6 @@ class ReservationModal extends Component {
                   className="flightReserveButton"
                   color="primary"
                   variant="contained"
-                  
                 >
                   Reserve
                 </Button>

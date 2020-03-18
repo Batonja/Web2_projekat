@@ -6,13 +6,13 @@ import ReservationModal from "./ReservationModal";
 import { connect } from "react-redux";
 import { Collapse } from "react-collapse";
 import EventSeatIcon from "@material-ui/icons/EventSeat";
-import Modal from "react-modal";
+import Modal from "react-bootstrap/Modal";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import FlightBasicInformation from "./Preview/FlightBasicInformation";
 
-const modalStyle = { content: { inset: "110px", "margin-left": "12%" } };
+const modalStyle = { "z-index": "1300" };
 
 class FlightsDisplay extends Component {
   constructor(props) {
@@ -51,12 +51,13 @@ class FlightsDisplay extends Component {
 
   openModal(event, flightId) {
     event.preventDefault();
+
     this.setState({ openedModal: flightId });
   }
 
-  closeModal() {
+  closeModal = event => {
     this.setState({ openedModal: -1 });
-  }
+  };
   render() {
     return (
       <div className="flightsTable">
@@ -217,21 +218,29 @@ class FlightsDisplay extends Component {
                             </Button>
                             <div className="flightReservationModal">
                               <Modal
-                                onRequestClose={this.closeModal}
+                                size="lg"
+                                onHide={e => this.closeModal(e)}
                                 style={modalStyle}
                                 ariaHideApp={false}
-                                isOpen={
+                                show={
                                   flight.Id === this.state.openedModal
                                     ? true
                                     : false
                                 }
-                                onRequestClose={this.closeModal}
+                                onRequestClose={e => this.closeModal(e)}
                               >
-                                <ReservationModal
-                                  airline={airline}
-                                  flight={flight}
-                                  closeModal={this.closeModal}
-                                />
+                                <Modal.Header>
+                                  <h2 style={{ "margin-left": "35%" }}>
+                                    Reserve Your Seats
+                                  </h2>
+                                </Modal.Header>
+                                <Modal.Footer>
+                                  <ReservationModal
+                                    airline={airline}
+                                    flight={flight}
+                                    closeModal={this.closeModal}
+                                  />
+                                </Modal.Footer>
                               </Modal>
                             </div>
                           </Col>
