@@ -107,6 +107,10 @@
   font-size: smaller;
 }
 
+.popover {
+  z-index: 1201 !important;
+}
+
 .searchForm {
   margin-left: 10px;
   margin-top: 0px;

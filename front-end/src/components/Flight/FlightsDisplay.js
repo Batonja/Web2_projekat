@@ -12,7 +12,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import FlightBasicInformation from "./Preview/FlightBasicInformation";
 
-const modalStyle = { "z-index": "1300" };
+const modalStyle = { "z-index": "1200" };
 
 class FlightsDisplay extends Component {
   constructor(props) {
@@ -64,7 +64,7 @@ class FlightsDisplay extends Component {
         <h2 className="flightsTableTitle">Flights</h2>
         {Array.from(this.props.airlines).map((airline, i) => {
           return (
-            <div>
+            <>
               {Array.from(airline.Flights).map((flight, flightIndex) => {
                 return (
                   <Container fluid className="flightWrap">
@@ -85,172 +85,158 @@ class FlightsDisplay extends Component {
                       </Col>
                     </Row>
                     <Collapse isOpened={this.isOpened(flight.Id)}>
-                      <div>
-                        <Row className="flightPresentRow">
-                          <Col md="auto" className="flightItem">
-                            {Array.from(
-                              new Array(airline.PlaneSeatsNumber[0])
-                            ).map((seatsRow, seatsRowId) => {
-                              return (
-                                <Container className="flightSeats">
-                                  <Row className="leftSideSeats">
-                                    <EventSeatIcon
-                                      value={
-                                        seatsRowId * airline.PlaneSeatsNumber[1]
-                                      }
-                                      color={
-                                        seatsRowId === 0
-                                          ? "disabled"
-                                          : flight.Seats[
-                                              seatsRowId *
-                                                airline.PlaneSeatsNumber[1]
-                                            ] === 0
-                                          ? "secondary"
-                                          : "primary"
-                                      }
-                                    />
-                                    <EventSeatIcon
-                                      value={
-                                        seatsRowId *
-                                          airline.PlaneSeatsNumber[1] +
-                                        1
-                                      }
-                                      color={
-                                        seatsRowId === 0
-                                          ? "disabled"
-                                          : flight.Seats[
-                                              seatsRowId *
-                                                airline.PlaneSeatsNumber[1] +
-                                                1
-                                            ] === 0
-                                          ? "secondary"
-                                          : "primary"
-                                      }
-                                    />
-                                    <EventSeatIcon
-                                      value={
-                                        seatsRowId *
-                                          airline.PlaneSeatsNumber[1] +
-                                        2
-                                      }
-                                      color={
-                                        seatsRowId === 0
-                                          ? "disabled"
-                                          : flight.Seats[
-                                              seatsRowId *
-                                                airline.PlaneSeatsNumber[1] +
-                                                2
-                                            ] === 0
-                                          ? "secondary"
-                                          : "primary"
-                                      }
-                                    />
-                                  </Row>
-                                  <Row className="rightSideSeats">
-                                    <EventSeatIcon
-                                      value={
-                                        seatsRowId *
-                                          airline.PlaneSeatsNumber[1] +
-                                        3
-                                      }
-                                      color={
-                                        seatsRowId === 0
-                                          ? "disabled"
-                                          : flight.Seats[
-                                              seatsRowId *
-                                                airline.PlaneSeatsNumber[1] +
-                                                3
-                                            ] === 0
-                                          ? "secondary"
-                                          : "primary"
-                                      }
-                                    />
-                                    <EventSeatIcon
-                                      value={
-                                        seatsRowId *
-                                          airline.PlaneSeatsNumber[1] +
-                                        4
-                                      }
-                                      color={
-                                        seatsRowId === 0
-                                          ? "disabled"
-                                          : flight.Seats[
-                                              seatsRowId *
-                                                airline.PlaneSeatsNumber[1] +
-                                                4
-                                            ] === 0
-                                          ? "secondary"
-                                          : "primary"
-                                      }
-                                    />
-                                    <EventSeatIcon
-                                      value={
-                                        seatsRowId *
-                                          airline.PlaneSeatsNumber[1] +
-                                        5
-                                      }
-                                      color={
-                                        seatsRowId === 0
-                                          ? "disabled"
-                                          : flight.Seats[
-                                              seatsRowId *
-                                                airline.PlaneSeatsNumber[1] +
-                                                5
-                                            ] === 0
-                                          ? "secondary"
-                                          : "primary"
-                                      }
-                                    />
-                                  </Row>
-                                </Container>
-                              );
-                            })}
-                          </Col>
-
-                          <Col className="flightItem">
-                            <Button
-                              className="flightReserveButton"
-                              color="primary"
-                              variant="contained"
-                              onClick={e => this.openModal(e, flight.Id)}
-                            >
-                              More Info
-                            </Button>
-                            <div className="flightReservationModal">
-                              <Modal
-                                size="lg"
-                                onHide={e => this.closeModal(e)}
-                                style={modalStyle}
-                                ariaHideApp={false}
-                                show={
-                                  flight.Id === this.state.openedModal
-                                    ? true
-                                    : false
-                                }
-                                onRequestClose={e => this.closeModal(e)}
-                              >
-                                <Modal.Header>
-                                  <h2 style={{ "margin-left": "35%" }}>
-                                    Reserve Your Seats
-                                  </h2>
-                                </Modal.Header>
-                                <Modal.Footer>
-                                  <ReservationModal
-                                    airline={airline}
-                                    flight={flight}
-                                    closeModal={this.closeModal}
+                      <Row className="flightPresentRow">
+                        <Col md="auto" className="flightItem">
+                          {Array.from(
+                            new Array(airline.PlaneSeatsNumber[0])
+                          ).map((seatsRow, seatsRowId) => {
+                            return (
+                              <Container className="flightSeats">
+                                <Row className="leftSideSeats">
+                                  <EventSeatIcon
+                                    value={
+                                      seatsRowId * airline.PlaneSeatsNumber[1]
+                                    }
+                                    color={
+                                      seatsRowId === 0
+                                        ? "disabled"
+                                        : flight.Seats[
+                                            seatsRowId *
+                                              airline.PlaneSeatsNumber[1]
+                                          ] === 0
+                                        ? "secondary"
+                                        : "primary"
+                                    }
                                   />
-                                </Modal.Footer>
-                              </Modal>
-                            </div>
-                          </Col>
-                        </Row>
-                      </div>
+                                  <EventSeatIcon
+                                    value={
+                                      seatsRowId * airline.PlaneSeatsNumber[1] +
+                                      1
+                                    }
+                                    color={
+                                      seatsRowId === 0
+                                        ? "disabled"
+                                        : flight.Seats[
+                                            seatsRowId *
+                                              airline.PlaneSeatsNumber[1] +
+                                              1
+                                          ] === 0
+                                        ? "secondary"
+                                        : "primary"
+                                    }
+                                  />
+                                  <EventSeatIcon
+                                    value={
+                                      seatsRowId * airline.PlaneSeatsNumber[1] +
+                                      2
+                                    }
+                                    color={
+                                      seatsRowId === 0
+                                        ? "disabled"
+                                        : flight.Seats[
+                                            seatsRowId *
+                                              airline.PlaneSeatsNumber[1] +
+                                              2
+                                          ] === 0
+                                        ? "secondary"
+                                        : "primary"
+                                    }
+                                  />
+                                </Row>
+                                <Row className="rightSideSeats">
+                                  <EventSeatIcon
+                                    value={
+                                      seatsRowId * airline.PlaneSeatsNumber[1] +
+                                      3
+                                    }
+                                    color={
+                                      seatsRowId === 0
+                                        ? "disabled"
+                                        : flight.Seats[
+                                            seatsRowId *
+                                              airline.PlaneSeatsNumber[1] +
+                                              3
+                                          ] === 0
+                                        ? "secondary"
+                                        : "primary"
+                                    }
+                                  />
+                                  <EventSeatIcon
+                                    value={
+                                      seatsRowId * airline.PlaneSeatsNumber[1] +
+                                      4
+                                    }
+                                    color={
+                                      seatsRowId === 0
+                                        ? "disabled"
+                                        : flight.Seats[
+                                            seatsRowId *
+                                              airline.PlaneSeatsNumber[1] +
+                                              4
+                                          ] === 0
+                                        ? "secondary"
+                                        : "primary"
+                                    }
+                                  />
+                                  <EventSeatIcon
+                                    value={
+                                      seatsRowId * airline.PlaneSeatsNumber[1] +
+                                      5
+                                    }
+                                    color={
+                                      seatsRowId === 0
+                                        ? "disabled"
+                                        : flight.Seats[
+                                            seatsRowId *
+                                              airline.PlaneSeatsNumber[1] +
+                                              5
+                                          ] === 0
+                                        ? "secondary"
+                                        : "primary"
+                                    }
+                                  />
+                                </Row>
+                              </Container>
+                            );
+                          })}
+                        </Col>
+
+                        <Col className="flightItem">
+                          <Button
+                            className="flightReserveButton"
+                            color="primary"
+                            variant="contained"
+                            onClick={e => this.openModal(e, flight.Id)}
+                          >
+                            More Info
+                          </Button>
+                          <div className="flightReservationModal">
+                            <Modal
+                              size="lg"
+                              onHide={e => this.closeModal(e)}
+                              style={modalStyle}
+                              ariaHideApp={false}
+                              show={
+                                flight.Id === this.state.openedModal
+                                  ? true
+                                  : false
+                              }
+                              onRequestClose={e => this.closeModal(e)}
+                            >
+                              <ReservationModal
+                                airline={airline}
+                                flight={flight}
+                                closeModal={this.closeModal}
+                              />
+                            </Modal>
+                          </div>
+                        </Col>
+                      </Row>
                     </Collapse>
                   </Container>
                 );
               })}
-            </div>
+            </>
           );
         })}
       </div>

@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import TextField from "@material-ui/core/TextField";
 
@@ -10,7 +9,7 @@ class FlightBasicInformation extends Component {
 
   render() {
     return (
-      <React.Fragment>
+      <>
         <Col md="auto" className="flightItem">
           <TextField
             label="Company"
@@ -52,7 +51,7 @@ class FlightBasicInformation extends Component {
             }
           ></TextField>
         </Col>
-      </React.Fragment>
+      </>
     );
   }
 }
