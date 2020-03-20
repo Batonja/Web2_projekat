@@ -7,6 +7,9 @@ import Alert from "react-bootstrap/Alert";
 import Overlay from "react-bootstrap/Overlay";
 import Popover from "react-bootstrap/Popover";
 import Button from "@material-ui/core/Button";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import InputLabel from "@material-ui/core/InputLabel";
 
 class SecondStep extends Component {
   constructor(props) {
@@ -18,7 +21,9 @@ class SecondStep extends Component {
       passportId: 0,
       passportIdError: false,
       nameError: false,
-      lastNameError: false
+      lastNameError: false,
+      luggage: 0,
+      ticketType: 0
     };
 
     this.passportIdField = React.createRef();
@@ -43,6 +48,13 @@ class SecondStep extends Component {
 
     this.setState({ passportId: event.target.value, passportIdError: false });
   }
+  onHandleLuggageChange = event => {
+    this.setState({ luggage: event.target.value });
+  };
+  onHandleTicketTypeChange = event => {
+    this.setState({ ticketType: event.target.value });
+  };
+
   onHandleSubmit = event => {
     if (event.button === 0) {
       if (this.state.name === "") {
@@ -128,6 +140,49 @@ class SecondStep extends Component {
                   </Popover.Content>
                 </Popover>
               </Overlay>
+            </Col>
+          </Row>
+          <br />
+          <Row className="flightPresentRow">
+            <Col md="auto" className="flightItem">
+              <InputLabel id="luggageLabel">Luggage Type / Price</InputLabel>
+              <Select
+                labelId="luggageLabel"
+                onChange={this.onHandleLuggageChange}
+                value={this.state.luggage}
+              >
+                <MenuItem value={0}>
+                  {this.props.airline.Luggage[0].Type.toString() +
+                    " / " +
+                    this.props.airline.Luggage[0].Price.toString()}
+                </MenuItem>
+                <MenuItem value={1}>
+                  {this.props.airline.Luggage[1].Type.toString() +
+                    " / " +
+                    this.props.airline.Luggage[1].Price.toString()}
+                </MenuItem>
+              </Select>
+            </Col>
+            <Col md="auto" className="flightItem">
+              <InputLabel id="chooseTicketLabel">Ticket / Price</InputLabel>
+              <Select
+                labelId="chooseTicketLabel"
+                onChange={this.onHandleTicketTypeChange}
+                value={this.state.ticketType}
+              >
+                <MenuItem value={0}>
+                  {"Economy" +
+                    " / " +
+                    (this.props.flight.Price +
+                      this.props.airline.Tickets.Economy)}{" "}
+                </MenuItem>
+                <MenuItem value={1}>
+                  {"Business" +
+                    " / " +
+                    (this.props.flight.Price * 1.05 +
+                      this.props.airline.Tickets.Business)}
+                </MenuItem>
+              </Select>
             </Col>
           </Row>
         </Modal.Body>

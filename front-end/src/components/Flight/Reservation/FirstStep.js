@@ -5,9 +5,7 @@ import Container from "react-bootstrap/Container";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Alert from "react-bootstrap/Alert";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import InputLabel from "@material-ui/core/InputLabel";
+
 import EventSeatIcon from "@material-ui/icons/EventSeat";
 import FlightBasicInformation from "../Preview/FlightBasicInformation";
 import Modal from "react-bootstrap/Modal";
@@ -17,7 +15,6 @@ class FirstStep extends Component {
     super(props);
 
     this.state = {
-      luggage: 0,
       seats: [],
       numReservedSeats: 0,
       invalidForm: false
@@ -53,9 +50,7 @@ class FirstStep extends Component {
       this.props.goToNextStep();
     }
   };
-  onHandleLuggageChange = event => {
-    this.setState({ luggage: event.target.value });
-  };
+
   render() {
     return (
       <>
@@ -68,8 +63,15 @@ class FirstStep extends Component {
               airline={this.props.airline}
               flight={this.props.flight}
             />
+            <Col md="auto" className="flightItem">
+              <TextField
+                label="Changeovers"
+                value={this.props.flight.ChangeOvers.toString()}
+              />
+            </Col>
           </Row>
           <br />
+
           <Row className="flightPresentRow">
             <Col md="auto" className="flightItem">
               {Array.from(
@@ -287,39 +289,6 @@ class FirstStep extends Component {
             </Col>
 
             <Col md="auto" className="flightItem">
-              <Row>
-                <Col>
-                  <InputLabel id="luggageLabel">
-                    Luggage Type / Price
-                  </InputLabel>
-                  <Select
-                    labelId="luggageLabel"
-                    onChange={this.onHandleLuggageChange}
-                    value={this.state.luggage}
-                  >
-                    <MenuItem value={0}>
-                      {this.props.airline.Luggage[0].Type.toString() +
-                        " / " +
-                        this.props.airline.Luggage[0].Price.toString()}
-                    </MenuItem>
-                    <MenuItem value={1}>
-                      {this.props.airline.Luggage[1].Type.toString() +
-                        " / " +
-                        this.props.airline.Luggage[1].Price.toString()}
-                    </MenuItem>
-                  </Select>
-                </Col>
-              </Row>
-              <br />
-              <Row>
-                <Col>
-                  <TextField
-                    label="Changeovers"
-                    value={this.props.flight.ChangeOvers.toString()}
-                  />
-                </Col>
-              </Row>
-              <br />
               <Row>
                 <Col>
                   <Button

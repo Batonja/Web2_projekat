@@ -11,6 +11,9 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import FlightBasicInformation from "./Preview/FlightBasicInformation";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import InputLabel from "@material-ui/core/InputLabel";
 
 const modalStyle = { "z-index": "1200" };
 
@@ -20,7 +23,8 @@ class FlightsDisplay extends Component {
 
     this.state = {
       openedCollapsed: [],
-      openedModal: -1
+      openedModal: -1,
+      ticketType: 0
     };
     this.openClose = this.openClose.bind(this);
     this.closeModal = this.closeModal.bind(this);
@@ -32,6 +36,10 @@ class FlightsDisplay extends Component {
 
     return false;
   }
+
+  onHandleTicketTypeChange = event => {
+    this.setState({ ticketType: event.target.value });
+  };
 
   openClose(event, index) {
     event.preventDefault();
@@ -201,7 +209,45 @@ class FlightsDisplay extends Component {
                           })}
                         </Col>
 
-                        <Col className="flightItem">
+                        <Col md="auto" className="flightItem">
+                          <InputLabel
+                            style={{
+                              "margin-left": "10px"
+                            }}
+                            id="chooseTicketLabel"
+                          >
+                            Ticket / Price
+                          </InputLabel>
+                          <Select
+                            style={{
+                              "margin-left": "10px",
+                              "margin-top": "5px"
+                            }}
+                            labelId="chooseTicketLabel"
+                            onChange={this.onHandleTicketTypeChange}
+                            value={this.state.ticketType}
+                          >
+                            <MenuItem value={0}>
+                              {"Economy" +
+                                " / " +
+                                (flight.Price - airline.Tickets.Economy)}{" "}
+                            </MenuItem>
+                            <MenuItem value={1}>
+                              {"Business" +
+                                " / " +
+                                (flight.Price - airline.Tickets.Business)}
+                            </MenuItem>
+                          </Select>
+                          <br />
+                          <Button
+                            className="flightReserveButton"
+                            color="primary"
+                            variant="contained"
+                          >
+                            Fast Reservation
+                          </Button>
+                          <br />
+                          <br />
                           <Button
                             className="flightReserveButton"
                             color="primary"
@@ -210,6 +256,7 @@ class FlightsDisplay extends Component {
                           >
                             More Info
                           </Button>
+
                           <div className="flightReservationModal">
                             <Modal
                               size="lg"

@@ -37,7 +37,7 @@ class ReservationModal extends Component {
             }
           />
         ) : this.state.progress === 1 ? (
-          <SecondStep />
+          <SecondStep airline={this.props.airline} flight={this.props.flight} />
         ) : (
           ""
         )}
