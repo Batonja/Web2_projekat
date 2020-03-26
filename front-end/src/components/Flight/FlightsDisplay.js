@@ -73,7 +73,7 @@ class FlightsDisplay extends Component {
         {Array.from(this.props.airlines).map((airline, i) => {
           return (
             <>
-              {Array.from(airline.Flights).map((flight, flightIndex) => {
+              {Array.from(airline.Flights).map(flight => {
                 return (
                   <Container fluid className="flightWrap">
                     <Row className="flightPresentRow">
@@ -291,6 +291,7 @@ class FlightsDisplay extends Component {
   }
 }
 const mapStateToProps = state => ({
-  airlines: state.flightRed.airlines
+  airlines: state.flightReducer.airlines
 });
+
 export default connect(mapStateToProps)(FlightsDisplay);

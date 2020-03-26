@@ -23,12 +23,31 @@ class SecondStep extends Component {
       nameError: false,
       lastNameError: false,
       luggage: 0,
-      ticketType: 0
+      ticketType: 0,
+      currentReservation: 0
     };
 
     this.passportIdField = React.createRef();
     this.nameField = React.createRef();
     this.lastNameField = React.createRef();
+  }
+
+  componentDidUpdate() {
+    if (
+      this.state.currentReservation != this.props.numOfCompletedReservations
+    ) {
+      this.setState({
+        currentReservation: this.props.numOfCompletedReservations
+      });
+    }
+  }
+
+  resetFields() {
+    this.passportIdField.current.value = "";
+    this.nameField.current.value = "";
+    this.lastNameField.current.value = "";
+    this.state.luggage = 0;
+    this.state.ticketType = 0;
   }
 
   updateName(event) {
@@ -56,19 +75,45 @@ class SecondStep extends Component {
   };
 
   onHandleSubmit = event => {
+    const regexLettersSpaceNumbers = /^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/;
+    const regexLettersOnly = /[^A-Za-z]+/;
+    const regexNotANumber = /[^0-9]/;
     if (event.button === 0) {
-      if (this.state.name === "") {
+      if (
+        this.state.name === "" ||
+        !regexLettersSpaceNumbers.test(this.state.name)
+      ) {
         this.setState({ nameError: true });
         return;
       }
-      if (this.state.lastName === "") {
+      if (
+        this.state.lastName === "" ||
+        regexLettersOnly.test(this.state.lastName)
+      ) {
         this.setState({ lastNameError: true });
         return;
       }
-      if (this.state.passportId === 0) {
+      if (
+        this.state.passportId === 0 ||
+        regexNotANumber.test(this.state.passportId)
+      ) {
         this.setState({ passportIdError: true });
         return;
       }
+
+      const passenger = {
+        Name: this.state.name,
+        LastName: this.state.lastName,
+        PassportId: this.state.passportId,
+        Luggage: this.state.luggage,
+        TicketType: this.state.ticketType
+      };
+
+      this.resetFields();
+      this.props.reserveSeat(
+        this.props.numOfReservations,
+        this.state.currentReservation
+      );
     }
   };
   render() {
@@ -81,7 +126,7 @@ class SecondStep extends Component {
           <Row className="flightPresentRow">
             <Col md="auto" className="flightItem">
               <TextField
-                ref={this.nameField}
+                inputRef={this.nameField}
                 label="Name"
                 onChange={event => this.updateName(event)}
               />
@@ -94,7 +139,8 @@ class SecondStep extends Component {
               <Popover>
                 <Popover.Content>
                   <Alert variant="warning">
-                    Invalid name please provide valid one
+                    Only letters, spaces and numbers are allowed, please provide
+                    valid name
                   </Alert>
                 </Popover.Content>
               </Popover>
@@ -102,7 +148,7 @@ class SecondStep extends Component {
 
             <Col md="auto" className="flightItem">
               <TextField
-                ref={this.lastNameField}
+                inputRef={this.lastNameField}
                 label="Lastname"
                 onChange={event => this.updateLastName(event)}
               />
@@ -122,7 +168,7 @@ class SecondStep extends Component {
             </Overlay>
             <Col md="auto" className="flightItem">
               <TextField
-                ref={this.passportIdField}
+                inputRef={this.passportIdField}
                 label="Passport ID"
                 onChange={event => this.updatePassportID(event)}
               />
@@ -187,17 +233,24 @@ class SecondStep extends Component {
           </Row>
         </Modal.Body>
         <Modal.Footer>
+          <Button variant="contained" color="primary" className="mb-2 mr-auto">
+            Invite A Friend
+          </Button>
+
           <Button
             onMouseDown={event => this.onHandleSubmit(event)}
             variant="contained"
             color="primary"
+            className="mb-2"
           >
-            Submit
+            {this.state.currentReservation + 1 === this.props.numOfReservations
+              ? "Submit"
+              : "Next Passenger"}
           </Button>
-          <br />
-          <Button variant="contained" color="primary">
-            Invite Friend
-          </Button>
+
+          <div>
+            {this.state.currentReservation + 1}/{this.props.numOfReservations}
+          </div>
         </Modal.Footer>
       </>
     );

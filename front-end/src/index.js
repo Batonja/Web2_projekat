@@ -3,19 +3,15 @@ import ReactDOM from "react-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-import { combineReducers, compose, createStore, applyMiddleware } from "redux";
-import flightReducer from "./reducers/flightReducer";
+import { compose, createStore, applyMiddleware } from "redux";
+import rootReducer from "./reducers/rootReducer";
 import thunk from "redux-thunk";
 import { Provider } from "react-redux";
-
-const allReducers = combineReducers({
-  flightRed: flightReducer
-});
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE || compose;
 
 const store = createStore(
-  allReducers,
+  rootReducer,
   composeEnhancers(applyMiddleware(thunk))
 );
 

@@ -7,11 +7,10 @@ import Tab from "@material-ui/core/Tab";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import IconButton from "@material-ui/core/IconButton";
 import AppBar from "@material-ui/core/AppBar";
-import Typography from "@material-ui/core/Typography";
-import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
+import { connect } from "react-redux";
 
 const useStyles = makeStyles({
   root: {
@@ -79,7 +78,9 @@ class Navigation extends Component {
                 <IconButton ariaLabel="account of current user">
                   <AccountCircle />
                 </IconButton>
-                Account
+                {this.props.loggedUser.Name
+                  ? this.props.loggedUser.Name
+                  : "Guest"}
               </Button>
 
               <Menu
@@ -97,23 +98,26 @@ class Navigation extends Component {
                 open={Boolean(this.state.anchorEl)}
                 onClose={this.handleClose}
               >
-                <MenuItem onClick={this.handleClose}></MenuItem>
-                <MenuItem onClick={this.handleClose}>
-                  <Tab label="Sign In" to={"/signin"} component={Link} />
-                </MenuItem>
-                <MenuItem onClick={this.handleClose}>
-                  <Tab label="Sign Up" to={"/signup"} component={Link} />
-                </MenuItem>
-                <MenuItem onClick={this.handleClose}>
-                  <IconButton
-                    ariaLabel="account of current user"
-                    to={"/account"}
-                    component={Link}
-                  >
-                    {" "}
-                    Menage account
-                  </IconButton>
-                </MenuItem>
+                {this.props.loggedUser.isLoggedIn ? (
+                  <MenuItem onClick={this.handleClose}>
+                    <IconButton
+                      ariaLabel="account of current user"
+                      to={"/account"}
+                      component={Link}
+                    >
+                      Manage account
+                    </IconButton>
+                  </MenuItem>
+                ) : (
+                  <div>
+                    <MenuItem onClick={this.handleClose}>
+                      <Tab label="Sign In" to={"/signin"} component={Link} />
+                    </MenuItem>
+                    <MenuItem onClick={this.handleClose}>
+                      <Tab label="Sign Up" to={"/signup"} component={Link} />
+                    </MenuItem>
+                  </div>
+                )}
               </Menu>
             </Tabs>
           </Paper>
@@ -122,5 +126,7 @@ class Navigation extends Component {
     );
   }
 }
-
-export default Navigation;
+const mapStateToProps = state => ({
+  loggedUser: state.userReducer.LoggedInUser
+});
+export default connect(mapStateToProps)(Navigation);

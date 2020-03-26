@@ -10,7 +10,9 @@ class ReservationModal extends Component {
     this.state = {
       progress: 0,
       seats: [],
-      numOfNewSeats: 0
+      numOfReservations: 0,
+      numOfCompletedReservations: 0,
+      passengers: []
     };
   }
 
@@ -20,8 +22,21 @@ class ReservationModal extends Component {
     this.setState({ progress: currentProgress });
   };
 
-  updateSeats = (event, seats, numOfNewSeats) => {
-    this.setState({ seats: seats, numOfNewSeats: numOfNewSeats });
+  updateSeats = (seats, numOfReservations, numOfCompletedReservations) => {
+    this.setState({
+      seats: seats,
+      numOfReservations: numOfReservations,
+      numOfCompletedReservations: numOfCompletedReservations
+    });
+  };
+
+  reserveSeat = (numOfReservations, numOfCompletedReservations, passenger) => {
+    var completedReservations = this.state.numOfCompletedReservations + 1;
+    this.setState({
+      numOfReservations: numOfReservations,
+      numOfCompletedReservations: completedReservations,
+      passengers: [...this.state.passengers, passenger]
+    });
   };
 
   render() {
@@ -32,12 +47,26 @@ class ReservationModal extends Component {
             airline={this.props.airline}
             flight={this.props.flight}
             goToNextStep={this.updateProgress}
-            sendSeats={(event, seats, numOfNewSeats) =>
-              this.updateSeats(event, seats, numOfNewSeats)
+            sendSeats={(seats, numOfReservations, numOfCompletedReservations) =>
+              this.updateSeats(
+                seats,
+                numOfReservations,
+                numOfCompletedReservations
+              )
             }
           />
-        ) : this.state.progress === 1 ? (
-          <SecondStep airline={this.props.airline} flight={this.props.flight} />
+        ) : this.state.progress === 1 &&
+          this.state.numOfReservations !==
+            this.state.numOfCompletedReservations ? (
+          <SecondStep
+            airline={this.props.airline}
+            flight={this.props.flight}
+            numOfReservations={this.state.numOfReservations}
+            numOfCompletedReservations={this.state.numOfCompletedReservations}
+            reserveSeat={(numOfReservations, numOfCompletedReservations) =>
+              this.reserveSeat(numOfReservations, numOfCompletedReservations)
+            }
+          />
         ) : (
           ""
         )}

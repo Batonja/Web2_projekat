@@ -47,6 +47,15 @@ class FirstStep extends Component {
 
         return;
       }
+
+      var completedReservations = 0;
+
+      this.props.sendSeats(
+        this.state.seats,
+        this.state.numReservedSeats,
+        completedReservations
+      );
+
       this.props.goToNextStep();
     }
   };

@@ -126,7 +126,7 @@ class Search extends Component {
 }
 
 const mapStateToProps = state => ({
-  airlines: state.flightRed.airlines
+  airlines: state.flightReducer.airlines
 });
 
 export default connect(mapStateToProps)(Search);
