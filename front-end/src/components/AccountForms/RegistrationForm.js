@@ -5,12 +5,10 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
-import '../../App.css'
+import "../../App.css";
 
-import { registerUser } from '../../actions/accountActions'
-import { connect } from 'react-redux'
-
-
+import { registerUser } from "../../actions/accountActions";
+import { connect } from "react-redux";
 
 class RegistrationForm extends Component {
 
@@ -46,8 +44,8 @@ class RegistrationForm extends Component {
     this.setState({
       ...this.state,
       [e.target.name]: e.target.value
-    })
-  }
+    });
+  };
 
   componentDidMount() {
     const regexLettersOnly = /[^A-Za-z]+/;
@@ -222,19 +220,19 @@ class RegistrationForm extends Component {
   }
 };
 
-
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const { AllUsers } = state.userReducer;
   return {
     usersEmails: AllUsers.map(user => user.Email)
-  }
-}
+  };
+};
 
-const mpaDispatchToProps = (dispatch) => {
+const mpaDispatchToProps = dispatch => {
   return {
-    registerUser: (user) => { dispatch(registerUser(user)) }
-  }
-}
-
+    registerUser: user => {
+      dispatch(registerUser(user));
+    }
+  };
+};
 
 export default connect(mapStateToProps, mpaDispatchToProps)(RegistrationForm);
