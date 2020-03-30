@@ -1,5 +1,4 @@
 import React, { useState, useEffect, Component } from "react";
-import { cloneDeep } from 'lodash.clonedeep'
 import Fab from "@material-ui/core/Fab";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
@@ -11,7 +10,6 @@ import { registerUser } from "../../actions/accountActions";
 import { connect } from "react-redux";
 
 class RegistrationForm extends Component {
-
   state = {
     FirstName: "",
     LastName: "",
@@ -20,25 +18,23 @@ class RegistrationForm extends Component {
     PasswordConfirm: "",
     Address: "",
     Phone: ""
-  }
-
+  };
 
   handleSubmit = e => {
     e.preventDefault();
 
     this.props.registerUser(this.state);
 
-
     this.setState({
-      FirstName: '',
-      LastName: '',
-      Email: '',
-      Password: '',
-      PasswordConfirm: '',
-      Address: '',
-      Phone: ''
-    })
-  }
+      FirstName: "",
+      LastName: "",
+      Email: "",
+      Password: "",
+      PasswordConfirm: "",
+      Address: "",
+      Phone: ""
+    });
+  };
 
   handleChange = e => {
     this.setState({
@@ -54,14 +50,12 @@ class RegistrationForm extends Component {
     //Email
     ValidatorForm.addValidationRule("isExistingUser", value => {
       let emailSearch = this.props.usersEmails.find(email => email === value);
-      return ((emailSearch !== undefined) && (emailSearch === value))
-        ? false
-        : true;
+      return emailSearch !== undefined && emailSearch === value ? false : true;
     });
 
     //Password
     ValidatorForm.addValidationRule("isPasswordMatch", value => {
-      return (value !== this.state.Password) ? false : true;
+      return value !== this.state.Password ? false : true;
     });
     // ValidatorForm.addValidationRule("isLongerEqualThenSix", value => {
     //   return (value.length < 6) ? false : true;
@@ -69,11 +63,11 @@ class RegistrationForm extends Component {
     //First nad Last name
     ValidatorForm.addValidationRule("areLettersOnly", value => {
       return regexLettersOnly.test(value) ? false : true;
-    })
+    });
     //Phone number
     ValidatorForm.addValidationRule("areNumbersOnly", value => {
       return regexNotANumber.test(value) ? false : true;
-    })
+    });
     // ValidatorForm.addValidationRule("isLongerEqualThenNine", value => {
     //   return (value.length < 9) ? false : true;
     // })
@@ -81,25 +75,21 @@ class RegistrationForm extends Component {
     // ValidatorForm.addValidationRule("isAddress", value => {
     //   return (!regexAddress.test(value)) ? false : true;
     // })
-
   }
 
   componentWillUnmount() {
-
-
-    ValidatorForm.removeValidationRule('isPasswordMatch');
+    ValidatorForm.removeValidationRule("isPasswordMatch");
     //ValidatorForm.removeValidationRule('isLongerEqualThenSix');
-    ValidatorForm.removeValidationRule('areLettersOnly');
-    ValidatorForm.removeValidationRule('areNumbersOnly');
-   // ValidatorForm.removeValidationRule('isLongerEqualThenNine');
+    ValidatorForm.removeValidationRule("areLettersOnly");
+    ValidatorForm.removeValidationRule("areNumbersOnly");
+    // ValidatorForm.removeValidationRule('isLongerEqualThenNine');
     //ValidatorForm.removeValidationRule('isAddress');
-
   }
 
   render() {
     return (
       <div className="account-form-div">
-        <div className='forms-in'>
+        <div className="forms-in">
           <div className="form-text-field">
             <h1>Sign up</h1>
           </div>
@@ -109,20 +99,22 @@ class RegistrationForm extends Component {
           >
             <div className="form-text-field">
               <TextValidator
-
                 margin="normal"
                 label="Email"
                 onChange={this.handleChange}
                 id="email-form"
                 name="Email"
                 value={this.state.Email}
-                validators={["required", "isEmail", "isExistingUser",]}
-                errorMessages={["this field is required", "email is not valid", "user with this email already exists"]}
+                validators={["required", "isEmail", "isExistingUser"]}
+                errorMessages={[
+                  "this field is required",
+                  "email is not valid",
+                  "user with this email already exists"
+                ]}
               />
             </div>
             <div className="form-text-field">
               <TextValidator
-
                 margin="normal"
                 label="Password"
                 type="password"
@@ -130,13 +122,12 @@ class RegistrationForm extends Component {
                 id="password-form"
                 name="Password"
                 value={this.state.Password}
-                validators={["required",]}
-                errorMessages={["this field is required",]}
+                validators={["required"]}
+                errorMessages={["this field is required"]}
               />
             </div>
             <div className="form-text-field">
               <TextValidator
-
                 margin="normal"
                 label="Repeat Password"
                 type="password"
@@ -150,7 +141,6 @@ class RegistrationForm extends Component {
             </div>
             <div className="form-text-field">
               <TextValidator
-
                 margin="normal"
                 label="First Name"
                 onChange={this.handleChange}
@@ -158,12 +148,14 @@ class RegistrationForm extends Component {
                 name="FirstName"
                 value={this.state.FirstName}
                 validators={["required", "areLettersOnly"]}
-                errorMessages={["this field is required", "first name must consist of letters only"]}
+                errorMessages={[
+                  "this field is required",
+                  "first name must consist of letters only"
+                ]}
               />
             </div>
             <div className="form-text-field">
               <TextValidator
-
                 margin="normal"
                 label="Last Name"
                 onChange={this.handleChange}
@@ -171,12 +163,14 @@ class RegistrationForm extends Component {
                 name="LastName"
                 value={this.state.LastName}
                 validators={["required", "areLettersOnly"]}
-                errorMessages={["this field is required", "last name must consist of letters only"]}
+                errorMessages={[
+                  "this field is required",
+                  "last name must consist of letters only"
+                ]}
               />
             </div>
             <div className="form-text-field">
               <TextValidator
-
                 margin="normal"
                 label="Phone Number"
                 onChange={this.handleChange}
@@ -184,32 +178,27 @@ class RegistrationForm extends Component {
                 name="Phone"
                 value={this.state.Phone}
                 validators={["required", "areNumbersOnly"]}
-                errorMessages={["this field is required", ]}
+                errorMessages={["this field is required"]}
               />
             </div>
             <div className="form-text-field">
               <TextValidator
-
                 margin="normal"
                 label="Address"
                 onChange={this.handleChange}
                 id="address-form"
                 name="Address"
                 value={this.state.Address}
-                validators={["required", ]}
-                errorMessages={["this field is required", ]}
+                validators={["required"]}
+                errorMessages={["this field is required"]}
               />
             </div>
             <br />
             <div className="form-text-field">
               <div>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                >
+                <Button type="submit" variant="contained" color="primary">
                   Register
-            </Button>
+                </Button>
               </div>
             </div>
             <br />
@@ -218,7 +207,7 @@ class RegistrationForm extends Component {
       </div>
     );
   }
-};
+}
 
 const mapStateToProps = state => {
   const { AllUsers } = state.userReducer;
