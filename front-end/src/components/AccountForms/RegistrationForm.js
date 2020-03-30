@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from "react";
+import {cloneDeep} from 'lodash.clonedeep'
 import Fab from "@material-ui/core/Fab";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
+import '../../App.css'
+
+import { registerUser } from '../../actions/accountActions'
+import { connect } from 'react-redux'
+
+
 
 const useStyles = makeStyles({
   centerDiv: {
@@ -21,113 +28,126 @@ const useStyles = makeStyles({
   }
 });
 
-const RegistrationForm = () => {
+const RegistrationForm = ({ usersEmails,registerUser }) => {
   const classes = new useStyles();
+  const [user, setUser] = useState({
+    FirstName: "",
+    LastName: "",
+    Email: "",
+    Password: "",
+    PasswordConfirm: "",
+    Address: "",
+    Phone: ""
+  })
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [passwordConfirm, setPasswordConfirm] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [address, setAddress] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
 
   const handleSubmit = e => {
-    e.preventDefault();
+   e.preventDefault();
+  
+    registerUser(user);
 
-    let user = {
-      email: email,
-      password: password,
-      firstName: firstName,
-      lastName: lastName,
-      address: address,
-      phoneNumber: phoneNumber
-    };
-    //SEND USER TO DATABASE
-
-    setEmail("");
-    setPassword("");
-    setPasswordConfirm("");
-    setFirstName("");
-    setLastName("");
-    setAddress("");
-    setPhoneNumber("");
-  };
-
+    setUser({
+      FirstName: '',
+      LastName: '',
+      Email: '',
+      Password: '',
+      PasswordConfirm: '',
+      Address: '',
+      Phone: ''
+    })
+  }
   const handleChange = e => {
-    //  reset errors and validation as well
-
-    const regexEmail = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/; // trazi npr ime@provider.com
-    const regexLettersOnly = /[^A-Za-z]+/;
-    const regexNotANumber = /[^0-9]/;
-    const regexLettersSpaceNumbers = /^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/;
-    if (e.target.id === "email-form") {
-      if (!regexEmail.test(e.target.value)) {
-        //Trigger error message for email
-      }
-
-      setEmail(e.target.value);
-    } else if (e.target.id === "password-form") {
-      setPassword(e.target.value);
-    } else if (e.target.id === "password-form-confirm") {
-      setPasswordConfirm(e.target.value);
-    } else if (e.target.id === "firstname-form") {
-      if (regexLettersOnly.test(e.target.value)) {
-        //Triger error message for firstName
-      }
-      setFirstName(e.target.value);
-    } else if (e.target.id === "lastname-form") {
-      if (regexLettersOnly.test(e.target.value)) {
-        //Triger error message for lastName
-      }
-      setLastName("e.target.value");
-    } else if (e.target.id === "phonenumber-form") {
-      if (regexNotANumber.test(e.target.id)) {
-        //Trigger error messag for phoneNumber
-      }
-      setPhoneNumber(e.target.value);
-    } else if (e.target.id === "address-form") {
-      if (!regexLettersSpaceNumbers.test(e.target.value)) {
-        //Trigger error message for address
-      }
-
-      setAddress(e.target.value);
-    } else {
-      //MISSED TEXTFIELD
-    }
-  };
+    setUser({
+      ...user,
+      [e.target.name]: e.target.value
+    })
+  }
 
   useEffect(() => {
-    ValidatorForm.addValidationRule("isPasswordMatch", value => {
-      if (value !== password) {
-        return false;
-      }
+    
+    const regexLettersOnly = /[^A-Za-z]+/;
+    const regexNotANumber = /[^0-9]/;
+    const regexAddress = /^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/;
+    //Email
+    ValidatorForm.addValidationRule("isExistingUser", value => {
+      let emailSearch = usersEmails.find(email => email === value);
+      return ((emailSearch !== undefined) &&(emailSearch === value))
+      ? false
+      : true;
       return true;
     });
-  }, []);
+
+    //Password
+    ValidatorForm.addValidationRule("isPasswordMatch", value => {
+      console.log(user.Password, value)
+      return (value !== user.Password) ? false : true;
+    });
+    ValidatorForm.addValidationRule("isLongerEqualThenSix", value =>{
+      return (value.length < 6)? false :true;
+    })
+    //First nad Last name
+    ValidatorForm.addValidationRule("areLettersOnly", value =>{
+      return regexLettersOnly.test(value)? false : true;
+    })
+    //Phone number
+    ValidatorForm.addValidationRule("areNumbersOnly", value =>{
+        return regexNotANumber.test(value)? false:true;
+    })
+    ValidatorForm.addValidationRule("isLongerEqualThenNine", value =>{
+      return (value.length < 9)? false :true;
+    })
+    //Address
+    ValidatorForm.addValidationRule("isAddress", value =>{
+      return (!regexAddress.test(value))? false :true;
+    })
+
+    return function cleanup() {
+      ValidatorForm.removeValidationRule('isPasswordMatch');
+      ValidatorForm.removeValidationRule('isLongerEqualThenSix');
+      ValidatorForm.removeValidationRule('areLettersOnly');
+      ValidatorForm.removeValidationRule('areNumbersOnly');
+      ValidatorForm.removeValidationRule('isLongerEqualThenNine');
+      ValidatorForm.removeValidationRule('isAddress');
+    }
+
+
+  }, [user]);
+
+  useEffect(()=>{
+
+    return function cleanup() {
+      ValidatorForm.removeValidationRule('isPasswordMatch');
+      ValidatorForm.removeValidationRule('isLongerEqualThenSix');
+      ValidatorForm.removeValidationRule('areLettersOnly');
+      ValidatorForm.removeValidationRule('areNumbersOnly');
+      ValidatorForm.removeValidationRule('isLongerEqualThenNine');
+      ValidatorForm.removeValidationRule('isAddress');
+    }
+  },[])
 
   return (
-    <div>
-      <h1>Sign up</h1>
-      <ValidatorForm
-        onSubmit={handleSubmit}
-        onError={errors => console.log(errors)}
-      >
-        <div className="row">
-          <div className={classes.centerDiv}>
+    <div className="account-form-div">
+      <div className='forms-in'>
+        <h1>Sign up</h1>
+        <ValidatorForm
+          onSubmit={handleSubmit}
+          onError={errors => console.log(errors)}
+        >
+
+          <div>
             <TextValidator
               className={classes.textField}
               margin="normal"
               label="Email"
               onChange={handleChange}
               id="email-form"
-              name="email"
-              value={email}
-              validators={["required", "isEmail"]}
-              errorMessages={["this field is required", "email is not valid"]}
+              name="Email"
+              value={user.Email}
+              validators={["required", "isEmail", "isExistingUser",]}
+              errorMessages={["this field is required", "email is not valid","user with this email already exists"]}
             />
           </div>
-          <div className={classes.centerDiv}>
+          <div>
             <TextValidator
               className={classes.textField}
               margin="normal"
@@ -135,96 +155,112 @@ const RegistrationForm = () => {
               type="password"
               onChange={handleChange}
               id="password-form"
-              name="password"
-              value={password}
-              validators={["required"]}
-              errorMessages={["this field is required"]}
+              name="Password"
+              value={user.Password}
+              validators={["required", "isLongerEqualThenSix"]}
+              errorMessages={["this field is required", "password must be longer then 6 characters"]}
             />
           </div>
-          <div className={classes.centerDiv}>
+          <div>
             <TextValidator
               className={classes.textField}
               margin="normal"
               label="Repeat Password"
               type="password"
-              name="repeatPassword"
+              name="PasswordConfirm"
               onChange={handleChange}
               id="password-form-confirm"
-              value={passwordConfirm}
+              value={user.PasswordConfirm}
               validators={["isPasswordMatch", "required"]}
               errorMessages={["password mismatch", "this field is required"]}
             />
           </div>
-          <div className={classes.centerDiv}>
+          <div>
             <TextValidator
               className={classes.textField}
               margin="normal"
               label="First Name"
               onChange={handleChange}
               id="firstname-form"
-              name="firstname"
-              value={firstName}
-              validators={["required"]}
-              errorMessages={["this field is required"]}
+              name="FirstName"
+              value={user.FirstName}
+              validators={["required", "areLettersOnly"]}
+              errorMessages={["this field is required", "first name must consist of letters only"]}
             />
           </div>
-          <div className={classes.centerDiv}>
+          <div>
             <TextValidator
               className={classes.textField}
               margin="normal"
               label="Last Name"
               onChange={handleChange}
               id="lastname-form"
-              name="lastName"
-              value={lastName}
-              validators={["required"]}
-              errorMessages={["this field is required"]}
+              name="LastName"
+              value={user.LastName}
+              validators={["required", "areLettersOnly"]}
+              errorMessages={["this field is required", "last name must consist of letters only"]}
             />
           </div>
-          <div className={classes.centerDiv}>
+          <div>
             <TextValidator
               className={classes.textField}
               margin="normal"
               label="Phone Number"
               onChange={handleChange}
               id="phonenumber-form"
-              name="phoneNumber"
-              value={phoneNumber}
-              validators={["required"]}
-              errorMessages={["this field is required"]}
+              name="Phone"
+              value={user.Phone}
+              validators={["required", "areNumbersOnly", 'isLongerEqualThenNine']}
+              errorMessages={["this field is required", "phone number must consist of numbers only","phone number must have more then 8 digits "]}
             />
           </div>
-          <div className={classes.centerDiv}>
+          <div>
             <TextValidator
               className={classes.textField}
               margin="normal"
               label="Address"
               onChange={handleChange}
               id="address-form"
-              name="address"
-              value={address}
-              validators={["required"]}
-              errorMessages={["this field is required"]}
+              name="Address"
+              value={user.Address}
+              validators={["required","isAddress"]}
+              errorMessages={["this field is required","Adress must consist of numbers and letters"]}
             />
           </div>
-        </div>
-        <br />
-        <div className="row">
-          <div className={classes.centerDiv}>
-            <Button
-              onClick={handleSubmit}
-              type="submit"
-              variant="contained"
-              color="primary"
-            >
-              Register
+          <br />
+          <div>
+            <div>
+              <Button
+                onClick={handleSubmit}
+                type="submit"
+                variant="contained"
+                color="primary"
+              >
+                Register
             </Button>
+            </div>
           </div>
-        </div>
-        <br />
-      </ValidatorForm>
+          <br />
+        </ValidatorForm>
+      </div>
     </div>
   );
 };
 
-export default RegistrationForm;
+
+const mapStateToProps = (state) => {
+  const { AllUsers } = state.userReducer;
+  console.log(AllUsers);
+  return {
+    usersEmails: AllUsers.map(user => user.Email)
+  }
+}
+
+const mpaDispatchToProps = (dispatch) => {
+  return {
+    registerUser: (user) => { dispatch(registerUser(user)) }
+  }
+}
+
+
+export default connect(mapStateToProps, mpaDispatchToProps)(RegistrationForm);

@@ -9,7 +9,7 @@ import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 function App() {
   return (
     <Router>
-      <Header />
+      {/* <Header /> */}
       <Navigation />
       <Routes />
       <Footer />

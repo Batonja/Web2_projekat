@@ -11,12 +11,7 @@ import Button from "@material-ui/core/Button";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import { connect } from "react-redux";
-
-const useStyles = makeStyles({
-  root: {
-    flexGrow: 3
-  }
-});
+ 
 
 class Navigation extends Component {
   constructor(props) {
@@ -65,17 +60,17 @@ class Navigation extends Component {
               textColor="primary"
               centered
             >
-              <Tab label="Home" to={"/"} component={Link} />
-              <Tab label="Flight" to={"/flights"} component={Link} />
-              <Tab label="Hotel" to={"/hotels"} component={Link} />
-              <Tab label="Car" to={"/cars"} component={Link} />
+              <Tab label="Home" to={"/"} component={Link}></Tab>
+              <Tab label="Flight" to={"/flights"} component={Link}></Tab>
+              <Tab label="Hotel" to={"/hotels"} component={Link}></Tab>
+              <Tab label="Car" to={"/cars"} component={Link}></Tab>
 
               <Button
                 aria-controls="simple-menu"
                 aria-haspopup="true"
                 onClick={this.handleClick}
               >
-                <IconButton ariaLabel="account of current user">
+                <IconButton aria-label="account of current user">
                   <AccountCircle />
                 </IconButton>
                 {this.props.loggedUser.Name
@@ -101,7 +96,7 @@ class Navigation extends Component {
                 {this.props.loggedUser.isLoggedIn ? (
                   <MenuItem onClick={this.handleClose}>
                     <IconButton
-                      ariaLabel="account of current user"
+                      aria-label="account of current user"
                       to={"/account"}
                       component={Link}
                     >
