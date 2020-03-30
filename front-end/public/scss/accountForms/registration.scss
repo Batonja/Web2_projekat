@@ -1,0 +1,22 @@
+.costum-navbar {
+  overflow: hidden;
+  background-color: #333;
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.account-form-div {
+  position: "flex";
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.forms-in {
+  margin: 5% 35% 5% 35%;
+  border-radius: 10%;
+  position: "flex";
+  justify-content: center;
+}

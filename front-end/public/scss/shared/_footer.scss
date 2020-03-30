@@ -1,7 +1,9 @@
-.footer {
-  background-color: whitesmoke;
-  margin-bottom: 0px;
-  .copyright {
-    margin-left: 40%;
-  }
+.costum-footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #25159b;
+  color: white;
+  text-align: center;
 }

@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from "react";
-import {cloneDeep} from 'lodash.clonedeep'
+
 import Fab from "@material-ui/core/Fab";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
-import '../../App.css'
+import "../../App.css";
 
-import { registerUser } from '../../actions/accountActions'
-import { connect } from 'react-redux'
-
-
+import { registerUser } from "../../actions/accountActions";
+import { connect } from "react-redux";
 
 const useStyles = makeStyles({
   centerDiv: {
@@ -28,7 +26,7 @@ const useStyles = makeStyles({
   }
 });
 
-const RegistrationForm = ({ usersEmails,registerUser }) => {
+const RegistrationForm = ({ usersEmails, registerUser }) => {
   const classes = new useStyles();
   const [user, setUser] = useState({
     FirstName: "",
@@ -38,102 +36,94 @@ const RegistrationForm = ({ usersEmails,registerUser }) => {
     PasswordConfirm: "",
     Address: "",
     Phone: ""
-  })
-
+  });
 
   const handleSubmit = e => {
-   e.preventDefault();
-  
+    e.preventDefault();
+
     registerUser(user);
 
     setUser({
-      FirstName: '',
-      LastName: '',
-      Email: '',
-      Password: '',
-      PasswordConfirm: '',
-      Address: '',
-      Phone: ''
-    })
-  }
+      FirstName: "",
+      LastName: "",
+      Email: "",
+      Password: "",
+      PasswordConfirm: "",
+      Address: "",
+      Phone: ""
+    });
+  };
   const handleChange = e => {
     setUser({
       ...user,
       [e.target.name]: e.target.value
-    })
-  }
+    });
+  };
 
   useEffect(() => {
-    
     const regexLettersOnly = /[^A-Za-z]+/;
     const regexNotANumber = /[^0-9]/;
     const regexAddress = /^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/;
     //Email
     ValidatorForm.addValidationRule("isExistingUser", value => {
       let emailSearch = usersEmails.find(email => email === value);
-      return ((emailSearch !== undefined) &&(emailSearch === value))
-      ? false
-      : true;
+      return emailSearch !== undefined && emailSearch === value ? false : true;
       return true;
     });
 
     //Password
     ValidatorForm.addValidationRule("isPasswordMatch", value => {
-      console.log(user.Password, value)
-      return (value !== user.Password) ? false : true;
+      console.log(user.Password, value);
+      return value !== user.Password ? false : true;
     });
-    ValidatorForm.addValidationRule("isLongerEqualThenSix", value =>{
-      return (value.length < 6)? false :true;
-    })
+    ValidatorForm.addValidationRule("isLongerEqualThenSix", value => {
+      return value.length < 6 ? false : true;
+    });
     //First nad Last name
-    ValidatorForm.addValidationRule("areLettersOnly", value =>{
-      return regexLettersOnly.test(value)? false : true;
-    })
+    ValidatorForm.addValidationRule("areLettersOnly", value => {
+      return regexLettersOnly.test(value) ? false : true;
+    });
     //Phone number
-    ValidatorForm.addValidationRule("areNumbersOnly", value =>{
-        return regexNotANumber.test(value)? false:true;
-    })
-    ValidatorForm.addValidationRule("isLongerEqualThenNine", value =>{
-      return (value.length < 9)? false :true;
-    })
+    ValidatorForm.addValidationRule("areNumbersOnly", value => {
+      return regexNotANumber.test(value) ? false : true;
+    });
+    ValidatorForm.addValidationRule("isLongerEqualThenNine", value => {
+      return value.length < 9 ? false : true;
+    });
     //Address
-    ValidatorForm.addValidationRule("isAddress", value =>{
-      return (!regexAddress.test(value))? false :true;
-    })
+    ValidatorForm.addValidationRule("isAddress", value => {
+      return !regexAddress.test(value) ? false : true;
+    });
 
     return function cleanup() {
-      ValidatorForm.removeValidationRule('isPasswordMatch');
-      ValidatorForm.removeValidationRule('isLongerEqualThenSix');
-      ValidatorForm.removeValidationRule('areLettersOnly');
-      ValidatorForm.removeValidationRule('areNumbersOnly');
-      ValidatorForm.removeValidationRule('isLongerEqualThenNine');
-      ValidatorForm.removeValidationRule('isAddress');
-    }
-
-
+      ValidatorForm.removeValidationRule("isPasswordMatch");
+      ValidatorForm.removeValidationRule("isLongerEqualThenSix");
+      ValidatorForm.removeValidationRule("areLettersOnly");
+      ValidatorForm.removeValidationRule("areNumbersOnly");
+      ValidatorForm.removeValidationRule("isLongerEqualThenNine");
+      ValidatorForm.removeValidationRule("isAddress");
+    };
   }, [user]);
 
-  useEffect(()=>{
-
+  useEffect(() => {
     return function cleanup() {
-      ValidatorForm.removeValidationRule('isPasswordMatch');
-      ValidatorForm.removeValidationRule('isLongerEqualThenSix');
-      ValidatorForm.removeValidationRule('areLettersOnly');
-      ValidatorForm.removeValidationRule('areNumbersOnly');
-      ValidatorForm.removeValidationRule('isLongerEqualThenNine');
-      ValidatorForm.removeValidationRule('isAddress');
-    }
-  },[])
+      ValidatorForm.removeValidationRule("isPasswordMatch");
+      ValidatorForm.removeValidationRule("isLongerEqualThenSix");
+      ValidatorForm.removeValidationRule("areLettersOnly");
+      ValidatorForm.removeValidationRule("areNumbersOnly");
+      ValidatorForm.removeValidationRule("isLongerEqualThenNine");
+      ValidatorForm.removeValidationRule("isAddress");
+    };
+  }, []);
 
   return (
     <div className="account-form-div">
-      <div className='forms-in'>
+      <div className="forms-in">
         <h1>Sign up</h1>
         <ValidatorForm
           onSubmit={handleSubmit}
           onError={errors => console.log(errors)}
         >
-
           <div>
             <TextValidator
               className={classes.textField}
@@ -143,8 +133,12 @@ const RegistrationForm = ({ usersEmails,registerUser }) => {
               id="email-form"
               name="Email"
               value={user.Email}
-              validators={["required", "isEmail", "isExistingUser",]}
-              errorMessages={["this field is required", "email is not valid","user with this email already exists"]}
+              validators={["required", "isEmail", "isExistingUser"]}
+              errorMessages={[
+                "this field is required",
+                "email is not valid",
+                "user with this email already exists"
+              ]}
             />
           </div>
           <div>
@@ -158,7 +152,10 @@ const RegistrationForm = ({ usersEmails,registerUser }) => {
               name="Password"
               value={user.Password}
               validators={["required", "isLongerEqualThenSix"]}
-              errorMessages={["this field is required", "password must be longer then 6 characters"]}
+              errorMessages={[
+                "this field is required",
+                "password must be longer then 6 characters"
+              ]}
             />
           </div>
           <div>
@@ -185,7 +182,10 @@ const RegistrationForm = ({ usersEmails,registerUser }) => {
               name="FirstName"
               value={user.FirstName}
               validators={["required", "areLettersOnly"]}
-              errorMessages={["this field is required", "first name must consist of letters only"]}
+              errorMessages={[
+                "this field is required",
+                "first name must consist of letters only"
+              ]}
             />
           </div>
           <div>
@@ -198,7 +198,10 @@ const RegistrationForm = ({ usersEmails,registerUser }) => {
               name="LastName"
               value={user.LastName}
               validators={["required", "areLettersOnly"]}
-              errorMessages={["this field is required", "last name must consist of letters only"]}
+              errorMessages={[
+                "this field is required",
+                "last name must consist of letters only"
+              ]}
             />
           </div>
           <div>
@@ -210,8 +213,16 @@ const RegistrationForm = ({ usersEmails,registerUser }) => {
               id="phonenumber-form"
               name="Phone"
               value={user.Phone}
-              validators={["required", "areNumbersOnly", 'isLongerEqualThenNine']}
-              errorMessages={["this field is required", "phone number must consist of numbers only","phone number must have more then 8 digits "]}
+              validators={[
+                "required",
+                "areNumbersOnly",
+                "isLongerEqualThenNine"
+              ]}
+              errorMessages={[
+                "this field is required",
+                "phone number must consist of numbers only",
+                "phone number must have more then 8 digits "
+              ]}
             />
           </div>
           <div>
@@ -223,8 +234,11 @@ const RegistrationForm = ({ usersEmails,registerUser }) => {
               id="address-form"
               name="Address"
               value={user.Address}
-              validators={["required","isAddress"]}
-              errorMessages={["this field is required","Adress must consist of numbers and letters"]}
+              validators={["required", "isAddress"]}
+              errorMessages={[
+                "this field is required",
+                "Adress must consist of numbers and letters"
+              ]}
             />
           </div>
           <br />
@@ -237,7 +251,7 @@ const RegistrationForm = ({ usersEmails,registerUser }) => {
                 color="primary"
               >
                 Register
-            </Button>
+              </Button>
             </div>
           </div>
           <br />
@@ -247,20 +261,20 @@ const RegistrationForm = ({ usersEmails,registerUser }) => {
   );
 };
 
-
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const { AllUsers } = state.userReducer;
   console.log(AllUsers);
   return {
     usersEmails: AllUsers.map(user => user.Email)
-  }
-}
+  };
+};
 
-const mpaDispatchToProps = (dispatch) => {
+const mpaDispatchToProps = dispatch => {
   return {
-    registerUser: (user) => { dispatch(registerUser(user)) }
-  }
-}
-
+    registerUser: user => {
+      dispatch(registerUser(user));
+    }
+  };
+};
 
 export default connect(mapStateToProps, mpaDispatchToProps)(RegistrationForm);

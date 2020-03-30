@@ -1,38 +1,3 @@
 .App {
   text-align: center;
 }
-
-.costum-navbar{
-  overflow: hidden;
-  background-color: #333;
-  position: fixed;
-  top: 0;
-  width: 100%;
-}
-
-.costum-footer {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  background-color: #25159b;
-  color: white;
-  text-align: center;
-}
-
-.account-form-div{
-  position: 'flex';
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-
-}
-
-.forms-in{
-  margin: 5% 35% 5% 35%;
-  border-radius: 10%;
-  position: 'flex';
-  justify-content: center;
-
-}
