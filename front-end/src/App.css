@@ -20,19 +20,33 @@
   text-align: center;
 }
 
+body {
+  min-height: 400px;
+  margin-bottom: 100px;
+  clear: both;
+}
+
 .account-form-div{
+  
   position: 'flex';
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
+  margin: 5%;
 
 }
 
 .forms-in{
-  margin: 5% 35% 5% 35%;
+ /* margin: 5% 20% 5% 20%;*/
   border-radius: 10%;
-  position: 'flex';
-  justify-content: center;
+  border: 2px solid black;
+}
 
+.form-text-field{
+  margin: 1% 10% 1% 10%;
+}
+
+.form-text-field h1{
+  width: 100%
 }
