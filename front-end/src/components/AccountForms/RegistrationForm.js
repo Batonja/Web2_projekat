@@ -1,8 +1,5 @@
-import React, { useState, useEffect, Component } from "react";
-import Fab from "@material-ui/core/Fab";
+import React, { Component } from "react";
 import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import { makeStyles } from "@material-ui/core/styles";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import "../../App.css";
 
@@ -149,8 +146,8 @@ class RegistrationForm extends Component {
                 value={this.state.FirstName}
                 validators={["required", "areLettersOnly"]}
                 errorMessages={[
-                  "this field is required",
-                  "first name must consist of letters only"
+                  "This field is required",
+                  "First name must consist of letters only"
                 ]}
               />
             </div>
@@ -164,8 +161,8 @@ class RegistrationForm extends Component {
                 value={this.state.LastName}
                 validators={["required", "areLettersOnly"]}
                 errorMessages={[
-                  "this field is required",
-                  "last name must consist of letters only"
+                  "This field is required",
+                  "Last name must consist of letters only"
                 ]}
               />
             </div>

@@ -4,10 +4,11 @@ import Flight from "../components/Flight/Flight";
 import Hotel from "../components/Hotel/Hotel";
 import Car from "../components/Car/Car";
 import Home from "../components/Home";
+import Account from "../components/AccountForms/Account";
 import Airlines from "../components/Flight/Airlines";
 import RegistrationForm from "../components/AccountForms/RegistrationForm";
 import LoginForm from "../components/AccountForms/LoginForm";
-import '../App.css'
+import "../App.css";
 
 export function Routes() {
   return (
@@ -17,9 +18,9 @@ export function Routes() {
       <Route path="/hotels" component={Hotel} />
       <Route path="/cars" component={Car} />
 
-      {/* <Route path="/account" component={Account}/> */}
+      <Route path="/account" component={Account} />
       <Route path="/signin" component={LoginForm} />
-      <Route path="/signup" component={RegistrationForm} className = 'forms'/>
+      <Route path="/signup" component={RegistrationForm} className="forms" />
       <Route path="/" component={Home} />
     </Switch>
   );

@@ -1,8 +1,12 @@
 const initialState = {
   LoggedInUser: {
-    Email: "thestepa@gmail.com",
     FirstName: "Stepa",
-    Friends: ["thestepa@gmail.com", "zivkozivkic@yahoo.com"]
+    LastName: "Stepanovic",
+    Email: "thestepa@gmail.com",
+    Password: "test",
+    Address: "Zmaj Jove 13",
+    Friends: ["thestepa@gmail.com", "zivkozivkic@yahoo.com"],
+    Phone: "062214141"
   },
   AllUsers: [
     {
