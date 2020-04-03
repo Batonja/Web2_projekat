@@ -1,8 +1,8 @@
 const initialState = {
   LoggedInUser: {
-    Email: "mileta@bode.com",
+    Email: "thestepa@gmail.com",
     FirstName: "Stepa",
-    Friends: ["thestepa@gmail.com"]
+    Friends: ["thestepa@gmail.com", "zivkozivkic@yahoo.com"]
   },
   AllUsers: [
     {
@@ -35,14 +35,14 @@ const initialState = {
 };
 
 export default function userReducer(state = initialState, action) {
-  console.log(action)
+  console.log(action);
   switch (action.type) {
-    case 'REGISTER_USER':
-      return{
+    case "REGISTER_USER":
+      return {
         ...state,
         AllUsers: [...state.AllUsers, action.payload]
-      }
-    break;
+      };
+      break;
     default:
       return state;
   }

@@ -96,6 +96,10 @@
   width: 100%;
 }
 
+.modalButton {
+  margin-bottom: 10px;
+}
+
 .flightTop {
   display: -webkit-box;
   display: -ms-flexbox;

@@ -10,7 +10,7 @@ import Button from "@material-ui/core/Button";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import InputLabel from "@material-ui/core/InputLabel";
-import InviteFriend from "./InviteFriend"
+import InviteFriend from "./InviteFriend";
 import { connect } from "react-redux";
 
 const modalStyle = { "z-index": "1200" };
@@ -26,7 +26,7 @@ class SecondStep extends Component {
       passportIdError: false,
       nameError: false,
       lastNameError: false,
-      openInviteFriend:false,
+      selectedFriendEmail: "",
       luggage: 0,
       ticketType: 0,
       currentReservation: 0
@@ -35,6 +35,7 @@ class SecondStep extends Component {
     this.passportIdField = React.createRef();
     this.nameField = React.createRef();
     this.lastNameField = React.createRef();
+    this.inviteFriendRef = React.createRef();
   }
 
   componentDidUpdate() {
@@ -78,13 +79,35 @@ class SecondStep extends Component {
   onHandleTicketTypeChange = event => {
     this.setState({ ticketType: event.target.value });
   };
-  openInviteFriend = () => {
-    this.setState({openInviteFriend:true})
+
+  submitReservation(passenger) {
+    this.props.reserveSeat(passenger);
   }
 
-  closeInviteFriend = () => {
-    this.setState({openInviteFriend:false})
-  }
+  getSelectedEmail = email => {
+    this.setState({ selectedFriendEmail: email });
+  };
+
+  inviteFriend = () => {
+    var theUser = "";
+    Array.from(this.props.allUsers).forEach(user => {
+      if (user.Email === this.state.selectedFriendEmail) {
+        theUser = user;
+      }
+    });
+
+    const passenger = {
+      FirstName: theUser.FirstName,
+      LastName: theUser.LastName,
+      PassportId: theUser.PassportId,
+      Luggage: this.state.luggage,
+      TicketType: this.state.ticketType,
+      Email: this.state.selectedFriendEmail
+    };
+    alert("Dodat: " + passenger.FirstName + " " + passenger.LastName);
+    this.inviteFriendRef.current.removeInvitedFriend();
+    this.submitReservation(passenger);
+  };
 
   onHandleSubmit = event => {
     const regexLettersSpaceNumbers = /^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/;
@@ -114,7 +137,7 @@ class SecondStep extends Component {
       }
 
       const passenger = {
-        Name: this.state.name,
+        FirstName: this.state.name,
         LastName: this.state.lastName,
         PassportId: this.state.passportId,
         Luggage: this.state.luggage,
@@ -122,10 +145,7 @@ class SecondStep extends Component {
       };
 
       this.resetFields();
-      this.props.reserveSeat(
-        this.props.numOfReservations,
-        this.state.currentReservation
-      );
+      this.submitReservation(passenger);
     }
   };
   render() {
@@ -245,26 +265,39 @@ class SecondStep extends Component {
           </Row>
         </Modal.Body>
         <Modal.Footer>
-          {this.props.loggedInUser.FirstName ?  <Button onMouseDown={ this.openInviteFriend} variant="contained" color="primary" className="mb-2 mr-auto">
-            Invite A Friend
-          </Button> : "" }
-          
-            <Modal onHide={this.closeInviteFriend} style={modalStyle} ariaHideApp={false} show={this.state.openInviteFriend}>
-                    <InviteFriend friends={this.props.loggedInUser.friends}/>
-
-              </Modal>          
-          <Button
-            onMouseDown={event => this.onHandleSubmit(event)}
-            variant="contained"
-            color="primary"
-            className="mb-2"
-          >
-            {this.state.currentReservation + 1 === this.props.numOfReservations
-              ? "Submit"
-              : "Next Passenger"}
-          </Button>
-
-          <div>
+          {this.props.loggedInUser.FirstName ? (
+            <div className="mb-2 mr-auto">
+              <InviteFriend
+                ref={this.inviteFriendRef}
+                sendSelectedFriend={email => this.getSelectedEmail(email)}
+                allUsers={this.props.allUsers}
+                friends={this.props.loggedInUser.Friends}
+              />
+              <br />
+              <Button
+                onMouseDown={this.inviteFriend}
+                variant="contained"
+                color="primary"
+                style={{ "margin-top": "10px" }}
+              >
+                Invite A Friend
+              </Button>
+            </div>
+          ) : (
+            ""
+          )}
+          <div style={{ "margin-bottom": "-40px" }}>
+            <Button
+              onMouseDown={event => this.onHandleSubmit(event)}
+              variant="contained"
+              color="primary"
+              style={{ "vertical-align": "text-bottom" }}
+            >
+              {this.state.currentReservation + 1 ===
+              this.props.numOfReservations
+                ? "Submit"
+                : "Next Passenger"}
+            </Button>
             {this.state.currentReservation + 1}/{this.props.numOfReservations}
           </div>
         </Modal.Footer>
@@ -274,7 +307,8 @@ class SecondStep extends Component {
 }
 
 const mapStateToProps = state => ({
-  loggedInUser:state.userReducer.LoggedInUser
-})
+  loggedInUser: state.userReducer.LoggedInUser,
+  allUsers: state.userReducer.AllUsers
+});
 
 export default connect(mapStateToProps)(SecondStep);

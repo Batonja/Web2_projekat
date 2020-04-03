@@ -30,10 +30,9 @@ class ReservationModal extends Component {
     });
   };
 
-  reserveSeat = (numOfReservations, numOfCompletedReservations, passenger) => {
+  reserveSeat = passenger => {
     var completedReservations = this.state.numOfCompletedReservations + 1;
     this.setState({
-      numOfReservations: numOfReservations,
       numOfCompletedReservations: completedReservations,
       passengers: [...this.state.passengers, passenger]
     });
@@ -63,9 +62,7 @@ class ReservationModal extends Component {
             flight={this.props.flight}
             numOfReservations={this.state.numOfReservations}
             numOfCompletedReservations={this.state.numOfCompletedReservations}
-            reserveSeat={(numOfReservations, numOfCompletedReservations) =>
-              this.reserveSeat(numOfReservations, numOfCompletedReservations)
-            }
+            reserveSeat={passenger => this.reserveSeat(passenger)}
           />
         ) : (
           ""
