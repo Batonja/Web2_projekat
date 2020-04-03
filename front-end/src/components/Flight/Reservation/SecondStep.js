@@ -10,6 +10,10 @@ import Button from "@material-ui/core/Button";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import InputLabel from "@material-ui/core/InputLabel";
+import InviteFriend from "./InviteFriend"
+import { connect } from "react-redux";
+
+const modalStyle = { "z-index": "1200" };
 
 class SecondStep extends Component {
   constructor(props) {
@@ -22,6 +26,7 @@ class SecondStep extends Component {
       passportIdError: false,
       nameError: false,
       lastNameError: false,
+      openInviteFriend:false,
       luggage: 0,
       ticketType: 0,
       currentReservation: 0
@@ -73,6 +78,13 @@ class SecondStep extends Component {
   onHandleTicketTypeChange = event => {
     this.setState({ ticketType: event.target.value });
   };
+  openInviteFriend = () => {
+    this.setState({openInviteFriend:true})
+  }
+
+  closeInviteFriend = () => {
+    this.setState({openInviteFriend:false})
+  }
 
   onHandleSubmit = event => {
     const regexLettersSpaceNumbers = /^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/;
@@ -233,10 +245,14 @@ class SecondStep extends Component {
           </Row>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="contained" color="primary" className="mb-2 mr-auto">
+          {this.props.loggedInUser.FirstName ?  <Button onMouseDown={ this.openInviteFriend} variant="contained" color="primary" className="mb-2 mr-auto">
             Invite A Friend
-          </Button>
+          </Button> : "" }
+          
+            <Modal onHide={this.closeInviteFriend} style={modalStyle} ariaHideApp={false} show={this.state.openInviteFriend}>
+                    <InviteFriend friends={this.props.loggedInUser.friends}/>
 
+              </Modal>          
           <Button
             onMouseDown={event => this.onHandleSubmit(event)}
             variant="contained"
@@ -257,4 +273,8 @@ class SecondStep extends Component {
   }
 }
 
-export default SecondStep;
+const mapStateToProps = state => ({
+  loggedInUser:state.userReducer.LoggedInUser
+})
+
+export default connect(mapStateToProps)(SecondStep);

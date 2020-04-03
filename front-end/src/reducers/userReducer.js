@@ -1,7 +1,7 @@
 const initialState = {
   LoggedInUser: {
     Email: "mileta@bode.com",
-    FirstName: false,
+    FirstName: "Stepa",
     Friends: ["thestepa@gmail.com"]
   },
   AllUsers: [

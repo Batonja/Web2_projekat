@@ -73,8 +73,8 @@ class Navigation extends Component {
                 <IconButton aria-label="account of current user">
                   <AccountCircle />
                 </IconButton>
-                {this.props.loggedUser.Name
-                  ? this.props.loggedUser.Name
+                {this.props.loggedUser.FirstName
+                  ? this.props.loggedUser.FirstName
                   : "Guest"}
               </Button>
 
@@ -93,7 +93,7 @@ class Navigation extends Component {
                 open={Boolean(this.state.anchorEl)}
                 onClose={this.handleClose}
               >
-                {this.props.loggedUser.isLoggedIn ? (
+                {this.props.loggedUser.FirstName ? (
                   <MenuItem onClick={this.handleClose}>
                     <IconButton
                       aria-label="account of current user"
