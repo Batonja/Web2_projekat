@@ -24,7 +24,7 @@ class FlightsDisplay extends Component {
     this.state = {
       openedCollapsed: [],
       openedModal: -1,
-      ticketType: 0
+      ticketType: 0,
     };
     this.openClose = this.openClose.bind(this);
     this.closeModal = this.closeModal.bind(this);
@@ -37,7 +37,7 @@ class FlightsDisplay extends Component {
     return false;
   }
 
-  onHandleTicketTypeChange = event => {
+  onHandleTicketTypeChange = (event) => {
     this.setState({ ticketType: event.target.value });
   };
 
@@ -45,7 +45,7 @@ class FlightsDisplay extends Component {
     event.preventDefault();
     if (this.state.openedCollapsed.includes(index)) {
       var filteredArray = this.state.openedCollapsed.filter(
-        item => item !== index
+        (item) => item !== index
       );
 
       this.setState({ openedCollapsed: filteredArray });
@@ -53,7 +53,7 @@ class FlightsDisplay extends Component {
     }
 
     this.setState({
-      openedCollapsed: [...this.state.openedCollapsed, index]
+      openedCollapsed: [...this.state.openedCollapsed, index],
     });
   }
 
@@ -63,7 +63,7 @@ class FlightsDisplay extends Component {
     this.setState({ openedModal: flightId });
   }
 
-  closeModal = event => {
+  closeModal = (event) => {
     this.setState({ openedModal: -1 });
   };
   render() {
@@ -73,7 +73,7 @@ class FlightsDisplay extends Component {
         {Array.from(this.props.airlines).map((airline, i) => {
           return (
             <>
-              {Array.from(airline.Flights).map(flight => {
+              {Array.from(airline.Flights).map((flight) => {
                 return (
                   <Container fluid className="flightWrap">
                     <Row className="flightPresentRow">
@@ -83,7 +83,7 @@ class FlightsDisplay extends Component {
                       />
 
                       <Col md="auto" className="flightArrow">
-                        <Button onClick={e => this.openClose(e, flight.Id)}>
+                        <Button onClick={(e) => this.openClose(e, flight.Id)}>
                           {this.isOpened(flight.Id) ? (
                             <KeyboardArrowUpIcon />
                           ) : (
@@ -212,7 +212,7 @@ class FlightsDisplay extends Component {
                         <Col md="auto" className="flightItem">
                           <InputLabel
                             style={{
-                              "margin-left": "10px"
+                              "margin-left": "10px",
                             }}
                             id="chooseTicketLabel"
                           >
@@ -221,7 +221,7 @@ class FlightsDisplay extends Component {
                           <Select
                             style={{
                               "margin-left": "10px",
-                              "margin-top": "5px"
+                              "margin-top": "5px",
                             }}
                             labelId="chooseTicketLabel"
                             onChange={this.onHandleTicketTypeChange}
@@ -252,7 +252,7 @@ class FlightsDisplay extends Component {
                             className="flightReserveButton"
                             color="primary"
                             variant="contained"
-                            onClick={e => this.openModal(e, flight.Id)}
+                            onClick={(e) => this.openModal(e, flight.Id)}
                           >
                             More Info
                           </Button>
@@ -260,7 +260,7 @@ class FlightsDisplay extends Component {
                           <div className="flightReservationModal">
                             <Modal
                               size="lg"
-                              onHide={e => this.closeModal(e)}
+                              onHide={(e) => this.closeModal(e)}
                               style={modalStyle}
                               ariaHideApp={false}
                               show={
@@ -268,7 +268,7 @@ class FlightsDisplay extends Component {
                                   ? true
                                   : false
                               }
-                              onRequestClose={e => this.closeModal(e)}
+                              onRequestClose={(e) => this.closeModal(e)}
                             >
                               <ReservationModal
                                 airline={airline}
@@ -290,8 +290,8 @@ class FlightsDisplay extends Component {
     );
   }
 }
-const mapStateToProps = state => ({
-  airlines: state.flightReducer.airlines
+const mapStateToProps = (state) => ({
+  airlines: state.flightReducer.airlines,
 });
 
 export default connect(mapStateToProps)(FlightsDisplay);

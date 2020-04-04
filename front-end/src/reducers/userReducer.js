@@ -5,8 +5,8 @@ const initialState = {
     Email: "thestepa@gmail.com",
     Password: "test",
     Address: "Zmaj Jove 13",
-    Friends: ["thestepa@gmail.com", "zivkozivkic@yahoo.com"],
-    Phone: "062214141"
+    Friends: ["mileta@bode.com", "zivkozivkic@yahoo.com"],
+    Phone: "062214141",
   },
   AllUsers: [
     {
@@ -15,7 +15,7 @@ const initialState = {
       Email: "zivkozivkic@yahoo.com",
       Password: "test",
       Address: "Sove Sovine 23",
-      Phone: "0635352321"
+      Phone: "0635352321",
     },
     {
       FirstName: "Stepa",
@@ -24,18 +24,18 @@ const initialState = {
       Password: "test",
       Address: "Zmaj Jove 13",
       Friends: ["mileta@bode.com", "zivkozivkic@yahoo.com"],
-      Phone: "062214141"
+      Phone: "062214141",
     },
     {
       Email: "mileta@bode.com",
       Password: "test",
       Name: "Milojica",
       FirstName: "Milovanov",
-      Friends: [{ Name: "Stepa", Email: "thestepa@gmail.com" }],
+      Friends: ["thestepa@gmail.com"],
       Address: "Cika Zike 22",
-      Phone: "0612114242"
-    }
-  ]
+      Phone: "0612114242",
+    },
+  ],
 };
 
 export default function userReducer(state = initialState, action) {
@@ -44,7 +44,7 @@ export default function userReducer(state = initialState, action) {
     case "REGISTER_USER":
       return {
         ...state,
-        AllUsers: [...state.AllUsers, action.payload]
+        AllUsers: [...state.AllUsers, action.payload],
       };
       break;
     default:

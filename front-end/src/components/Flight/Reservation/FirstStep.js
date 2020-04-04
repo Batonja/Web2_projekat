@@ -23,7 +23,7 @@ class FirstStep extends Component {
 
   componentDidMount() {
     this.setState({
-      seats: this.props.flight.Seats,
+      seats: Array.from(this.props.flight.Seats),
     });
   }
 
