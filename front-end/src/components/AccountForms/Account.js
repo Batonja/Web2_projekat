@@ -11,15 +11,16 @@ class Account extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      allUsers: this.props.allUsers,
+      AllUsers: this.props.allUsers,
       FirstName: this.props.loggedInUser.FirstName,
       LastName: this.props.loggedInUser.LastName,
       Email: this.props.loggedInUser.Email,
       Password: this.props.loggedInUser.Password,
-      PasswordConfirm: "",
+      PasswordConfirm: this.props.loggedInUser.Password,
       Address: this.props.loggedInUser.Address,
       Phone: this.props.loggedInUser.Phone,
-      AllEmails: []
+      AllEmails: [],
+      AllFriends: [],
     };
   }
 
@@ -29,29 +30,44 @@ class Account extends Component {
     const regexAddress = /^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/;
 
     const allEmails = [];
-    for (var index = 0; index < this.state.allUsers.length; index++) {
-      if (this.state.allUsers[index].Email !== this.state.Email)
-        allEmails.push(this.state.allUsers[index].Email);
+    const allFriends = [];
+    for (var index = 0; index < this.state.AllUsers.length; index++) {
+      if (this.state.AllUsers[index].Email !== this.state.Email) {
+        allEmails.push(this.state.AllUsers[index].Email);
+      }
+      for (
+        var indexOfFriend = 0;
+        indexOfFriend < this.props.loggedInUser.Friends.length;
+        indexOfFriend++
+      ) {
+        if (
+          this.props.loggedInUser.Friends[indexOfFriend] ===
+          this.state.AllUsers[index].Email
+        ) {
+          allFriends.push(this.state.AllUsers[index]);
+        }
+      }
     }
-    this.setState({ AllEmails: allEmails });
+
+    this.setState({ AllEmails: allEmails, AllFriends: allFriends });
     //Email
-    ValidatorForm.addValidationRule("isExistingUser", value => {
-      let emailSearch = this.state.AllEmails.find(email => email === value);
+    ValidatorForm.addValidationRule("isExistingUser", (value) => {
+      let emailSearch = this.state.AllEmails.find((email) => email === value);
       return emailSearch !== undefined && emailSearch === value ? false : true;
     });
 
     //Password
-    ValidatorForm.addValidationRule("isPasswordMatch", value => {
-      return value !== this.state.loggedInUser.Password ? false : true;
+    ValidatorForm.addValidationRule("isPasswordMatch", (value) => {
+      return value !== this.state.Password ? false : true;
     });
 
     //First nad Last name
-    ValidatorForm.addValidationRule("areLettersOnly", value => {
+    ValidatorForm.addValidationRule("areLettersOnly", (value) => {
       return regexLettersOnly.test(value) ? false : true;
     });
 
     //Phone number
-    ValidatorForm.addValidationRule("areNumbersOnly", value => {
+    ValidatorForm.addValidationRule("areNumbersOnly", (value) => {
       return regexNotANumber.test(value) ? false : true;
     });
   }
@@ -64,17 +80,17 @@ class Account extends Component {
     //ValidatorForm.removeValidationRule('isAddress');
   }
 
-  handleChange = e => {
+  handleChange = (e) => {
     this.setState({
       ...this.state,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
   render() {
     return (
       <Container fluid>
-        <ValidatorForm onError={errors => console.log(errors)}>
+        <ValidatorForm onError={(errors) => console.log(errors)}>
           <Row>
             <Col md="auto">
               <TextValidator
@@ -87,7 +103,7 @@ class Account extends Component {
                 value={this.state.FirstName}
                 errorMessages={[
                   "This field is required",
-                  "First name must consist of letters only"
+                  "First name must consist of letters only",
                 ]}
               />
             </Col>
@@ -98,11 +114,11 @@ class Account extends Component {
                 id="lastName-form"
                 name="LastName"
                 onChange={this.handleChange}
-                validators={["required"]}
+                validators={["required", "areLettersOnly"]}
                 value={this.state.LastName}
                 errorMessages={[
                   "This field is required",
-                  "Last name must consist of letters only"
+                  "Last name must consist of letters only",
                 ]}
               />
             </Col>
@@ -118,7 +134,7 @@ class Account extends Component {
                 errorMessages={[
                   "this field is required",
                   "email is not valid",
-                  "user with this email already exists"
+                  "user with this email already exists",
                 ]}
               />
             </Col>
@@ -177,15 +193,31 @@ class Account extends Component {
               Edit
             </Button>
           </Row>
+          <Row>
+            <Container>
+              <Row>
+                <Col lg="auto">
+                  <div className="tableFriendsTitle"> My Friends </div>
+                </Col>
+              </Row>
+              {Array.from(this.state.AllFriends).map((friend, index) => {
+                return (
+                  <Row>
+                    <Col md="auto"></Col>
+                  </Row>
+                );
+              })}
+            </Container>
+          </Row>
         </ValidatorForm>
       </Container>
     );
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   allUsers: state.userReducer.AllUsers,
-  loggedInUser: state.userReducer.LoggedInUser
+  loggedInUser: state.userReducer.LoggedInUser,
 });
 
 export default connect(mapStateToProps)(Account);
