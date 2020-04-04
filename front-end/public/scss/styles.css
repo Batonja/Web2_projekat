@@ -71,6 +71,10 @@
   width: 305px;
 }
 
+.tableFriendsTitle {
+  font-size: xx-large;
+}
+
 .flightsTable {
   margin-left: 20px;
   margin-top: 10px;
