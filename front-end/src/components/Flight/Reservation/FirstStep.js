@@ -17,12 +17,14 @@ class FirstStep extends Component {
     this.state = {
       seats: [],
       numReservedSeats: 0,
-      invalidForm: false
+      invalidForm: false,
     };
   }
 
   componentDidMount() {
-    this.setState({ seats: this.props.flight.Seats });
+    this.setState({
+      seats: this.props.flight.Seats,
+    });
   }
 
   onHandleAddSeat = (event, color, seatId) => {
@@ -40,7 +42,7 @@ class FirstStep extends Component {
       this.setState({ seats: seats, numReservedSeats: numReserved });
     }
   };
-  onAddReservation = event => {
+  onAddReservation = (event) => {
     if (event.button === 0) {
       if (this.state.numReservedSeats <= 0) {
         this.setState({ invalidForm: true });
@@ -304,7 +306,7 @@ class FirstStep extends Component {
                     className="flightReserveButton"
                     color="primary"
                     variant="contained"
-                    onMouseDown={event => this.onAddReservation(event)}
+                    onMouseDown={(event) => this.onAddReservation(event)}
                   >
                     Reserve
                   </Button>

@@ -12,7 +12,7 @@ class ReservationModal extends Component {
       seats: [],
       numOfReservations: 0,
       numOfCompletedReservations: 0,
-      passengers: []
+      passengers: [],
     };
   }
 
@@ -26,15 +26,20 @@ class ReservationModal extends Component {
     this.setState({
       seats: seats,
       numOfReservations: numOfReservations,
-      numOfCompletedReservations: numOfCompletedReservations
+      numOfCompletedReservations: numOfCompletedReservations,
     });
   };
 
-  reserveSeat = passenger => {
+  reserveSeat = (passenger) => {
     var completedReservations = this.state.numOfCompletedReservations + 1;
+
+    if (completedReservations === this.state.numOfReservations) {
+      this.props.closeModal();
+    }
+
     this.setState({
       numOfCompletedReservations: completedReservations,
-      passengers: [...this.state.passengers, passenger]
+      passengers: [...this.state.passengers, passenger],
     });
   };
 
@@ -62,7 +67,7 @@ class ReservationModal extends Component {
             flight={this.props.flight}
             numOfReservations={this.state.numOfReservations}
             numOfCompletedReservations={this.state.numOfCompletedReservations}
-            reserveSeat={passenger => this.reserveSeat(passenger)}
+            reserveSeat={(passenger) => this.reserveSeat(passenger)}
           />
         ) : (
           ""

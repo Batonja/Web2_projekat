@@ -29,7 +29,7 @@ class SecondStep extends Component {
       selectedFriendEmail: "",
       luggage: 0,
       ticketType: 0,
-      currentReservation: 0
+      currentReservation: 0,
     };
 
     this.passportIdField = React.createRef();
@@ -43,7 +43,7 @@ class SecondStep extends Component {
       this.state.currentReservation != this.props.numOfCompletedReservations
     ) {
       this.setState({
-        currentReservation: this.props.numOfCompletedReservations
+        currentReservation: this.props.numOfCompletedReservations,
       });
     }
   }
@@ -73,10 +73,10 @@ class SecondStep extends Component {
 
     this.setState({ passportId: event.target.value, passportIdError: false });
   }
-  onHandleLuggageChange = event => {
+  onHandleLuggageChange = (event) => {
     this.setState({ luggage: event.target.value });
   };
-  onHandleTicketTypeChange = event => {
+  onHandleTicketTypeChange = (event) => {
     this.setState({ ticketType: event.target.value });
   };
 
@@ -84,13 +84,13 @@ class SecondStep extends Component {
     this.props.reserveSeat(passenger);
   }
 
-  getSelectedEmail = email => {
+  getSelectedEmail = (email) => {
     this.setState({ selectedFriendEmail: email });
   };
 
   inviteFriend = () => {
     var theUser = "";
-    Array.from(this.props.allUsers).forEach(user => {
+    Array.from(this.props.allUsers).forEach((user) => {
       if (user.Email === this.state.selectedFriendEmail) {
         theUser = user;
       }
@@ -102,14 +102,14 @@ class SecondStep extends Component {
       PassportId: theUser.PassportId,
       Luggage: this.state.luggage,
       TicketType: this.state.ticketType,
-      Email: this.state.selectedFriendEmail
+      Email: this.state.selectedFriendEmail,
     };
-    alert("Dodat: " + passenger.FirstName + " " + passenger.LastName);
+
     this.inviteFriendRef.current.removeInvitedFriend();
     this.submitReservation(passenger);
   };
 
-  onHandleSubmit = event => {
+  onHandleSubmit = (event) => {
     const regexLettersSpaceNumbers = /^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/;
     const regexLettersOnly = /[^A-Za-z]+/;
     const regexNotANumber = /[^0-9]/;
@@ -141,7 +141,7 @@ class SecondStep extends Component {
         LastName: this.state.lastName,
         PassportId: this.state.passportId,
         Luggage: this.state.luggage,
-        TicketType: this.state.ticketType
+        TicketType: this.state.ticketType,
       };
 
       this.resetFields();
@@ -160,7 +160,7 @@ class SecondStep extends Component {
               <TextField
                 inputRef={this.nameField}
                 label="Name"
-                onChange={event => this.updateName(event)}
+                onChange={(event) => this.updateName(event)}
               />
             </Col>
             <Overlay
@@ -182,7 +182,7 @@ class SecondStep extends Component {
               <TextField
                 inputRef={this.lastNameField}
                 label="Lastname"
-                onChange={event => this.updateLastName(event)}
+                onChange={(event) => this.updateLastName(event)}
               />
             </Col>
             <Overlay
@@ -202,7 +202,7 @@ class SecondStep extends Component {
               <TextField
                 inputRef={this.passportIdField}
                 label="Passport ID"
-                onChange={event => this.updatePassportID(event)}
+                onChange={(event) => this.updatePassportID(event)}
               />
 
               <Overlay
@@ -269,7 +269,7 @@ class SecondStep extends Component {
             <div className="mb-2 mr-auto">
               <InviteFriend
                 ref={this.inviteFriendRef}
-                sendSelectedFriend={email => this.getSelectedEmail(email)}
+                sendSelectedFriend={(email) => this.getSelectedEmail(email)}
                 allUsers={this.props.allUsers}
                 friends={this.props.loggedInUser.Friends}
               />
@@ -288,7 +288,7 @@ class SecondStep extends Component {
           )}
           <div style={{ "margin-bottom": "-40px" }}>
             <Button
-              onMouseDown={event => this.onHandleSubmit(event)}
+              onMouseDown={(event) => this.onHandleSubmit(event)}
               variant="contained"
               color="primary"
               style={{ "vertical-align": "text-bottom" }}
@@ -306,9 +306,9 @@ class SecondStep extends Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   loggedInUser: state.userReducer.LoggedInUser,
-  allUsers: state.userReducer.AllUsers
+  allUsers: state.userReducer.AllUsers,
 });
 
 export default connect(mapStateToProps)(SecondStep);

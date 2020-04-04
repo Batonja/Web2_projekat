@@ -28,14 +28,6 @@
   text-align: center;
 }
 
-.costum-navbar {
-  overflow: hidden;
-  background-color: #333;
-  position: fixed;
-  top: 0;
-  width: 100%;
-}
-
 .account-form-div {
   position: "flex";
   -webkit-box-orient: vertical;
@@ -188,6 +180,30 @@
   -webkit-box-align: start;
       -ms-flex-align: start;
           align-items: flex-start;
+}
+
+.cars-form-div {
+  position: "flex";
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  text-align: center;
+}
+
+.forms-in-cars {
+  margin: 5% 35% 5% 35%;
+  border-radius: 10%;
+  position: "flex";
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
 }
 
 .myTitle {
