@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import Button from "@material-ui/core/Button";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
-import "../../App.css";
 
 import { registerUser } from "../../actions/accountActions";
 import { connect } from "react-redux";
@@ -222,3 +221,4 @@ const mpaDispatchToProps = dispatch => {
 };
 
 export default connect(mapStateToProps, mpaDispatchToProps)(RegistrationForm);
+

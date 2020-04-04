@@ -10,7 +10,7 @@
         "flight/flights.scss",
         "flight/general/flightsList.scss",
         "flight/search/search.scss",
-        "flight/modal/modal.scss"
+        "flight/modal/modal.scss",
     ],
     "names": [],
     "file": "styles.css"

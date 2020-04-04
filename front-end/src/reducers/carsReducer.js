@@ -9,9 +9,11 @@ initialState = {
                 {
                     Id: 1,
                     CarModel: "GT Mustang 56",
+                    RegistrationNumber: "NS-123-123",
+                    NumberOfSeats: 4,
+                    NumberOfDoors: 4,
                     AvailableNow: true,
-
-
+                    deleted: false,
                 }
             ],
 
@@ -25,7 +27,6 @@ initialState = {
             ],
             Grades: [5, 4, 2, 1],
             AverageGrade: 12,
-
         }  
     ]
     
