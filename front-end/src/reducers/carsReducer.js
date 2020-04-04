@@ -12,6 +12,7 @@ initialState = {
                     RegistrationNumber: "NS-123-123",
                     NumberOfSeats: 4,
                     NumberOfDoors: 4,
+                    Image: '',
                     AvailableNow: true,
                     deleted: false,
                 }

@@ -1,7 +1,12 @@
 import React, { Component } from 'react'
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import Button from "@material-ui/core/Button";
+import { Input } from '@material-ui/core';
+import AddAPhotoIcon from '@material-ui/icons/AddAPhoto';
+
+
 import '../../../App.css'
+
 
 export default class VehicleForm extends Component {
 
@@ -12,6 +17,7 @@ export default class VehicleForm extends Component {
         NumberOfSeats: "",
         NumberOfDoors: "",
         AvailableNow: true,
+        Image: ''
     }
 
     handleSubmit = (e) => {
@@ -19,6 +25,25 @@ export default class VehicleForm extends Component {
 
     }
 
+
+    handlePreview = (e) => {
+        e.preventDefault();
+
+        let file = e.target.files[0];
+        let reader = new FileReader();
+
+        if (e.target.files.length === 0) {
+            return;
+        }
+
+        reader.onloadend = (e) => {
+            this.setState({
+                Image: [reader.result]
+            });
+        }
+
+        reader.readAsDataURL(file);
+    }
 
     handleChange = e => {
         this.setState({
@@ -29,8 +54,35 @@ export default class VehicleForm extends Component {
 
     render() {
         return (
-            <div className="cars-form-div">
-                <div className ="forms-in-cars">
+            <div id="form-container">
+                <div className="forms-in-cars">
+                <h3> Car Preview</h3>
+                    <Button
+                        component="label"
+                        variant="contained"
+                        color="primary"
+                        size="large"
+                        startIcon={<AddAPhotoIcon />}
+                    >
+                        Upload image
+                    <input type="file" style={{ display: "none" }} onChange={this.handlePreview} />
+                    </Button>
+
+                   
+                    <div >
+                        {
+                            (this.state.Image === "")
+                                ? (
+                                    <img src={require('../template-images/add-car-form.png')} alt="" className="car-image" />
+                                ) : (
+                                    <img src={this.state.Image} alt="" className="car-image" />
+                                )
+                        }
+
+                    </div>
+                </div>
+
+                <div className="forms-in-cars">
                     <div className="form-text-field">
                         <h3>Add Vehicle</h3>
                     </div>
@@ -94,7 +146,7 @@ export default class VehicleForm extends Component {
                         </div>
                         <br />
                     </ValidatorForm>
-                    </div>
+                </div>
             </div>
 
         )

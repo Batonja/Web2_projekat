@@ -1,16 +1,25 @@
 
-.cars-form-div {
-    position: "flex";
-    flex-direction: column;
+#form-container {
+    display: flex;
+    flex-wrap: nowrap;
     justify-content: center;
     align-items: center;
     text-align: center;
+   // background-color: red;
 }
 
 .forms-in-cars
 {
-    margin: 5% 35% 5% 35%;
+    margin: 30px 30px 30px 30px ;
     border-radius: 10%;
-    position: "flex";
+   // position: "flex";
     justify-content: center;
+    //background-color: blue;
+}
+
+.car-image{
+    margin: 30px 30px 30px 30px;
+    height:230px;
+    width: 400px;
+    border-radius: 20px;
 }

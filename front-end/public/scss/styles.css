@@ -182,12 +182,12 @@
           align-items: flex-start;
 }
 
-.cars-form-div {
-  position: "flex";
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
+#form-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: nowrap;
+      flex-wrap: nowrap;
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
@@ -198,12 +198,18 @@
 }
 
 .forms-in-cars {
-  margin: 5% 35% 5% 35%;
+  margin: 30px 30px 30px 30px;
   border-radius: 10%;
-  position: "flex";
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
+}
+
+.car-image {
+  margin: 30px 30px 30px 30px;
+  height: 230px;
+  width: 400px;
+  border-radius: 20px;
 }
 
 .myTitle {
@@ -219,5 +225,14 @@ body {
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+.form-text-field {
+  width: 400px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #3F51B5;
+  font-weight: bolder;
 }
 /*# sourceMappingURL=styles.css.map */
