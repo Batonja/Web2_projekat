@@ -5,10 +5,10 @@ import Container from "react-bootstrap/Container";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Alert from "react-bootstrap/Alert";
-
 import EventSeatIcon from "@material-ui/icons/EventSeat";
 import FlightBasicInformation from "../Preview/FlightBasicInformation";
 import Modal from "react-bootstrap/Modal";
+import { renderSeatsWithMouseDown } from "../Common/Helpers/renderSeats";
 
 class FirstStep extends Component {
   constructor(props) {
@@ -91,208 +91,24 @@ class FirstStep extends Component {
                 return (
                   <Container className="flightSeats">
                     <Row className="leftSideSeats">
-                      <EventSeatIcon
-                        value={
-                          seatsRowId * this.props.airline.PlaneSeatsNumber[1]
-                        }
-                        color={
-                          seatsRowId === 0
-                            ? "disabled"
-                            : this.state.seats[
-                                seatsRowId *
-                                  this.props.airline.PlaneSeatsNumber[1]
-                              ] === 0
-                            ? "secondary"
-                            : "primary"
-                        }
-                        onMouseDown={(e, color, seatId) =>
-                          this.onHandleAddSeat(
-                            e,
-                            seatsRowId === 0
-                              ? "disabled"
-                              : this.state.seats[
-                                  seatsRowId *
-                                    this.props.airline.PlaneSeatsNumber[1]
-                                ] === 0
-                              ? "secondary"
-                              : "primary",
-                            seatsRowId * this.props.airline.PlaneSeatsNumber[1]
-                          )
-                        }
-                      />
-
-                      <EventSeatIcon
-                        value={
-                          seatsRowId * this.props.airline.PlaneSeatsNumber[1] +
-                          1
-                        }
-                        color={
-                          seatsRowId === 0
-                            ? "disabled"
-                            : this.state.seats[
-                                seatsRowId *
-                                  this.props.airline.PlaneSeatsNumber[1] +
-                                  1
-                              ] === 0
-                            ? "secondary"
-                            : "primary"
-                        }
-                        onMouseDown={(e, color, seatId) =>
-                          this.onHandleAddSeat(
-                            e,
-                            seatsRowId === 0
-                              ? "disabled"
-                              : this.state.seats[
-                                  seatsRowId *
-                                    this.props.airline.PlaneSeatsNumber[1] +
-                                    1
-                                ] === 0
-                              ? "secondary"
-                              : "primary",
-                            seatsRowId *
-                              this.props.airline.PlaneSeatsNumber[1] +
-                              1
-                          )
-                        }
-                      />
-                      <EventSeatIcon
-                        value={
-                          seatsRowId * this.props.airline.PlaneSeatsNumber[1] +
-                          2
-                        }
-                        color={
-                          seatsRowId === 0
-                            ? "disabled"
-                            : this.state.seats[
-                                seatsRowId *
-                                  this.props.airline.PlaneSeatsNumber[1] +
-                                  2
-                              ] === 0
-                            ? "secondary"
-                            : "primary"
-                        }
-                        onMouseDown={(e, color, seatId) =>
-                          this.onHandleAddSeat(
-                            e,
-                            seatsRowId === 0
-                              ? "disabled"
-                              : this.state.seats[
-                                  seatsRowId *
-                                    this.props.airline.PlaneSeatsNumber[1] +
-                                    2
-                                ] === 0
-                              ? "secondary"
-                              : "primary",
-                            seatsRowId *
-                              this.props.airline.PlaneSeatsNumber[1] +
-                              2
-                          )
-                        }
-                      />
+                      {renderSeatsWithMouseDown(
+                        seatsRowId,
+                        this.props.airline.PlaneSeatsNumber[1],
+                        0,
+                        this.state.seats,
+                        (e, color, seatId) =>
+                          this.onHandleAddSeat(e, color, seatId)
+                      )}
                     </Row>
                     <Row className="rightSideSeats">
-                      <EventSeatIcon
-                        value={
-                          seatsRowId * this.props.airline.PlaneSeatsNumber[1] +
-                          3
-                        }
-                        color={
-                          seatsRowId === 0
-                            ? "disabled"
-                            : this.state.seats[
-                                seatsRowId *
-                                  this.props.airline.PlaneSeatsNumber[1] +
-                                  3
-                              ] === 0
-                            ? "secondary"
-                            : "primary"
-                        }
-                        onMouseDown={(e, color, seatId) =>
-                          this.onHandleAddSeat(
-                            e,
-                            seatsRowId === 0
-                              ? "disabled"
-                              : this.state.seats[
-                                  seatsRowId *
-                                    this.props.airline.PlaneSeatsNumber[1] +
-                                    3
-                                ] === 0
-                              ? "secondary"
-                              : "primary",
-                            seatsRowId *
-                              this.props.airline.PlaneSeatsNumber[1] +
-                              3
-                          )
-                        }
-                      />
-                      <EventSeatIcon
-                        value={
-                          seatsRowId * this.props.airline.PlaneSeatsNumber[1] +
-                          4
-                        }
-                        color={
-                          seatsRowId === 0
-                            ? "disabled"
-                            : this.state.seats[
-                                seatsRowId *
-                                  this.props.airline.PlaneSeatsNumber[1] +
-                                  4
-                              ] === 0
-                            ? "secondary"
-                            : "primary"
-                        }
-                        onMouseDown={(e, color, seatId) =>
-                          this.onHandleAddSeat(
-                            e,
-                            seatsRowId === 0
-                              ? "disabled"
-                              : this.state.seats[
-                                  seatsRowId *
-                                    this.props.airline.PlaneSeatsNumber[1] +
-                                    4
-                                ] === 0
-                              ? "secondary"
-                              : "primary",
-                            seatsRowId *
-                              this.props.airline.PlaneSeatsNumber[1] +
-                              4
-                          )
-                        }
-                      />
-                      <EventSeatIcon
-                        value={
-                          seatsRowId * this.props.airline.PlaneSeatsNumber[1] +
-                          5
-                        }
-                        color={
-                          seatsRowId === 0
-                            ? "disabled"
-                            : this.state.seats[
-                                seatsRowId *
-                                  this.props.airline.PlaneSeatsNumber[1] +
-                                  5
-                              ] === 0
-                            ? "secondary"
-                            : "primary"
-                        }
-                        onMouseDown={(e, color, seatId) =>
-                          this.onHandleAddSeat(
-                            e,
-                            seatsRowId === 0
-                              ? "disabled"
-                              : this.state.seats[
-                                  seatsRowId *
-                                    this.props.airline.PlaneSeatsNumber[1] +
-                                    5
-                                ] === 0
-                              ? "secondary"
-                              : "primary",
-                            seatsRowId *
-                              this.props.airline.PlaneSeatsNumber[1] +
-                              5
-                          )
-                        }
-                      />
+                      {renderSeatsWithMouseDown(
+                        seatsRowId,
+                        this.props.airline.PlaneSeatsNumber[1],
+                        Math.ceil(this.props.airline.PlaneSeatsNumber[1] / 2),
+                        this.state.seats,
+                        (e, color, seatId) =>
+                          this.onHandleAddSeat(e, color, seatId)
+                      )}
                     </Row>
                   </Container>
                 );

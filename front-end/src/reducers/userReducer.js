@@ -29,8 +29,8 @@ const initialState = {
     {
       Email: "mileta@bode.com",
       Password: "test",
-      Name: "Milojica",
-      FirstName: "Milovanov",
+      FirstName: "Milojica",
+      LastName: "Milovanov",
       Friends: ["thestepa@gmail.com"],
       Address: "Cika Zike 22",
       Phone: "0612114242",

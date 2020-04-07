@@ -274,6 +274,7 @@ class SecondStep extends Component {
                 friends={this.props.loggedInUser.Friends}
               />
               <br />
+
               <Button
                 onMouseDown={this.inviteFriend}
                 variant="contained"
