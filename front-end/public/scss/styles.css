@@ -1,22 +1,15 @@
+.header {
+  background-color: #3F51B5;
+}
+
 .header .title {
   margin-left: 40%;
   font-size: xx-large;
 }
 
-.header .navigation {
-  width: 100%;
-}
 
-.header .navigation ul {
-  list-style-type: none;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-}
 
-.header .navigation ul li {
-  padding-left: 10px;
-}
+
 
 .costum-footer {
   position: fixed;
@@ -222,13 +215,16 @@
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+ "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+ sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+ monospace;
 }
 
 .form-text-field {

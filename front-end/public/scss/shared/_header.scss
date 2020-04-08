@@ -1,17 +1,7 @@
 .header {
+  background-color: #3F51B5;
   .title {
     margin-left: 40%;
     font-size: xx-large;
+   
   }
-  .navigation {
-    width: 100%;
-
-    ul {
-      list-style-type: none;
-      display: flex;
-      li {
-        padding-left: 10px;
-      }
-    }
-  }
-}
