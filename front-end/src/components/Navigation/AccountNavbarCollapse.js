@@ -85,8 +85,8 @@ const AccountNavbarCollapse = (props) => {
                     open={Boolean(anchorEl)}
                     onClose={handleClose}
                 >
-                    <MenuItem onClick={handleClose}>Login</MenuItem>
-                    <MenuItem onClick={handleClose}>Register</MenuItem>
+                    <MenuItem onClick={handleClose} to={"/signin"} component={RouterLink}>Login</MenuItem>
+                    <MenuItem onClick={handleClose} to={"/signup"} component={RouterLink}>Register</MenuItem>
                 </Menu>
             </div>
 
