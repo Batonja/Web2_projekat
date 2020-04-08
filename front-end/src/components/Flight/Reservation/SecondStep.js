@@ -26,16 +26,24 @@ class SecondStep extends Component {
       passportIdError: false,
       nameError: false,
       lastNameError: false,
+      email: "",
+      emailError: false,
       selectedFriendEmail: "",
       luggage: 0,
       ticketType: 0,
       currentReservation: 0,
+      seatsIds: [],
     };
 
     this.passportIdField = React.createRef();
     this.nameField = React.createRef();
     this.lastNameField = React.createRef();
     this.inviteFriendRef = React.createRef();
+    this.emailField = React.createRef();
+  }
+
+  componentDidMount() {
+    this.setState({ seatsIds: this.props.seatsIds });
   }
 
   componentDidUpdate() {
@@ -73,6 +81,11 @@ class SecondStep extends Component {
 
     this.setState({ passportId: event.target.value, passportIdError: false });
   }
+
+  updateEmail = (event) => {
+    this.setState({ email: event.target.value });
+  };
+
   onHandleLuggageChange = (event) => {
     this.setState({ luggage: event.target.value });
   };
@@ -102,7 +115,8 @@ class SecondStep extends Component {
       PassportId: theUser.PassportId,
       Luggage: this.state.luggage,
       TicketType: this.state.ticketType,
-      Email: this.state.selectedFriendEmail,
+      Email: theUser.Email,
+      SeatId: this.state.seatsIds[this.state.currentReservation],
     };
 
     this.inviteFriendRef.current.removeInvitedFriend();
@@ -113,6 +127,7 @@ class SecondStep extends Component {
     const regexLettersSpaceNumbers = /^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/;
     const regexLettersOnly = /[^A-Za-z]+/;
     const regexNotANumber = /[^0-9]/;
+    const regexEmail = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
     if (event.button === 0) {
       if (
         this.state.name === "" ||
@@ -135,13 +150,17 @@ class SecondStep extends Component {
         this.setState({ passportIdError: true });
         return;
       }
-
+      if (!regexEmail.test(event.target.value)) {
+        this.setState({ emailError: true });
+      }
       const passenger = {
         FirstName: this.state.name,
         LastName: this.state.lastName,
         PassportId: this.state.passportId,
+        Email: this.state.email,
         Luggage: this.state.luggage,
         TicketType: this.state.ticketType,
+        SeatId: this.props.seatsIds[this.state.currentReservation],
       };
 
       this.resetFields();
@@ -219,6 +238,26 @@ class SecondStep extends Component {
                 </Popover>
               </Overlay>
             </Col>
+            <Col md="auto" className="flightItem">
+              <TextField
+                label="Email"
+                onChange={(event) => this.updateEmail(event)}
+                inputRef={this.emailField}
+              />
+            </Col>
+            <Overlay
+              target={this.emailField}
+              show={this.state.emailError}
+              placement="bottom"
+            >
+              <Popover>
+                <Popover.Content>
+                  <Alert variant="warning">
+                    Invalid email please provide a valid one
+                  </Alert>
+                </Popover.Content>
+              </Popover>
+            </Overlay>
           </Row>
           <br />
           <Row className="flightPresentRow">
@@ -272,6 +311,7 @@ class SecondStep extends Component {
                 sendSelectedFriend={(email) => this.getSelectedEmail(email)}
                 allUsers={this.props.allUsers}
                 friends={this.props.loggedInUser.Friends}
+                passengers={this.props.flight.Passengers}
               />
               <br />
 

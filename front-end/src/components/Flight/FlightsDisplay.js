@@ -5,7 +5,7 @@ import Button from "@material-ui/core/Button";
 import ReservationModal from "./ReservationModal";
 import { connect } from "react-redux";
 import { Collapse } from "react-collapse";
-
+import Spinner from "react-bootstrap/Spinner";
 import Modal from "react-bootstrap/Modal";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -15,6 +15,8 @@ import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import InputLabel from "@material-ui/core/InputLabel";
 import { renderSeats } from "./Common/Helpers/renderSeats";
+import reserveSeats from "../../actions/Flight/reserveSeats";
+
 const modalStyle = { "z-index": "1200" };
 
 class FlightsDisplay extends Component {
@@ -67,9 +69,7 @@ class FlightsDisplay extends Component {
     this.setState({ openedModal: -1 });
   };
 
-  fastReservation = (event) => {
-    event.preventDefault();
-  };
+  fastReservation = (seats, airlineId, flightId) => {};
 
   render() {
     return (
@@ -100,30 +100,36 @@ class FlightsDisplay extends Component {
                     <Collapse isOpened={this.isOpened(flight.Id)}>
                       <Row className="flightPresentRow">
                         <Col md="auto" className="flightItem">
-                          {Array.from(
-                            new Array(airline.PlaneSeatsNumber[0])
-                          ).map((seatsRow, seatsRowId) => {
-                            return (
-                              <Container className="flightSeats">
-                                <Row className="leftSideSeats">
-                                  {renderSeats(
-                                    seatsRowId,
-                                    airline.PlaneSeatsNumber[1],
-                                    0,
-                                    flight.Seats
-                                  )}
-                                </Row>
-                                <Row className="rightSideSeats">
-                                  {renderSeats(
-                                    seatsRowId,
-                                    airline.PlaneSeatsNumber[1],
-                                    Math.ceil(airline.PlaneSeatsNumber[1] / 2),
-                                    flight.Seats
-                                  )}
-                                </Row>
-                              </Container>
-                            );
-                          })}
+                          {this.props.isLoading ? (
+                            <Spinner animation="border" />
+                          ) : (
+                            Array.from(
+                              new Array(airline.PlaneSeatsNumber[0])
+                            ).map((seatsRow, seatsRowId) => {
+                              return (
+                                <Container className="flightSeats">
+                                  <Row className="leftSideSeats">
+                                    {renderSeats(
+                                      seatsRowId,
+                                      airline.PlaneSeatsNumber[1],
+                                      0,
+                                      flight.Seats
+                                    )}
+                                  </Row>
+                                  <Row className="rightSideSeats">
+                                    {renderSeats(
+                                      seatsRowId,
+                                      airline.PlaneSeatsNumber[1],
+                                      Math.ceil(
+                                        airline.PlaneSeatsNumber[1] / 2
+                                      ),
+                                      flight.Seats
+                                    )}
+                                  </Row>
+                                </Container>
+                              );
+                            })
+                          )}
                         </Col>
 
                         <Col md="auto" className="flightItem">
@@ -160,7 +166,11 @@ class FlightsDisplay extends Component {
                             className="flightReserveButton"
                             color="primary"
                             variant="contained"
-                            onClick={(e) => this.fastReservation(e)}
+                            onClick={this.fastReservation(
+                              flight.Seats,
+                              airline.Id,
+                              flight.Id
+                            )}
                           >
                             Fast Reservation
                           </Button>
@@ -210,6 +220,13 @@ class FlightsDisplay extends Component {
 }
 const mapStateToProps = (state) => ({
   airlines: state.flightReducer.airlines,
+  loggedInUser: state.userReducer.LoggedInUser,
+  isLoading: state.loadingReducer.loading,
 });
 
-export default connect(mapStateToProps)(FlightsDisplay);
+const mapDispatchToProps = (dispatch) => ({
+  OnFastReservation: (seats, passengers, airlineId, flightId) =>
+    reserveSeats(seats, passengers, airlineId, flightId),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(FlightsDisplay);

@@ -16,6 +16,7 @@ class FirstStep extends Component {
 
     this.state = {
       seats: [],
+      seatsIds: [],
       numReservedSeats: 0,
       invalidForm: false,
     };
@@ -39,7 +40,11 @@ class FirstStep extends Component {
         numReserved++;
       }
 
-      this.setState({ seats: seats, numReservedSeats: numReserved });
+      this.setState({
+        seats: seats,
+        numReservedSeats: numReserved,
+        seatsIds: this.state.seatsIds.concat(seatId),
+      });
     }
   };
   onAddReservation = (event) => {
@@ -55,7 +60,8 @@ class FirstStep extends Component {
       this.props.sendSeats(
         this.state.seats,
         this.state.numReservedSeats,
-        completedReservations
+        completedReservations,
+        this.state.seatsIds
       );
 
       this.props.goToNextStep();

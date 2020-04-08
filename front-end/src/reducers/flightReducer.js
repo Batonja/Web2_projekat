@@ -1,6 +1,9 @@
+import { RESERVE_SEATS } from "../actions/Flight/reserveSeats";
+
 const initialState = {
   airlines: [
     {
+      Id: 0,
       Title: "Batijeva avio kompanija",
       Address: "Generala Batija 34",
       Description:
@@ -17,6 +20,7 @@ const initialState = {
           ChangeOvers: ["London", "Dubai"],
           Price: 400,
           Seats: [],
+          Passengers: [],
         },
         {
           Id: 2,
@@ -77,6 +81,7 @@ const initialState = {
             1,
             1,
           ],
+          Passengers: [],
         },
       ],
       Tickets: { Economy: 10, Business: 0 },
@@ -87,6 +92,7 @@ const initialState = {
       ],
     },
     {
+      Id: 1,
       Title: "Damirova avio kompanija",
       Address: "Vojvode Misica 35",
       Description:
@@ -140,6 +146,7 @@ const initialState = {
             1,
             1,
           ],
+          Passengers: [],
         },
         {
           Id: 4,
@@ -151,6 +158,7 @@ const initialState = {
           ChangeOvers: ["Birmingham", "Georgia"],
           Price: 550,
           Seats: [],
+          Passengers: [],
         },
       ],
       Tickets: { Economy: 15, Business: 2 },
@@ -165,6 +173,43 @@ const initialState = {
 
 export default function flightReducer(state = initialState, { type, payload }) {
   switch (type) {
+    case RESERVE_SEATS:
+      for (
+        var indexOfAirline = 0;
+        indexOfAirline < state.airlines.length;
+        indexOfAirline++
+      ) {
+        if (state.airlines[indexOfAirline].Id === payload.airlineId) {
+          for (
+            var indexOfFlight = 0;
+            indexOfFlight < state.airlines[indexOfAirline].Flights.length;
+            indexOfFlight++
+          ) {
+            if (
+              state.airlines[indexOfAirline].Flights[indexOfFlight].Id ===
+              payload.flightId
+            ) {
+              var editedAirline = state.airlines[indexOfAirline];
+              editedAirline.Flights[indexOfFlight].Seats = payload.seats;
+              editedAirline.Flights[
+                indexOfFlight
+              ].Passengers = editedAirline.Flights[
+                indexOfFlight
+              ].Passengers.concat(payload.passengers);
+
+              return {
+                ...state,
+                Airlines: [
+                  ...state.airlines.slice(0, indexOfAirline),
+                  editedAirline,
+                  state.airlines.slice(indexOfAirline),
+                ],
+              };
+            }
+          }
+        }
+      }
+
     default:
       return state;
   }
