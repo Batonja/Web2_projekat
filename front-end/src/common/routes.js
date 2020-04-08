@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as  Route,  Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Flight from "../components/Flight/Flight";
 import Hotel from "../components/Hotel/Hotel";
 import Car from "../components/Car/Car";
@@ -17,7 +17,7 @@ export function Routes() {
       <Route path="/flights" component={Flight} />
       <Route path="/hotels" component={Hotel} />
       <Route path="/cars" component={Car} />
-      
+
       <Route path="/account" component={Account} />
       <Route path="/signin" component={LoginForm} />
       <Route path="/signup" component={RegistrationForm} className="forms" />

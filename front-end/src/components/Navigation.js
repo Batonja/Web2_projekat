@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { BrowserRouter as Link, } from "react-router-dom";
+import { BrowserRouter as Link } from "react-router-dom";
 import Paper from "@material-ui/core/Paper";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
@@ -17,7 +17,7 @@ class Navigation extends Component {
 
     this.state = {
       value: -1,
-      menuOpened: false
+      menuOpened: false,
     };
   }
   componentDidMount() {
@@ -38,7 +38,7 @@ class Navigation extends Component {
     this.setState({ value: newValue });
   };
 
-  handleClick = event => {
+  handleClick = (event) => {
     this.setState({ anchorEl: event.target });
   };
   handleClose = () => {
@@ -81,12 +81,12 @@ class Navigation extends Component {
                 anchorEl={this.state.anchorEl}
                 anchorOrigin={{
                   vertical: "top",
-                  horizontal: "right"
+                  horizontal: "right",
                 }}
                 keepMounted
                 transformOrigin={{
                   vertical: "top",
-                  horizontal: "center"
+                  horizontal: "center",
                 }}
                 open={Boolean(this.state.anchorEl)}
                 onClose={this.handleClose}
@@ -119,7 +119,7 @@ class Navigation extends Component {
     );
   }
 }
-const mapStateToProps = state => ({
-  loggedUser: state.userReducer.LoggedInUser
+const mapStateToProps = (state) => ({
+  loggedUser: state.userReducer.LoggedInUser,
 });
 export default connect(mapStateToProps)(Navigation);
