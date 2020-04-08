@@ -42,7 +42,7 @@ class RegistrationForm extends Component {
   componentDidMount() {
     const regexLettersOnly = /[^A-Za-z]+/;
     const regexNotANumber = /[^0-9]/;
-    const regexAddress = /^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/;
+    //const regexAddress = /^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/;
     //Email
     ValidatorForm.addValidationRule("isExistingUser", value => {
       let emailSearch = this.props.usersEmails.find(email => email === value);

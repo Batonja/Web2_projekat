@@ -209,7 +209,7 @@ export default function flightReducer(state = initialState, { type, payload }) {
           }
         }
       }
-
+      break;
     default:
       return state;
   }

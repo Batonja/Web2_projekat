@@ -3,7 +3,7 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { connect } from "react-redux";
-import TextField from "@material-ui/core/TextField";
+//import TextField from "@material-ui/core/TextField";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 
 import Button from "@material-ui/core/Button";
@@ -27,7 +27,7 @@ class Account extends Component {
   componentDidMount() {
     const regexLettersOnly = /[^A-Za-z]+/;
     const regexNotANumber = /[^0-9]/;
-    const regexAddress = /^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/;
+    //const regexAddress = /^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/;
 
     const allEmails = [];
     const allFriends = [];

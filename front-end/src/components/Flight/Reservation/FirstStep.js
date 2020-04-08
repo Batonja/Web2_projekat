@@ -5,7 +5,7 @@ import Container from "react-bootstrap/Container";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Alert from "react-bootstrap/Alert";
-import EventSeatIcon from "@material-ui/icons/EventSeat";
+//import EventSeatIcon from "@material-ui/icons/EventSeat";
 import FlightBasicInformation from "../Preview/FlightBasicInformation";
 import Modal from "react-bootstrap/Modal";
 import { renderSeatsWithMouseDown } from "../Common/Helpers/renderSeats";

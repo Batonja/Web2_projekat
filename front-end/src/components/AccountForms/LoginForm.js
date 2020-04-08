@@ -7,23 +7,24 @@ class LoginForm extends Component {
     super(props);
 
     this.state = {
-      emailError: false
+      password: '',
+      email: ''
     };
-    this.emailRef = React.createRef();
-    this.passwordRef = React.createRef();
+
 
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  handleChange = e => {
+    this.setState({
+      ...this.state,
+      [e.target.name]: e.target.value
+    });
+  };
+
+
   handleSubmit() {
-    this.setState({ emailError: false });
-
-    const regexEmail = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
-
-    if (!regexEmail.test(this.emailRef.current.value)) {
-      this.setState({ emailError: true });
-      //Trigger error message for email
-    }
+    
   }
   render() {
     return (
@@ -35,17 +36,10 @@ class LoginForm extends Component {
             label="Email"
             id="email-form"
             name="email"
-            ref={this.emailRef}
             validators={["required", "isEmail"]}
             errorMessages={["this field is required", "email is not valid"]}
           />
-          {this.state.emailError === true ? (
-            <p style={{ color: "red" }}>
-              Email error please provide valid email
-            </p>
-          ) : (
-            ""
-          )}
+        
           <br />
 
           <TextValidator
@@ -55,7 +49,7 @@ class LoginForm extends Component {
             id="password-form"
             name="password"
             validators={["required"]}
-            errorMessages={["this field is required"]}
+            errorMessages={["Password field is required"]}
           />
 
           <br />

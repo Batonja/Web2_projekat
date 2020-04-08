@@ -3,9 +3,7 @@ import Col from "react-bootstrap/Col";
 import TextField from "@material-ui/core/TextField";
 
 class FlightBasicInformation extends Component {
-  constructor(props) {
-    super(props);
-  }
+
 
   render() {
     return (

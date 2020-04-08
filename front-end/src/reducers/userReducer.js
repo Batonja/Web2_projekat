@@ -46,7 +46,6 @@ export default function userReducer(state = initialState, action) {
         ...state,
         AllUsers: [...state.AllUsers, action.payload],
       };
-      break;
     default:
       return state;
   }

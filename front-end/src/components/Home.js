@@ -9,9 +9,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 
 class Home extends Component {
-  constructor(props) {
-    super(props);
-  }
+
 
   render() {
     return (

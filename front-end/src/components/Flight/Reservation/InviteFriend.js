@@ -39,7 +39,7 @@ class InviteFriend extends Component {
             indexNextFriend < this.state.allFriends.length;
             indexNextFriend++
           ) {
-            if (this.state.allFriends[indexNextFriend] != friend) {
+            if (this.state.allFriends[indexNextFriend] !== friend) {
               this.setState({
                 selectedFriend: this.state.allFriends[indexNextFriend],
               });

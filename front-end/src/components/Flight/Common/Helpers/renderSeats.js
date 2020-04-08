@@ -1,5 +1,5 @@
 import EventSeatIcon from "@material-ui/icons/EventSeat";
-import React, { useState } from "react";
+import React from "react";
 
 export function renderSeats(
   seatsRowId,

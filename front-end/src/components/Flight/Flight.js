@@ -3,14 +3,14 @@ import Button from "@material-ui/core/Button";
 import Search from "./Search";
 import FlightsDisplay from "./FlightsDisplay";
 import { Link } from "react-router-dom";
+import { withStyles } from "@material-ui/core/styles";
 
-import { makeStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles(theme => ({
+const styles = theme => ({
   button: {
     margin: theme.spacing(1)
   }
-}));
+});
 
 class Flight extends Component {
   constructor(props) {
@@ -45,4 +45,4 @@ class Flight extends Component {
   }
 }
 
-export default Flight;
+export default withStyles(styles)(Flight);

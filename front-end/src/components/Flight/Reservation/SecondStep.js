@@ -13,7 +13,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import InviteFriend from "./InviteFriend";
 import { connect } from "react-redux";
 
-const modalStyle = { "z-index": "1200" };
+//const modalStyle = { "z-index": "1200" };
 
 class SecondStep extends Component {
   constructor(props) {
@@ -48,7 +48,7 @@ class SecondStep extends Component {
 
   componentDidUpdate() {
     if (
-      this.state.currentReservation != this.props.numOfCompletedReservations
+      this.state.currentReservation !== this.props.numOfCompletedReservations
     ) {
       this.setState({
         currentReservation: this.props.numOfCompletedReservations,
@@ -60,8 +60,13 @@ class SecondStep extends Component {
     this.passportIdField.current.value = "";
     this.nameField.current.value = "";
     this.lastNameField.current.value = "";
-    this.state.luggage = 0;
-    this.state.ticketType = 0;
+    // this.state.luggage = 0;
+    // this.state.ticketType = 0;
+    this.setState({
+      ...this.state,
+      langguage: 0,
+      ticketType: 0
+    })
   }
 
   updateName(event) {
