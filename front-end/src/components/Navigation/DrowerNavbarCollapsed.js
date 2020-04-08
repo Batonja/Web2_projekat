@@ -11,7 +11,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import FlightIcon from "@material-ui/icons/Flight";
 import HomeIcon from "@material-ui/icons/Home";
 import IconButton from "@material-ui/core/IconButton";
-
+import { Link as RouterLink } from "react-router-dom";
 
 const useStyles = makeStyles({
     list: {
@@ -20,7 +20,7 @@ const useStyles = makeStyles({
     fullList: {
         width: "auto"
     },
-    
+
     toggleDrawer: {}
 });
 
@@ -51,7 +51,11 @@ export default function DrowerNavbarCollapsed() {
             onKeyDown={toggleDrawer(anchor, false)}
         >
             <List>
-                <ListItem button key={"Airlines"}>
+                <ListItem
+                    button
+                    key={"Airlines"}
+                    to={"/flights"}
+                    component={RouterLink}>
                     <ListItemIcon>
                         <FlightIcon />
                     </ListItemIcon>
@@ -60,7 +64,11 @@ export default function DrowerNavbarCollapsed() {
             </List>
             <Divider />
             <List>
-                <ListItem button key={"RentACar"}>
+                <ListItem
+                    button
+                    key={"RentACar"}
+                    to={"/cars"}
+                    component={RouterLink}>
                     <ListItemIcon>
                         <EmojiTransportationIcon />
                     </ListItemIcon>
