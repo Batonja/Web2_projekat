@@ -18,67 +18,71 @@ const styles = (theme) => ({
     position: "absolute",
     left: 0,
   },
-  buttonBar: {
+  buttonBarFlexMenu: {
+    display: "flex",
     [theme.breakpoints.down("xs")]: {
       display: "none",
     },
-    margin: "10px",
+    margin: "0",
     paddingLeft: "16px",
     right: 0,
     position: "relative",
     width: "100%",
     background: "transparent",
   },
+  margin: "10px",
+  paddingLeft: "16px",
+  right: 0,
+  position: "relative",
+  width: "100%",
+  background: "transparent",
 
   buttonCollapse: {
     [theme.breakpoints.up("sm")]: {
       display: "none",
     },
-    margin: "0",
-    boxShadow: "none",
+
+    toggleDrawer: {},
+    linkButtonDiv: {
+      margin: "10px",
+    },
   },
-  toggleDrawer: {},
 });
 
 const MenuNavbarCollapse = (props) => {
   const { classes } = props;
 
-  return (
-    <div className={classes.menu}>
-      <div className={classes.buttonCollapse}>
-        <DrowerNavbarCollapsed />
-      </div>
-
-      <div className={props.classes.buttonBar} id="menu-uncollapsed">
-        <IconButton
-          color="inherit"
-          aria-label="Menu"
-          className={classes.toggleDrawer}
-        >
-          <HomeIcon />
-        </IconButton>
-        <Link
-          component="button"
-          variant="body2"
-          color="inherit"
-          to={"/flights"}
-          component={RouterLink}
-        >
-          Airlines
-        </Link>
-
-        <Link
-          component="button"
-          variant="body2"
-          color="inherit"
-          to={"/signin"}
-          component={RouterLink}
-        >
-          Rent A Car
-        </Link>
-      </div>
+  <div className={props.classes.buttonBarFlexMenu} id="menu-uncollapsed">
+    <div>
+      <IconButton
+        color="inherit"
+        aria-label="Menu"
+        className={classes.toggleDrawer}
+      >
+        <HomeIcon />
+      </IconButton>
     </div>
-  );
+    <div className={classes.linkButtonDiv}>
+      <Link
+        variant="body2"
+        color="inherit"
+        to={"/signin"}
+        component={RouterLink}
+      >
+        Airlines
+      </Link>
+    </div>
+    <div className={classes.linkButtonDiv}>
+      <Link
+        variant="body2"
+        color="inherit"
+        to={"/signin"}
+        component={RouterLink}
+      >
+        Rent A Car
+      </Link>
+    </div>
+  </div>;
 };
 
 export default withStyles(styles)(MenuNavbarCollapse);
