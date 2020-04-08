@@ -10,69 +10,69 @@ import AccountNavbarCollapse from "./AccountNavbarCollapse";
 import MenuNavbarCollapse from "./MenuNavbarCollapse";
 
 const styles = (theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  grow: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginLeft: -12,
-    marginRight: 20,
-  },
+    root: {
+        flexGrow: 1,
+    },
+    grow: {
+        flexGrow: 1,
+    },
+    menuButton: {
+        marginLeft: -12,
+        marginRight: 20,
+    },
 
-  navigation: {},
-  toggleDrawer: {},
-  appTitle: {
-    //position: "static",
-    flexGrow: 1,
-    // left: "50%",
-    //top: "10%",
-    width: "100%",
-    height: "100%",
-    textAlign: "center",
-    fontFamily: "Charmonman", //"Impact, Charcoal, sans-serif",
-  },
-  logo: {
-    flexGrow: 1,
-    position: "absolute",
-    margin: "auto",
-    //textAlign: 'center',
-    left: "5%",
-    maxWidth: "100%",
-    maxHeight: "100%",
-    zIndex: "-1",
-    opacity: "0.5",
-  },
-  customizeToolbar: {
-    minHeight: 60,
-    maxHeight: 80,
-  },
+    navigation: {},
+    toggleDrawer: {},
+    appTitle: {
+        [theme.breakpoints.down("sm")]: {
+            display: "none",
+            textAlign: 'right'
+        },
+        //flexGrow: 1,
+        width: "100%",
+        height: "100%",
+        textAlign: "center",
+        fontFamily: "Charmonman", //"Impact, Charcoal, sans-serif",
+    },
+    logo: {
+        flexGrow: 1,
+        position: "absolute",
+        margin: "auto",
+        left: "5%",
+        maxWidth: "100%",
+        maxHeight: "100%",
+        zIndex: "-1",
+        opacity: "0.5",
+    },
+    customizeToolbar: {
+        minHeight: 60,
+        maxHeight: 80,
+    },
 });
 
 function Navbar(props) {
-  const { classes } = props;
-  //const logo = <img style={{ marginTop: 10 }} src={require('./logo.png')} alt="logo" className={classes.logo} />
-  return (
-    <div>
-      <AppBar position="fixed" className={classes.navigation}>
-        <Toolbar className={classes.customizeToolbar}>
-          {/* {logo} */}
-          <MenuNavbarCollapse />
-          <Typography variant="h3" color="inherit" className={classes.appTitle}>
-            <Link component={RouterLink} to="/" color="inherit">
-              Doom Travel
+    const { classes } = props;
+    //const logo = <img style={{ marginTop: 10 }} src={require('./logo.png')} alt="logo" className={classes.logo} />
+    return (
+        <div>
+            <AppBar position="fixed" className={classes.navigation}>
+                <Toolbar className={classes.customizeToolbar}>
+                    {/* {logo} */}
+                    <MenuNavbarCollapse />
+                    <Typography variant="h3" color="inherit" className={classes.appTitle}>
+                        <Link component={RouterLink} to="/" color="inherit">
+                            Doom Travel
             </Link>
-          </Typography>
-          <AccountNavbarCollapse />
-        </Toolbar>
-      </AppBar>
-    </div>
-  );
+                    </Typography>
+                    <AccountNavbarCollapse />
+                </Toolbar>
+            </AppBar>
+        </div>
+    );
 }
 
 Navbar.propTypes = {
-  classes: PropTypes.object.isRequired,
+    classes: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(Navbar);

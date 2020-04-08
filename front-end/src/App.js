@@ -5,14 +5,27 @@ import { Routes } from "./common/routes";
 import { BrowserRouter as Router } from "react-router-dom";
 import Navbar from './components/Navigation/Navbar'
 
-function App() {
+
+
+
+
+
+
+
+function App(props) {
+  const {classes} = props; 
   return (
-    <Router>
-        <Navbar />
-      <Routes />
-      <Footer />
-    </Router>
+    <div >
+      <Router>
+        <Navbar  />
+        <br/><br/><br/><br/>
+        <div>
+          <Routes/>
+          <Footer/>
+        </div>
+      </Router>
+    </div>
   );
 }
 
-export default App;
+export default (App);
