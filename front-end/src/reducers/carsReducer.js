@@ -1,7 +1,7 @@
-initialState = {
-    rentacarServices: [
+const initialState = {
+    rentACarServices: [
         {
-            Administrator:{
+            Administrator: {
                 FirstName: "Stepa",
                 LastName: "Stepanovic",
                 Email: "thestepa@gmail.com",
@@ -20,9 +20,14 @@ initialState = {
                 {
                     Id: 1,
                     CarModel: "GT Mustang 56",
+                    PriceADay: 150,
                     RegistrationNumber: "NS-123-123",
-                    NumberOfSeats: 4,
-                    NumberOfDoors: 4,
+                    NumberOfSeats: 5,
+                    NumberOfDoors: 5,
+                    NumberOfSuitcases: 2,
+                    CoolingType: "Aircondition",
+                    GearboxType: "Automatic",
+                    Aircondition: true,
                     Image: '',
                     AvailableNow: true,
                     deleted: false,
@@ -31,9 +36,14 @@ initialState = {
                 {
                     Id: 2,
                     CarModel: "Audi TT",
+                    PriceADay: 350,
                     RegistrationNumber: "NS-124-124",
                     NumberOfSeats: 4,
                     NumberOfDoors: 4,
+                    NumberOfSuitcases: 2,
+                    CoolingType: "Aircondition",
+                    GearboxType: "Automatic",
+                    Aircondition: true,
                     Image: '',
                     AvailableNow: true,
                     deleted: false,
@@ -42,16 +52,20 @@ initialState = {
                 {
                     Id: 2,
                     CarModel: "Toyota Hybrid C-HR",
+                    PriceADay: 140,
                     RegistrationNumber: "NS-124-124",
                     NumberOfSeats: 4,
                     NumberOfDoors: 4,
+                    GearboxType: "Automatic",
+                    NumberOfSuitcases: 2,
+                    CoolingType: "Aircondition",
                     Image: '',
+                    Aircondition: true,
                     AvailableNow: true,
                     deleted: false,
                     AverageCarGrade: 4
                 }
             ],
-
             BranchOffices: [
                 {
                     Id: 1,
@@ -61,12 +75,13 @@ initialState = {
                 }
             ],
             Grades: [5, 4, 2, 1],
-            AverageGrade: 12,
+            AverageGrade: 4,
         },
     ]
-    
+
 }
 export default function userReducer(state = initialState, action) {
+
     switch (action.type) {
         default:
             return state;

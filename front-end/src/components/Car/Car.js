@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import AddVehicleForm from './Forms/AddVehicleForm'
 import CarOrdersModal from './CarOrdersModal'
+import { connect } from "react-redux";
+import { makeStyles } from "@material-ui/core/styles";
+import {compose } from 'redux'
 
-import { withStyles } from "@material-ui/core/styles";
-
-const styles = (theme) => ({
+const useStyles = makeStyles({
 
   carPageFlexContainer: {
     flexWrap: "nowrap",
@@ -22,19 +23,35 @@ const styles = (theme) => ({
 
 
 const Car = (props) => {
-  const { classes } = props
 
+  const classes = new useStyles();
+  const { rentACarServices } = props
+  useEffect(()=>{
+    console.log(rentACarServices[0].Vehicles)
+  })
   return (
     <div className={classes.carPageFlexContainer}>
       <h3>Cars Page</h3>
       {/* <AddVehicleForm/> */}
-      <CarOrdersModal />
+      {rentACarServices[0].Vehicles.map((car,index) => 
+        
+        (<CarOrdersModal key= {index} vehicle={car} />)
+      , rentACarServices[0].Vehicles)}
+
     </div>
   );
 
 
 }
 
-export default withStyles(styles)(Car);
+const mapStateToProps = (state) => ({
+  rentACarServices: state.carsReducer.rentACarServices
+});
+
+
+
+export default connect(mapStateToProps)(Car)
+
+
 
 

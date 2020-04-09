@@ -21,8 +21,9 @@ function App(props) {
         <br/><br/><br/><br/>
         <div>
           <Routes/>
-          <Footer/>
         </div>
+        <Footer/>
+        <br/><br/>
       </Router>
     </div>
   );

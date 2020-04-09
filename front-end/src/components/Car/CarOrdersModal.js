@@ -3,6 +3,7 @@ import { withStyles } from "@material-ui/core/styles";
 import AirlineSeatReclineNormalRoundedIcon from '@material-ui/icons/AirlineSeatReclineNormalRounded';
 import Icon from '@mdi/react'
 import Button from '@material-ui/core/Button';
+import Rating from '@material-ui/lab/Rating';
 
 import SendRoundedIcon from '@material-ui/icons/SendRounded';
 import { mdiCarDoor } from '@mdi/js';
@@ -11,7 +12,9 @@ import { mdiMinusBox } from '@mdi/js';
 import { mdiCheckboxMarked } from '@mdi/js';
 import { mdiBriefcase } from '@mdi/js';
 import { mdiCarShiftPattern } from '@mdi/js'; //Manual
-import { mdiAirConditioner } from '@mdi/js'; 
+import { mdiAirConditioner } from '@mdi/js';
+import { connect } from "react-redux";
+import Box from '@material-ui/core/Box';
 
 const styles = (theme) => ({
 
@@ -19,6 +22,7 @@ const styles = (theme) => ({
         width: "70%",
         height: "300px",
         display: "flex",
+        margin: "20px",
         flexDirection: "column",
         alignItems: 'center',
         justifyContent: 'center',
@@ -50,7 +54,7 @@ const styles = (theme) => ({
         display: "flex",
         flexDirection: "column",
         borderRadius: '5px',
-        
+
     },
 
     carImageOrderModal: {
@@ -92,10 +96,10 @@ const styles = (theme) => ({
     featureList: {
         textAlign: "left",
         columns: 2,
-        margin: "0",
         padding: '0',
         alignItems: "left",
         justifyContent: "left",
+        listStyleType: "none",
     },
 
     modalHeaders: {
@@ -121,17 +125,21 @@ const styles = (theme) => ({
 
 const CarOrdersModal = (props) => {
     const { classes } = props
+    const { vehicle } = props
+    useEffect(() => {
+        console.log(vehicle.AverageGrade)
+    })
 
     return (
         <div className={classes.carOrderModalContainer}>
             <div className={classes.carNameHeaderModal}>
-                <h4 className={classes.modalHeaders}>Mustang GT</h4>
+                <h4 className={classes.modalHeaders}>{vehicle.CarModel}</h4>
             </div>
             <div className={classes.contentContainer}>
                 <div className={classes.infoAndImageFlex}>
                     <div className={classes.carImageOrderModal}>
                         <img src={require('./template-images/add-car-form.png')} alt="car aimage" styles={{ width: "100%", height: "100%" }} />
-                        <h6 className={classes.modalHeaders}>Mustang GT</h6>
+                        <h6 className={classes.modalHeaders}>{vehicle.CarModel}</h6>
                     </div>
                     <div className={classes.carOrderInfoModal}>
                         <div>
@@ -142,44 +150,49 @@ const CarOrdersModal = (props) => {
                                         title="Number of passengers"
                                         size={1}
                                         color="black"
-                                    />: 5
+                                    />: {vehicle.NumberOfSeats}
                                 </li>
                                 <li>
                                     <Icon path={mdiCarDoor}
                                         title="Number of doors"
                                         size={1}
                                         color="black"
-                                    />: 5
+                                    />: {vehicle.NumberOfDoors}
                                 </li>
                                 <li>
                                     <Icon path={mdiBriefcase}
                                         title="Number of suitcases"
                                         size={1}
                                         color="black"
-                                    />: 2
+                                    />: {vehicle.NumberOfSuitcases}
                                 </li>
                                 <li>
                                     <Icon path={mdiCarShiftPattern}
-                                        title="Number of suitcases"
+                                        title="Gearbox type"
                                         size={1}
                                         color="black"
-                                    />: Automatic
+                                    />: {vehicle.GearboxType}
                                 </li>
                                 <li>
                                     <Icon path={mdiAirConditioner}
                                         title="Air cooling"
                                         size={1}
                                         color="black"
-                                    />: Aircondition
+                                    />: {vehicle.CoolingType}
                                 </li>
-                               
+                                <li>
+                                    <Box component="fieldset" mb={3} borderColor="transparent">
+                                        <Rating value={vehicle.AverageCarGrade} readOnly />
+                                    </Box>
+                                    
+                                </li>
                             </ul>
                         </div>
                     </div>
                 </div>
                 <div className={classes.priceButtonSectionModal}>
                     <h4 className={classes.modalHeaders}>Choose vihacle</h4>
-                    <h4 >150$</h4>
+                    <h4 >{vehicle.PriceADay}$</h4>
                     <Button
                         variant="contained"
                         color="primary"
