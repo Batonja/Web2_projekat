@@ -149,7 +149,7 @@ const AccountNavbarCollapse = (props) => {
             color="inherit"
             aria-label="Menu"
             className={classes.toggleDrawer}
-            to={!props.loggedInUser.FirstName ? "" : "/account"}
+            to={!props.loggedInUser.FirstName ? false : "/account"}
             component={RouterLink}
           >
             <AccountCircleIcon />
