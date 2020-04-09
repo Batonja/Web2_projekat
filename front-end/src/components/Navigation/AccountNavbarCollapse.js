@@ -58,6 +58,12 @@ const AccountNavbarCollapse = (props) => {
     setAnchorEl(null);
   };
 
+  const logOut = () => {
+    props.OnLogOff();
+
+    handleClose();
+  };
+
   const { classes } = props;
 
   return (
@@ -72,28 +78,66 @@ const AccountNavbarCollapse = (props) => {
           <AccountCircleIcon />
           {props.loggedInUser.FirstName ? props.loggedInUser.FirstName : ""}
         </IconButton>
-        <Menu
-          id="menu-collapsed"
-          anchorEl={anchorEl}
-          keepMounted
-          anchorOrigin={{
-            vertical: "top",
-            horizontal: "left",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "left",
-          }}
-          open={Boolean(anchorEl)}
-          onClose={handleClose}
-        >
-          <MenuItem onClick={handleClose} to={"/signIn"} component={RouterLink}>
-            Login
-          </MenuItem>
-          <MenuItem onClick={handleClose} to={"/signUp"} component={RouterLink}>
-            Register
-          </MenuItem>
-        </Menu>
+
+        {!props.loggedInUser.FirstName ? (
+          <Menu
+            id="menu-collapsed"
+            anchorEl={anchorEl}
+            keepMounted
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "left",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "left",
+            }}
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+          >
+            <MenuItem
+              onClick={handleClose}
+              to={"/signIn"}
+              component={RouterLink}
+            >
+              Login
+            </MenuItem>
+            <MenuItem
+              onClick={handleClose}
+              to={"/signUp"}
+              component={RouterLink}
+            >
+              Register
+            </MenuItem>
+          </Menu>
+        ) : (
+          <Menu
+            id="menu-collapsed"
+            anchorEl={anchorEl}
+            keepMounted
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "left",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "left",
+            }}
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+          >
+            <MenuItem onClick={logOut} to={"/"} component={RouterLink}>
+              Log Out
+            </MenuItem>
+            <MenuItem
+              onClick={handleClose}
+              to={"/account"}
+              component={RouterLink}
+            >
+              My Account
+            </MenuItem>
+          </Menu>
+        )}
       </div>
 
       <div
@@ -105,6 +149,8 @@ const AccountNavbarCollapse = (props) => {
             color="inherit"
             aria-label="Menu"
             className={classes.toggleDrawer}
+            to={!props.loggedInUser.FirstName ? "" : "/account"}
+            component={RouterLink}
           >
             <AccountCircleIcon />
             {props.loggedInUser.FirstName ? props.loggedInUser.FirstName : ""}
@@ -157,7 +203,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  OnLoggOff: () => dispatch(logOff),
+  OnLoggOff: () => dispatch(logOff()),
 });
 
 export default compose(
