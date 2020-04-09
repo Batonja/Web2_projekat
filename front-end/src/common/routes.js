@@ -19,8 +19,8 @@ export function Routes() {
       <Route path="/cars" component={Car} />
 
       <Route path="/account" component={Account} />
-      <Route path="/signin" component={LoginForm} />
-      <Route path="/signup" component={RegistrationForm} className="forms" />
+      <Route path="/signIn" component={LoginForm} />
+      <Route path="/signUp" component={RegistrationForm} className="forms" />
       <Route path="/" component={Home} />
     </Switch>
   );

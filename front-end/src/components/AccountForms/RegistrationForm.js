@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Button from "@material-ui/core/Button";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 
-import { registerUser } from "../../actions/accountActions";
+import signUp from "../../actions/User/signUp";
 import { connect } from "react-redux";
 
 class RegistrationForm extends Component {
@@ -13,14 +13,14 @@ class RegistrationForm extends Component {
     Password: "",
     PasswordConfirm: "",
     Address: "",
-    Phone: ""
+    Phone: "",
   };
 
-  handleSubmit = e => {
+  handleSubmit = (e) => {
     e.preventDefault();
 
-    this.props.registerUser(this.state);
-
+    this.props.OnSignUp(this.state);
+    this.props.history.push("/signIn");
     this.setState({
       FirstName: "",
       LastName: "",
@@ -28,40 +28,41 @@ class RegistrationForm extends Component {
       Password: "",
       PasswordConfirm: "",
       Address: "",
-      Phone: ""
+      Phone: "",
     });
   };
 
-  handleChange = e => {
+  handleChange = (e) => {
     this.setState({
       ...this.state,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
   componentDidMount() {
     const regexLettersOnly = /[^A-Za-z]+/;
     const regexNotANumber = /[^0-9]/;
+    const usersEmails = this.props.AllUsers.map((user) => user.Email);
     //const regexAddress = /^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/;
     //Email
-    ValidatorForm.addValidationRule("isExistingUser", value => {
-      let emailSearch = this.props.usersEmails.find(email => email === value);
+    ValidatorForm.addValidationRule("isExistingUser", (value) => {
+      let emailSearch = usersEmails.find((email) => email === value);
       return emailSearch !== undefined && emailSearch === value ? false : true;
     });
 
     //Password
-    ValidatorForm.addValidationRule("isPasswordMatch", value => {
+    ValidatorForm.addValidationRule("isPasswordMatch", (value) => {
       return value !== this.state.Password ? false : true;
     });
     // ValidatorForm.addValidationRule("isLongerEqualThenSix", value => {
     //   return (value.length < 6) ? false : true;
     // })
     //First nad Last name
-    ValidatorForm.addValidationRule("areLettersOnly", value => {
+    ValidatorForm.addValidationRule("areLettersOnly", (value) => {
       return regexLettersOnly.test(value) ? false : true;
     });
     //Phone number
-    ValidatorForm.addValidationRule("areNumbersOnly", value => {
+    ValidatorForm.addValidationRule("areNumbersOnly", (value) => {
       return regexNotANumber.test(value) ? false : true;
     });
     // ValidatorForm.addValidationRule("isLongerEqualThenNine", value => {
@@ -91,7 +92,7 @@ class RegistrationForm extends Component {
           </div>
           <ValidatorForm
             onSubmit={this.handleSubmit}
-            onError={errors => console.log(errors)}
+            onError={(errors) => console.log(errors)}
           >
             <div className="form-text-field">
               <TextValidator
@@ -105,7 +106,7 @@ class RegistrationForm extends Component {
                 errorMessages={[
                   "this field is required",
                   "email is not valid",
-                  "user with this email already exists"
+                  "user with this email already exists",
                 ]}
               />
             </div>
@@ -146,7 +147,7 @@ class RegistrationForm extends Component {
                 validators={["required", "areLettersOnly"]}
                 errorMessages={[
                   "This field is required",
-                  "First name must consist of letters only"
+                  "First name must consist of letters only",
                 ]}
               />
             </div>
@@ -161,7 +162,7 @@ class RegistrationForm extends Component {
                 validators={["required", "areLettersOnly"]}
                 errorMessages={[
                   "This field is required",
-                  "Last name must consist of letters only"
+                  "Last name must consist of letters only",
                 ]}
               />
             </div>
@@ -205,20 +206,12 @@ class RegistrationForm extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  const { AllUsers } = state.userReducer;
-  return {
-    usersEmails: AllUsers.map(user => user.Email)
-  };
-};
+const mapStateToProps = (state) => ({
+  AllUsers: state.userReducer.AllUsers,
+});
 
-const mpaDispatchToProps = dispatch => {
-  return {
-    registerUser: user => {
-      dispatch(registerUser(user));
-    }
-  };
-};
+const mpaDispatchToProps = (dispatch) => ({
+  OnSignUp: (user) => dispatch(signUp(user)),
+});
 
 export default connect(mapStateToProps, mpaDispatchToProps)(RegistrationForm);
-

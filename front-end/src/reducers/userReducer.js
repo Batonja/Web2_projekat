@@ -1,13 +1,8 @@
+import { SIGN_IN } from "../actions/User/signIn";
+import { SIGN_UP } from "../actions/User/signUp";
+import { LOG_OFF } from "../actions/User/logOff";
 const initialState = {
-  LoggedInUser: {
-    FirstName: "Stepa",
-    LastName: "Stepanovic",
-    Email: "thestepa@gmail.com",
-    Password: "test",
-    Address: "Zmaj Jove 13",
-    Friends: ["mileta@bode.com", "zivkozivkic@yahoo.com"],
-    Phone: "062214141",
-  },
+  LoggedInUser: {},
   AllUsers: [
     {
       FirstName: "Zivojin",
@@ -15,6 +10,7 @@ const initialState = {
       Email: "zivkozivkic@yahoo.com",
       Password: "test",
       Address: "Sove Sovine 23",
+      Friends: ["thestepa@gmail.com"],
       Phone: "0635352321",
     },
     {
@@ -38,14 +34,26 @@ const initialState = {
   ],
 };
 
-export default function userReducer(state = initialState, action) {
-  console.log(action);
-  switch (action.type) {
-    case "REGISTER_USER":
+export default function userReducer(state = initialState, { type, payload }) {
+  switch (type) {
+    case SIGN_UP:
       return {
         ...state,
-        AllUsers: [...state.AllUsers, action.payload],
+        AllUsers: [...state.AllUsers, payload],
       };
+    case SIGN_IN:
+      for (var index = 0; index < state.AllUsers.length; index++) {
+        if (
+          state.AllUsers[index].Email === payload.email &&
+          state.AllUsers[index].Password === payload.password
+        ) {
+          return { ...state, LoggedInUser: state.AllUsers[index] };
+        }
+      }
+      break;
+    case LOG_OFF:
+      return { ...state, LoggedInUser: { FirstName: false } };
+
     default:
       return state;
   }
