@@ -13,7 +13,6 @@ import Navbar from './components/Navigation/Navbar'
 
 
 function App(props) {
-  const {classes} = props; 
   return (
     <div >
       <Router>

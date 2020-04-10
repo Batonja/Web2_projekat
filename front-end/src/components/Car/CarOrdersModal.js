@@ -1,124 +1,114 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { withStyles } from "@material-ui/core/styles";
-import AirlineSeatReclineNormalRoundedIcon from '@material-ui/icons/AirlineSeatReclineNormalRounded';
 import Icon from '@mdi/react'
 import Button from '@material-ui/core/Button';
 import Rating from '@material-ui/lab/Rating';
 
 import SendRoundedIcon from '@material-ui/icons/SendRounded';
+//import AirlineSeatReclineNormalRoundedIcon from '@material-ui/icons/AirlineSeatReclineNormalRounded';
 import { mdiCarDoor } from '@mdi/js';
 import { mdiAccountMultiple } from '@mdi/js';
-import { mdiMinusBox } from '@mdi/js';
-import { mdiCheckboxMarked } from '@mdi/js';
+// import { mdiMinusBox } from '@mdi/js';
+// import { mdiCheckboxMarked } from '@mdi/js';
 import { mdiBriefcase } from '@mdi/js';
 import { mdiCarShiftPattern } from '@mdi/js'; //Manual
 import { mdiAirConditioner } from '@mdi/js';
-import { connect } from "react-redux";
 import Box from '@material-ui/core/Box';
 
 const styles = (theme) => ({
-
+    //------Level0
     carOrderModalContainer: {
         width: "70%",
-        height: "300px",
+        height: "400px",
         display: "flex",
         margin: "20px",
         flexDirection: "column",
         alignItems: 'center',
         justifyContent: 'center',
         textAlign: "center",
+        borderRadius: '10px',
         backgroundColor: "#3F51B5",
-        borderRadius: '10px'
 
     },
+    //------Level1
     contentContainer: {
-
-
-        width: "100%",
-        height: "70%",
-        display: "flex",
-        margin: "10px",
-        flexDirection: "row",
-        alignItems: 'center',
-        justifyContent: 'center',
-        textAlign: "center",
-        backgroundColor: "#3F51B5",
-        borderRadius: '10px'
-
-    },
-
-    carOrderInfoModal: {
-        width: "40%",
-        height: "90%",
-        margin: "10px 10px 10px 10px",
-        display: "flex",
-        flexDirection: "column",
-        borderRadius: '5px',
-
-    },
-
-    carImageOrderModal: {
-        width: "50%",
-        height: "90%",
-        display: "flex",
-        margin: "5px 5px 5px 5px",
-        flexDirection: "column",
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: '5px'
-    },
-
-    infoAndImageFlex: {
-        width: "70%",
-        height: "80%",
-        display: "flex",
-        flexDirection: "row",
-        alignItems: 'center',
-        justifyContent: 'center',
-        textAlign: "center",
-        backgroundColor: "#e5e5e5",
-        borderRadius: '10px'
-    },
-
-    priceButtonSectionModal: {
-        width: "20%",
+        width: "90%",
         height: "60%",
         display: "flex",
-        margin: "10px 10px 10px 20px",
+        flexDirection: "row",
+        justifyContent: 'center',
+        textAlign: "center",
+        borderRadius: '10px',
+        backgroundColor: "#3F51B5",
+
+    },
+    carNameHeaderModal: {
+        backgroundColor: "#e5e5e5",
+        width: '90%',
+        margin: "10px",
+        borderRadius: "5px",
+    },
+    //------Level2
+    infoAndImageFlex: {
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        margin: "15px",
+        flexDirection: "row",
+        textAlign: "center",
+        alignItems: 'center',
+        backgroundColor: "#e5e5e5",
+        borderRadius: '10px'
+    },
+    priceButtonSectionModal: {
+        width: "30%",
+        height: "60%",
+        display: "flex",
+        margin: "15px 10px 10px 00px",
         flexDirection: "column",
         alignItems: 'center',
-        justifyContent: 'top',
+        justifyContent: 'center',
         textAlign: "center",
         backgroundColor: "#e5e5e5",
         borderRadius: '5px'
     },
+    //------Level3
+    carImageOrderModal: {
+        width: "50%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        margin: "5px 5px 5px 5px",
+        borderRadius: '5px'
+    },
+    carOrderInfoModal: {
+        width: "50%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: 'top',
+        textAlign: "left",
+        alignItems: 'left',
+        borderRadius: '5px',
+        // margin: "10px 10px 10px 10px",
 
+    },
+    //------Level4
     featureList: {
+        listStyleType: "none",
         textAlign: "left",
         columns: 2,
-        padding: '0',
         alignItems: "left",
         justifyContent: "left",
-        listStyleType: "none",
     },
-
     modalHeaders: {
-        fontWeight: "bold",
         textAlign: "center",
+        fontWeight: "bold",
         color: "#ff4d07"
     },
-
     orderButton: {
         backgroundColor: "#ff4d07",
     },
-
-    carNameHeaderModal: {
-        backgroundColor: "#e5e5e5",
-        width: '80%',
-        margin: "10px",
-        borderRadius: "5px",
-    }
-
 
 });
 
@@ -126,9 +116,6 @@ const styles = (theme) => ({
 const CarOrdersModal = (props) => {
     const { classes } = props
     const { vehicle } = props
-    useEffect(() => {
-        console.log(vehicle.AverageGrade)
-    })
 
     return (
         <div className={classes.carOrderModalContainer}>
@@ -138,8 +125,11 @@ const CarOrdersModal = (props) => {
             <div className={classes.contentContainer}>
                 <div className={classes.infoAndImageFlex}>
                     <div className={classes.carImageOrderModal}>
-                        <img src={require('./template-images/add-car-form.png')} alt="car aimage" styles={{ width: "100%", height: "100%" }} />
-                        <h6 className={classes.modalHeaders}>{vehicle.CarModel}</h6>
+                        <img src={require('./template-images/add-car-form.png')} alt="car aimage" style={{ height: "90%" }} />
+                        <div>
+                            <h6 className={classes.modalHeaders}>{vehicle.CarModel}</h6>
+
+                        </div>
                     </div>
                     <div className={classes.carOrderInfoModal}>
                         <div>
@@ -181,17 +171,20 @@ const CarOrdersModal = (props) => {
                                     />: {vehicle.CoolingType}
                                 </li>
                                 <li>
-                                    <Box component="fieldset" mb={3} borderColor="transparent">
-                                        <Rating value={vehicle.AverageCarGrade} readOnly />
-                                    </Box>
-                                    
+
+
+
                                 </li>
                             </ul>
+                            <h6 className={classes.modalHeaders}>Customer Ratings:</h6>
+                            <Box component="fieldset" mb={3} borderColor="transparent" textAlign={"center"}>
+                                <Rating value={vehicle.AverageCarGrade} readOnly />
+                            </Box>
                         </div>
                     </div>
                 </div>
                 <div className={classes.priceButtonSectionModal}>
-                    <h4 className={classes.modalHeaders}>Choose vihacle</h4>
+                    <h4 className={classes.modalHeaders}>Choose vehicle</h4>
                     <h4 >{vehicle.PriceADay}$</h4>
                     <Button
                         variant="contained"
