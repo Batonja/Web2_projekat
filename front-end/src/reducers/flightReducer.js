@@ -1,5 +1,5 @@
 import { RESERVE_SEATS } from "../actions/Flight/reserveSeats";
-import finishedLoading from "../actions/Loading/finishedLoading";
+
 
 const initialState = {
   airlines: [
@@ -15,8 +15,8 @@ const initialState = {
           Id: 1,
           From: "Kairo",
           To: "NYC",
-          DepartureDate: "3/7/2020 8:01 PM",
-          ArivalDate: "3/9/2020 9:00PM",
+          DepartureDate: "03/07/2020 8:01 PM",
+          ArivalDate: "03/09/2020 9:00PM",
           TripLength: 3,
           ChangeOvers: ["London", "Dubai"],
           Price: 400,
@@ -27,8 +27,8 @@ const initialState = {
           Id: 2,
           From: "Brazilia",
           To: "Kairo",
-          DepartureDate: "3/10/2020 8:01 PM",
-          ArivalDate: "3/12/2020 9:00PM",
+          DepartureDate: "03/10/2020",
+          ArivalDate: "03/12/2020",
           TripLength: 3,
           ChangeOvers: ["Dubai"],
           Price: 600,
@@ -104,8 +104,8 @@ const initialState = {
           Id: 3,
           From: "Milan",
           To: "Brazillia",
-          DepartureDate: "3/3/2020 8:01 PM",
-          ArivalDate: "3/12/2020 9:00PM",
+          DepartureDate: "03/03/2020",
+          ArivalDate: "03/12/2020 9:00PM",
           TripLength: 3,
           ChangeOvers: ["Birmingham", "Georgia"],
           Price: 400,
@@ -153,8 +153,8 @@ const initialState = {
           Id: 4,
           From: "Pariz",
           To: "Milan",
-          DepartureDate: "3/5/2020 8:01 PM",
-          ArivalDate: "3/11/2020 9:00PM",
+          DepartureDate: "03/05/2020 8:01 PM",
+          ArivalDate: "03/11/2020 9:00PM",
           TripLength: 3,
           ChangeOvers: ["Birmingham", "Georgia"],
           Price: 550,

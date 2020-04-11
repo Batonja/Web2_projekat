@@ -3,7 +3,6 @@ import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import Button from "@material-ui/core/Button";
 import { connect } from "react-redux";
 import signIn from "../../actions/User/signIn";
-import { Redirect } from "react-router-dom";
 
 class LoginForm extends Component {
   constructor(props) {

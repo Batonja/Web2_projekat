@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Container from "react-bootstrap/Container";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Alert from "react-bootstrap/Alert";
@@ -69,7 +68,6 @@ class FirstStep extends Component {
   };
 
   render() {
-    const seatsInARow = 6;
     return (
       <>
         <Modal.Header>

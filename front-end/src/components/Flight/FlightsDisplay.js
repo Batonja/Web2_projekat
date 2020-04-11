@@ -17,8 +17,6 @@ import InputLabel from "@material-ui/core/InputLabel";
 import { renderSeats } from "./Common/Helpers/renderSeats";
 import reserveSeats from "../../actions/Flight/reserveSeats";
 import MultiRef from "react-multi-ref";
-import Overlay from "react-bootstrap/Overlay";
-import Popover from "react-bootstrap/Popover";
 import Alert from "react-bootstrap/Alert";
 
 const modalStyle = { "z-index": "1200" };

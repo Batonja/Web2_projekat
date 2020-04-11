@@ -15,7 +15,7 @@ export function renderSeats(seats) {
             ? "action"
             : seats[index] === 0
             ? "secondary"
-            : seats[index] == 2
+            : seats[index] === 2
             ? "disabled"
             : "primary"
         }
@@ -55,7 +55,7 @@ export function renderSeatsWithMouseDown(seats, mouseDownFunction) {
             ? "action"
             : seats[index] === 0
             ? "secondary"
-            : seats[index] == 2
+            : seats[index] === 2
             ? "disabled"
             : "primary"
         }
@@ -66,7 +66,7 @@ export function renderSeatsWithMouseDown(seats, mouseDownFunction) {
               ? "action"
               : seats[seatId] === 0
               ? "secondary"
-              : seats[seatId] == 2
+              : seats[seatId] === 2
               ? "disabled"
               : "primary",
             seatId
