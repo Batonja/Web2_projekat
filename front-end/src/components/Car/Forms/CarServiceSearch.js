@@ -331,7 +331,7 @@ const CarServiceSearch = (props) => {
                     className={classes.orderButton}
                     disabled={
                         (location !== '' &&
-                            !(Object.keys(selectedService).length === 0 && selectedService.constructor === Object) &&
+                            !(Object.keys(selectedService).length === 0 && selectedService.constructor === Object)// &&
                             //DATES LOGIC ELIMINATION - Todo
 
                         ) ? (false) : (true)}>
