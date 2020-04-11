@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Component } from 'react'
 
 import { connect } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
@@ -119,6 +119,51 @@ const DatePickerWithFormik = ({
 
     const [focusedInput, setFocusedInput] = useState(null);
 
+const DatePickerWithFormik = ({
+    startDateId,
+    endDateId,
+    form: { setFieldValue, setFieldTouched, values },
+    field,
+    ...props
+}) => {
+    console.log(values);
+    const [focusedInput, setFocusedInput] = useState(null);
+
+
+
+    return (
+        <DateRangePicker
+            style={{ width: "90%" }}
+            startDate={values.startDate}
+            startDateId="tata-start-date"
+            endDate={values.endDate}
+            endDateId="tata-end-date"
+            onDatesChange={({ startDate, endDate }) => {
+                setFieldValue("startDate", startDate);
+                setFieldValue("endDate", endDate);
+            }}
+            focusedInput={focusedInput}
+            onFocusChange={focusedInput => setFocusedInput(focusedInput)}
+        />
+    );
+};
+
+
+const formInitialValues = {
+    // DatePickerWithFormik: null
+    startDate: null,
+    endDate: null
+};
+
+const handleSubmit = formValues => {
+
+    console.log(formValues);
+};
+
+const validatedFormFields = Yup.object().shape({
+    // simpleDate: ,
+});
+
 
 
     return (
@@ -172,7 +217,7 @@ const CarServiceSearch = (props) => {
         startDate: null,
         endDate: null,
     })
-
+    const [focusedInput, setFocusedInput] = useState(null)
     const [toggleSearch, setToggleSearch] = useState(false)
 
 
@@ -183,6 +228,10 @@ const CarServiceSearch = (props) => {
         getOptionLabel: (option) => option,
     }
 
+    const defaultPropsServices = {
+        options: props.rentACarServices,
+        getOptionLabel: (option) => option.City,
+    }
     const handleChange = (event) => {
         setSelectedService(event.target.value);
     };
@@ -193,12 +242,13 @@ const CarServiceSearch = (props) => {
     const handleSearch = () => {
         setToggleSearch(true)
         setLocation('');
-        setSelectedService({});
+        //setSelectedService({});
         setDates({
             startDate: null,
             endDate: null,
         })
     }
+    
 
     useEffect(() => {
         var services = [];
@@ -307,7 +357,7 @@ const CarServiceSearch = (props) => {
                         style={{ width: "90%" }}
                     >
                         {props => (
-                            <Form >
+                            <Form>
 
                                 <InputLabel id="demo-simple-select-label">Choose Dates For which you need a car</InputLabel>
                                 <Field
@@ -331,7 +381,7 @@ const CarServiceSearch = (props) => {
                     className={classes.orderButton}
                     disabled={
                         (location !== '' &&
-                            !(Object.keys(selectedService).length === 0 && selectedService.constructor === Object)// &&
+                            !(Object.keys(selectedService).length === 0 && selectedService.constructor === Object) //&&
                             //DATES LOGIC ELIMINATION - Todo
 
                         ) ? (false) : (true)}>

@@ -36,6 +36,10 @@ const Car = (props) => {
 
 
     <div className={classes.carPageFlexContainer}>
+      {/* <AddVehicleForm/> */}
+      {/* {rentACarServices[0].Vehicles.map((car,index) =>  
+        (<CarOrdersModal key= {index} vehicle={car} />)
+      , rentACarServices[0].Vehicles)} */}
       <CarServiceSearch rentACarServices />
     </div>
   );
