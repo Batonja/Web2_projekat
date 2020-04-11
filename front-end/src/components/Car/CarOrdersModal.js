@@ -208,6 +208,20 @@ const CarOrdersModal = (props) => {
       </div>
 
       <div className={classes.priceButtonSectionModal}>
+        <h4 className={classes.modalHeaders}>Choose vehicle</h4>
+        <h4>{vehicle.PriceADay}$</h4>
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          className={classes.orderButton}
+          endIcon={<SendRoundedIcon />}
+        >
+          Order
+        </Button>
+      </div>
+
+      <div className={classes.priceButtonSectionModal}>
         <h4 className={classes.modalHeaders}>Choose vihacle</h4>
         <h4>{vehicle.PriceADay}$</h4>
         <Button
