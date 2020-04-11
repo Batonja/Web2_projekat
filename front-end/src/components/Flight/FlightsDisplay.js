@@ -16,6 +16,10 @@ import MenuItem from "@material-ui/core/MenuItem";
 import InputLabel from "@material-ui/core/InputLabel";
 import { renderSeats } from "./Common/Helpers/renderSeats";
 import reserveSeats from "../../actions/Flight/reserveSeats";
+import MultiRef from "react-multi-ref";
+import Overlay from "react-bootstrap/Overlay";
+import Popover from "react-bootstrap/Popover";
+import Alert from "react-bootstrap/Alert";
 
 const modalStyle = { "z-index": "1200" };
 
@@ -27,10 +31,14 @@ class FlightsDisplay extends Component {
       openedCollapsed: [],
       openedModal: -1,
       ticketType: 0,
+      fastReservationError: -1,
+      fastReservationAlreadyFlying: -1,
+      fastReservationSuccess: -1,
     };
     this.openClose = this.openClose.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.openModal = this.openModal.bind(this);
+    this.fastReservationRef = new MultiRef();
   }
 
   isOpened(index) {
@@ -69,7 +77,51 @@ class FlightsDisplay extends Component {
     this.setState({ openedModal: -1 });
   };
 
-  fastReservation = (seats, airlineId, flightId) => {};
+  fastReservation = (event, seats, airlineId, flightId, passengers) => {
+    event.preventDefault();
+    var foundSeat = false;
+    var alreadyFlying = false;
+    for (
+      var indexOfPassenger = 0;
+      indexOfPassenger < passengers.length;
+      indexOfPassenger++
+    ) {
+      if (
+        passengers[indexOfPassenger].Email === this.props.loggedInUser.Email
+      ) {
+        alreadyFlying = flightId;
+        this.setState({ fastReservationAlreadyFlying: alreadyFlying });
+        break;
+      }
+    }
+    if (!alreadyFlying) {
+      for (var indexOfSeat = 0; indexOfSeat < seats.length; indexOfSeat++) {
+        if (seats[indexOfSeat] === -1) {
+          seats[indexOfSeat] = 0;
+          foundSeat = true;
+          break;
+        }
+      }
+      if (foundSeat) {
+        this.props.OnFastReservation(
+          seats,
+          this.props.loggedInUser,
+          airlineId,
+          flightId
+        );
+        this.setState({ fastReservationSuccess: flightId });
+      } else {
+        this.setState({ fastReservationError: flightId });
+      }
+    }
+    setTimeout(() => {
+      this.setState({
+        fastReservationSuccess: -1,
+        fastReservationAlreadyFlying: -1,
+        fastReservationError: -1,
+      });
+    }, 3000);
+  };
 
   render() {
     return (
@@ -103,32 +155,7 @@ class FlightsDisplay extends Component {
                           {this.props.isLoading ? (
                             <Spinner animation="border" />
                           ) : (
-                            Array.from(
-                              new Array(airline.PlaneSeatsNumber[0])
-                            ).map((seatsRow, seatsRowId) => {
-                              return (
-                                <Container className="flightSeats">
-                                  <Row className="leftSideSeats">
-                                    {renderSeats(
-                                      seatsRowId,
-                                      airline.PlaneSeatsNumber[1],
-                                      0,
-                                      flight.Seats
-                                    )}
-                                  </Row>
-                                  <Row className="rightSideSeats">
-                                    {renderSeats(
-                                      seatsRowId,
-                                      airline.PlaneSeatsNumber[1],
-                                      Math.ceil(
-                                        airline.PlaneSeatsNumber[1] / 2
-                                      ),
-                                      flight.Seats
-                                    )}
-                                  </Row>
-                                </Container>
-                              );
-                            })
+                            renderSeats(flight.Seats)
                           )}
                         </Col>
 
@@ -162,18 +189,53 @@ class FlightsDisplay extends Component {
                             </MenuItem>
                           </Select>
                           <br />
-                          <Button
-                            className="flightReserveButton"
-                            color="primary"
-                            variant="contained"
-                            onClick={this.fastReservation(
-                              flight.Seats,
-                              airline.Id,
-                              flight.Id
-                            )}
-                          >
-                            Fast Reservation
-                          </Button>
+                          {this.props.loggedInUser.FirstName ? (
+                            <Button
+                              ref={this.fastReservationRef.ref(flight.Id)}
+                              className="flightReserveButton"
+                              color="primary"
+                              variant="contained"
+                              onClick={(e) =>
+                                this.fastReservation(
+                                  e,
+                                  flight.Seats,
+                                  airline.Id,
+                                  flight.Id,
+                                  flight.Passengers
+                                )
+                              }
+                            >
+                              Fast Reservation
+                            </Button>
+                          ) : (
+                            ""
+                          )}
+
+                          {this.state.fastReservationError === flight.Id ? (
+                            <Alert variant="warning">
+                              Sorry but this flight doesn't have any fast
+                              reservation seat available, next time you should
+                              be faster
+                            </Alert>
+                          ) : (
+                            ""
+                          )}
+
+                          {this.state.fastReservationAlreadyFlying ===
+                          flight.Id ? (
+                            <Alert variant="warning">
+                              You are already on this flight
+                            </Alert>
+                          ) : (
+                            ""
+                          )}
+                          {this.state.fastReservationSuccess === flight.Id ? (
+                            <Alert variant="success">
+                              You have successfully reserved your flight
+                            </Alert>
+                          ) : (
+                            ""
+                          )}
                           <br />
                           <br />
                           <Button
@@ -226,7 +288,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   OnFastReservation: (seats, passengers, airlineId, flightId) =>
-    reserveSeats(seats, passengers, airlineId, flightId),
+    dispatch(reserveSeats(seats, passengers, airlineId, flightId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(FlightsDisplay);

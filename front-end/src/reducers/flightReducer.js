@@ -1,4 +1,5 @@
 import { RESERVE_SEATS } from "../actions/Flight/reserveSeats";
+import finishedLoading from "../actions/Loading/finishedLoading";
 
 const initialState = {
   airlines: [
@@ -19,7 +20,7 @@ const initialState = {
           TripLength: 3,
           ChangeOvers: ["London", "Dubai"],
           Price: 400,
-          Seats: [],
+          Seats: [1],
           Passengers: [],
         },
         {
@@ -38,7 +39,7 @@ const initialState = {
             -1,
             -1,
             -1,
-            0,
+            2,
             1,
             1,
             1,

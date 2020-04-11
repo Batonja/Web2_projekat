@@ -32,10 +32,10 @@ class FirstStep extends Component {
     var seats = this.state.seats;
     var numReserved = this.state.numReservedSeats;
     if (event.button === 0) {
-      if (color === "secondary") {
+      if (seats[seatId] === 0) {
         seats[seatId] = 1;
         numReserved--;
-      } else if (color === "primary") {
+      } else if (seats[seatId] === 1) {
         seats[seatId] = 0;
         numReserved++;
       }
@@ -69,6 +69,7 @@ class FirstStep extends Component {
   };
 
   render() {
+    const seatsInARow = 6;
     return (
       <>
         <Modal.Header>
@@ -91,34 +92,9 @@ class FirstStep extends Component {
 
           <Row className="flightPresentRow">
             <Col md="auto" className="flightItem">
-              {Array.from(
-                new Array(this.props.airline.PlaneSeatsNumber[0])
-              ).map((seatsRow, seatsRowId) => {
-                return (
-                  <Container className="flightSeats">
-                    <Row className="leftSideSeats">
-                      {renderSeatsWithMouseDown(
-                        seatsRowId,
-                        this.props.airline.PlaneSeatsNumber[1],
-                        0,
-                        this.state.seats,
-                        (e, color, seatId) =>
-                          this.onHandleAddSeat(e, color, seatId)
-                      )}
-                    </Row>
-                    <Row className="rightSideSeats">
-                      {renderSeatsWithMouseDown(
-                        seatsRowId,
-                        this.props.airline.PlaneSeatsNumber[1],
-                        Math.ceil(this.props.airline.PlaneSeatsNumber[1] / 2),
-                        this.state.seats,
-                        (e, color, seatId) =>
-                          this.onHandleAddSeat(e, color, seatId)
-                      )}
-                    </Row>
-                  </Container>
-                );
-              })}
+              {renderSeatsWithMouseDown(this.state.seats, (e, color, seatId) =>
+                this.onHandleAddSeat(e, color, seatId)
+              )}
             </Col>
 
             <Col md="auto" className="flightItem">

@@ -65,8 +65,8 @@ class SecondStep extends Component {
     this.setState({
       ...this.state,
       langguage: 0,
-      ticketType: 0
-    })
+      ticketType: 0,
+    });
   }
 
   updateName(event) {
@@ -332,7 +332,13 @@ class SecondStep extends Component {
           ) : (
             ""
           )}
-          <div style={{ "margin-bottom": "-40px" }}>
+          <div
+            style={
+              this.props.loggedInUser.FirstName
+                ? { "margin-bottom": "-40px" }
+                : { "margin-bottom": "0px" }
+            }
+          >
             <Button
               onMouseDown={(event) => this.onHandleSubmit(event)}
               variant="contained"
