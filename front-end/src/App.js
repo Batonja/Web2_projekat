@@ -8,10 +8,6 @@ import Navbar from './components/Navigation/Navbar'
 
 
 
-
-
-
-
 function App(props) {
   return (
     <div >

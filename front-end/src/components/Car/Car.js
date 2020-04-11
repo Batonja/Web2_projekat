@@ -1,6 +1,9 @@
 import React, { useEffect } from "react";
 //import AddVehicleForm from './Forms/AddVehicleForm'
-import CarOrdersModal from './CarOrdersModal'
+//import CarOrdersModal from './CarOrdersModal'
+import CarServiceSearch from  './Forms/CarServiceSearch'
+
+
 import { connect } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -26,22 +29,22 @@ const Car = (props) => {
 
   const classes = new useStyles();
   const { rentACarServices } = props
-  useEffect(()=>{
-    console.log(rentACarServices[0].Vehicles)
-  })
+  // useEffect(()=>{
+  //   console.log(rentACarServices[0].Vehicles)
+  // })
   return (
+
+
     <div className={classes.carPageFlexContainer}>
       <h3>Cars Page</h3>
       {/* <AddVehicleForm/> */}
-      {rentACarServices[0].Vehicles.map((car,index) => 
-        
+      {/* {rentACarServices[0].Vehicles.map((car,index) =>  
         (<CarOrdersModal key= {index} vehicle={car} />)
-      , rentACarServices[0].Vehicles)}
+      , rentACarServices[0].Vehicles)} */}
+      <CarServiceSearch rentACarServices />
 
     </div>
   );
-
-
 }
 
 const mapStateToProps = (state) => ({
