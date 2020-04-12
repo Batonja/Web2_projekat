@@ -8,14 +8,16 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import Button from "@material-ui/core/Button";
+import NativeSelect from '@material-ui/core/NativeSelect';
 
-import 'bootstrap/dist/css/bootstrap.min.css'
-import 'react-dates/initialize'
-import 'react-dates/lib/css/_datepicker.css'
-import { DateRangePicker } from 'react-dates';
-import * as Yup from "yup";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-// /import DatePickerWithFormik from "./date-picker";
+import MomentUtils from "@date-io/moment";
+import {
+    MuiPickersUtilsProvider,
+    //TimePicker,
+    DatePicker,
+    KeyboardDatePicker
+} from "@material-ui/pickers";
+
 import CarOrdersModal from '../CarOrdersModal'
 
 
@@ -37,7 +39,6 @@ const styles = (theme) => ({
             width: "95%",
             height: "400px"
         },
-
         width: "55%",
         height: "450px",
         flexDirection: "column",
@@ -57,7 +58,7 @@ const styles = (theme) => ({
         },
         width: "80%",
 
-        height: '70%',
+        height: '80%',
         margin: "10px",
         alignItems: 'center',
         justifyContent: 'center',
@@ -108,104 +109,7 @@ const styles = (theme) => ({
 })
 
 
-const DatePickerWithFormik = ({
-    startDateId,
-    endDateId,
-    form: { setFieldValue, setFieldTouched, values },
-    field,
-    ...props
-}) => {
 
-
-    const [focusedInput, setFocusedInput] = useState(null);
-
-const DatePickerWithFormik = ({
-    startDateId,
-    endDateId,
-    form: { setFieldValue, setFieldTouched, values },
-    field,
-    ...props
-}) => {
-    console.log(values);
-    const [focusedInput, setFocusedInput] = useState(null);
-
-
-
-    return (
-        <DateRangePicker
-            style={{ width: "90%" }}
-            startDate={values.startDate}
-            startDateId="tata-start-date"
-            endDate={values.endDate}
-            endDateId="tata-end-date"
-            onDatesChange={({ startDate, endDate }) => {
-                setFieldValue("startDate", startDate);
-                setFieldValue("endDate", endDate);
-            }}
-            focusedInput={focusedInput}
-            onFocusChange={focusedInput => setFocusedInput(focusedInput)}
-        />
-    );
-};
-
-
-const formInitialValues = {
-    // DatePickerWithFormik: null
-    startDate: null,
-    endDate: null
-};
-
-const handleSubmit = formValues => {
-
-    console.log(formValues);
-};
-
-const validatedFormFields = Yup.object().shape({
-    // simpleDate: ,
-});
-
-
-
-    return (
-        <DateRangePicker
-            style={{ width: "90%" }}
-            startDate={values.startDate}
-            startDateId="tata-start-date"
-            endDate={values.endDate}
-            endDateId="tata-end-date"
-            onDatesChange={({ startDate, endDate }) => {
-                setFieldValue("startDate", startDate);
-                setFieldValue("endDate", endDate);
-            }}
-            focusedInput={focusedInput}
-            onFocusChange={focusedInput => setFocusedInput(focusedInput)}
-        />
-    );
-};
-
-const formInitialValues = {
-    // DatePickerWithFormik: null
-    startDate: null,
-    endDate: null
-};
-
-const handleSubmit = formValues => {
-    console.log(formValues);
-};
-
-const validatedFormFields = Yup.object().shape({
-    // simpleDate: ,
-});
-
-var today = new Date()
-var tomorrow = new Date()
-var theDayAfterTomorrow = new Date()
-tomorrow.setDate(today.getDate() + 1)
-theDayAfterTomorrow.setDate(today.getDate() + 2)
-
-const availabilityDates = [today, tomorrow, theDayAfterTomorrow]
-
-console.log(availabilityDates)
 
 const CarServiceSearch = (props) => {
 
@@ -213,13 +117,12 @@ const CarServiceSearch = (props) => {
     const [location, setLocation] = useState('');
     const [selectedService, setSelectedService] = useState({});
     const [availableServices, setAvailableSerrvice] = useState(null);
-    const [dates, setDates] = useState({
+    const [datesForLease, setdatesForLease] = useState({
         startDate: null,
+        tommorowFromStartDate: null,
         endDate: null,
     })
-    const [focusedInput, setFocusedInput] = useState(null)
     const [toggleSearch, setToggleSearch] = useState(false)
-
 
 
     const defaultPropsLocation = {
@@ -228,27 +131,44 @@ const CarServiceSearch = (props) => {
         getOptionLabel: (option) => option,
     }
 
+
+
     const defaultPropsServices = {
         options: props.rentACarServices,
         getOptionLabel: (option) => option.City,
     }
-    const handleChange = (event) => {
+    const handleChangeSelectedService = (event) => {
+        console.log(event.target.value.Title)
         setSelectedService(event.target.value);
     };
     const setLocationRefernce = (inputElement) => {
         locationField = inputElement;
     }
-
     const handleSearch = () => {
+        console.log(selectedService)
         setToggleSearch(true)
         setLocation('');
         //setSelectedService({});
-        setDates({
+        setdatesForLease({
             startDate: null,
+            tommorowFromStartDate: null,
             endDate: null,
         })
     }
-    
+
+    const handleChangeStartDate = (date) => {
+        let tommorowFromStartDate = new Date()
+        tommorowFromStartDate.setDate(date._d.getDate() + 1)
+        console.log(tommorowFromStartDate, date._d)
+        console.log((date._d > tommorowFromStartDate))
+        setdatesForLease({ ...datesForLease, startDate: date._d, tommorowFromStartDate });
+    }
+
+    const handleChangeEndtDate = (date) => {
+        console.log(date, typeof (date))
+        setdatesForLease({ ...datesForLease, endDate: date._d });
+    }
+
 
     useEffect(() => {
         var services = [];
@@ -265,21 +185,17 @@ const CarServiceSearch = (props) => {
     useEffect(() => {
         //console.log(availableServices)
     }, [availableServices])
-    useEffect(() => {
-        console.log(dates)
-    }, [dates])
+
     useEffect(() => {
         locationField.focus()
-
-        let tommorow = new Date()
-        let theDayAfter = new Date()
-        theDayAfter.setDate(tommorow.getDate() + 1)
-        console.log(selectedService)
     })
 
     const { classes } = props
     const { rentACarServices } = props
 
+
+
+    const todayDate = new Date()
 
     return (
         <div className={classes.componentSearchFlexContainer}>
@@ -288,7 +204,8 @@ const CarServiceSearch = (props) => {
                     <h4 className={classes.searchHeaders}>Search for Rent A Car Service at specific location</h4>
                 </div>
                 <div className={classes.SearchSectionFlexContainerBox}>
-                    <InputLabel id="demo-simple-select-label">Choose Location</InputLabel>
+
+                    <InputLabel >Choose Location</InputLabel>
                     <Autocomplete
                         className={classes.searchFormField}
                         {...defaultPropsLocation}
@@ -309,15 +226,15 @@ const CarServiceSearch = (props) => {
                     {(availableServices !== null)
                         ? (
                             <>
-                                <InputLabel id="demo-simple-select-label">Available Rent A Car Services</InputLabel>
+                                <InputLabel >Available Rent A Car Services</InputLabel>
                                 <Select
                                     className={classes.searchFormField}
                                     labelId="demo-simple-select-outlined-label"
                                     id="demo-simple-select-outlined"
-                                    value={selectedService.Title}
-                                    onChange={handleChange}
-                                    label="Location"
-
+                                    value={selectedService["Title"]}
+                                    onChange={handleChangeSelectedService}
+                                    label="Service"
+                                    renderValue={() => { return selectedService.Title }}
 
                                 >
                                     {
@@ -329,7 +246,7 @@ const CarServiceSearch = (props) => {
                             </>
                         ) : (
                             <>
-                                <InputLabel id="demo-simple-select-label">Available Rent A Car Services  (enter location first)</InputLabel>
+                                <InputLabel>Available Rent A Car Services  (enter location first)</InputLabel>
                                 <Select
                                     className={classes.searchFormField}
                                     labelId="demo-simple-select-outlined-label"
@@ -345,49 +262,77 @@ const CarServiceSearch = (props) => {
 
                                 </Select>
                             </>
-
                         )
-
                     }
-                    <br /><br />
-                    <Formik
-                        initialValues={formInitialValues}
-                        onSubmit={handleSubmit}
-                        validationSchema={validatedFormFields}
-                        style={{ width: "90%" }}
-                    >
-                        {props => (
-                            <Form>
-
-                                <InputLabel id="demo-simple-select-label">Choose Dates For which you need a car</InputLabel>
-                                <Field
-
-                                    component={DatePickerWithFormik}
-                                    style={{ width: "90%" }}
+                    <div className={classes.datesSearchFlex}>
+                        <InputLabel>Choose pick up and  drop off dates</InputLabel>
+                        <MuiPickersUtilsProvider utils={MomentUtils}>
+                            <div className={classes.dateBox}>
+                                <KeyboardDatePicker
+                                    placeholder="MM/DD/YYYY"
+                                    format={"MM/DD/YYYY"}
+                                    mask={value =>
+                                        value
+                                            ? [/\d/, /\d/, "/", /\d/, /\d/, "/", /\d/, /\d/, /\d/, /\d/]
+                                            : []
+                                    }
+                                    value={datesForLease.startDate}
+                                    onChange={handleChangeStartDate}
+                                    disableOpenOnEnter
+                                    minDate={todayDate}
+                                    animateYearScrolling={false}
+                                    autoOk={true}
+                                    clearable
+                                    onInputChange={e => console.log("Keyboard:", e.target.value)}
+                                    KeyboardButtonProps={{
+                                        'aria-label': 'change date',
+                                    }}
                                 />
-                                <ErrorMessage name="DatePickerWithFormik">
-                                    {msg => <div style={{ color: "red" }}>{msg}</div>}
-                                </ErrorMessage>
+                            </div>
+                            <div>
+                                <KeyboardDatePicker
+                                    //keyboard
+                                    placeholder="MM/DD/YYYY"
+                                    format={"MM/DD/YYYY"}
+                                    // handle clearing outside => pass plain array if you are not controlling value outside
+                                    mask={value =>
+                                        value
+                                            ? [/\d/, /\d/, "/", /\d/, /\d/, "/", /\d/, /\d/, /\d/, /\d/]
+                                            : []
+                                    }
+                                    value={datesForLease.endDate}
+                                    onChange={handleChangeEndtDate}
+                                    disableOpenOnEnter
+                                    minDate={(datesForLease.startDate !== null) ? datesForLease.tommorowFromStartDate : todayDate}
+                                    animateYearScrolling={false}
+                                    autoOk={true}
+                                    clearable
+                                    onInputChange={e => console.log("Keyboard:", e.target.value)}
+                                    KeyboardButtonProps={{
+                                        'aria-label': 'change date',
+                                    }}
+                                />
+                            </div>
+                        </MuiPickersUtilsProvider>
+                    </div>
+                    <Button
+                        variant="contained"
+                        onClick={handleSearch}
+                        className={classes.orderButton}
+                        disabled={
+                            (location !== '' &&
+                                !(Object.keys(selectedService).length === 0 && selectedService.constructor === Object) &&
+                                //datesForLease LOGIC ELIMINATION - Todo
+                                ((datesForLease.startDate !== null && datesForLease.endDate !== null))
+                            ) ? (false) : (true)}>
+                        Search
+                </Button>
 
-                            </Form>
-                        )}
-                    </Formik>
 
                 </div>
 
-                <Button
-                    variant="contained"
-                    onClick={handleSearch}
-                    className={classes.orderButton}
-                    disabled={
-                        (location !== '' &&
-                            !(Object.keys(selectedService).length === 0 && selectedService.constructor === Object) //&&
-                            //DATES LOGIC ELIMINATION - Todo
 
-                        ) ? (false) : (true)}>
-                    Search
-                </Button>
-            </div >
+            </div>
 
             <div className={classes.componentSearchFlexContainer}>
                 {(toggleSearch === true)
