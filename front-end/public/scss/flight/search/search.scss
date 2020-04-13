@@ -7,7 +7,7 @@
     display: flex;
     .searchFormCell {
       display: inline-block;
-      width: 200px;
+      min-width: 200px;
     }
 
     .searchFormCell:nth-child(2) {
@@ -19,7 +19,7 @@
     }
   }
   .destinationSelect {
-    max-width: 200px;
+    max-width: 400px;
   }
   #searchButton {
     width: 100%;

@@ -12,7 +12,7 @@
 
 .searchForm .searchFormRow .searchFormCell {
   display: inline-block;
-  width: 200px;
+  min-width: 200px;
 }
 
 .searchForm .searchFormRow .searchFormCell:nth-child(2) {
@@ -24,7 +24,7 @@
 }
 
 .searchForm .destinationSelect {
-  max-width: 200px;
+  max-width: 400px;
 }
 
 .searchForm #searchButton {

@@ -4,39 +4,38 @@ import Search from "./Search";
 import FlightsDisplay from "./FlightsDisplay";
 import { Link } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
+import Filter from "./Filter";
 
-
-const styles = theme => ({
+const styles = (theme) => ({
   button: {
-    margin: theme.spacing(1)
-  }
+    margin: theme.spacing(1),
+  },
 });
 
 class Flight extends Component {
   constructor(props) {
     super(props);
-
-    this.myFunction = this.myFunction.bind(this);
   }
 
-  myFunction() {
-    alert("Alert");
-  }
   render() {
     const classes = this.props;
     return (
       <div>
         <div className="flightTop">
-          <Search />
+          <div style={{ display: "inline-block" }}>
+            <Search />
+            <br />
+            <Filter />
+          </div>
           <FlightsDisplay />
         </div>
+
         <Button
           variant="contained"
           color="primary"
           className={classes.button}
           to="/flights/airlines"
           component={Link}
-          onClick={this.myFunction}
         >
           Airlines
         </Button>
