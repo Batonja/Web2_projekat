@@ -1,8 +1,9 @@
 import { RESERVE_SEATS } from "../actions/Flight/reserveSeats";
-
-
+import { SEARCH } from "../actions/Flight/search";
+import { FILTER } from "../actions/Flight/filter";
+import cloneDeep from "lodash/cloneDeep";
 const initialState = {
-  airlines: [
+  allAirlines: [
     {
       Id: 0,
       Title: "Batijeva avio kompanija",
@@ -15,9 +16,9 @@ const initialState = {
           Id: 1,
           From: "Kairo",
           To: "NYC",
-          DepartureDate: "03/07/2020 8:01 PM",
-          ArivalDate: "03/09/2020 9:00PM",
-          TripLength: 3,
+          DepartureDate: "07/03/2020",
+          ArivalDate: "09/03/2020",
+          TripLength: "0.5",
           ChangeOvers: ["London", "Dubai"],
           Price: 400,
           Seats: [1],
@@ -29,7 +30,7 @@ const initialState = {
           To: "Kairo",
           DepartureDate: "03/10/2020",
           ArivalDate: "03/12/2020",
-          TripLength: 3,
+          TripLength: "3.5",
           ChangeOvers: ["Dubai"],
           Price: 600,
           Seats: [
@@ -105,8 +106,8 @@ const initialState = {
           From: "Milan",
           To: "Brazillia",
           DepartureDate: "03/03/2020",
-          ArivalDate: "03/12/2020 9:00PM",
-          TripLength: 3,
+          ArivalDate: "03/12/2020",
+          TripLength: "5.5",
           ChangeOvers: ["Birmingham", "Georgia"],
           Price: 400,
           Seats: [
@@ -153,9 +154,9 @@ const initialState = {
           Id: 4,
           From: "Pariz",
           To: "Milan",
-          DepartureDate: "03/05/2020 8:01 PM",
-          ArivalDate: "03/11/2020 9:00PM",
-          TripLength: 3,
+          DepartureDate: "03/05/2020",
+          ArivalDate: "03/11/2020",
+          TripLength: "3.5",
           ChangeOvers: ["Birmingham", "Georgia"],
           Price: 550,
           Seats: [],
@@ -170,10 +171,166 @@ const initialState = {
       ],
     },
   ],
+
+  filteredAirlines: [],
 };
 
 export default function flightReducer(state = initialState, { type, payload }) {
   switch (type) {
+    case FILTER:
+      var airlinesToDisplay = [];
+
+      for (
+        var indexOfAirline = 0;
+        indexOfAirline < state.allAirlines.length;
+        indexOfAirline++
+      ) {
+        var currentAirlineWithoutFlights = cloneDeep(
+          state.airlines[indexOfAirline]
+        );
+        currentAirlineWithoutFlights.Flights = [];
+        for (
+          var indexOfFlight = 0;
+          indexOfFlight < state.allAirlines[indexOfAirline].Flights.length;
+          indexOfFlight++
+        ) {
+          for (
+            var indexOfSelectedTripLength = 0;
+            indexOfSelectedTripLength < payload.selectedTripLengths.length;
+            indexOfSelectedTripLength++
+          ) {
+            switch (
+              payload.selectedTripLengths[indexOfSelectedTripLength].value
+            ) {
+              case 0:
+                var tripLengthFloat = parseFloat(
+                  state.allAirlines[indexOfAirline].Flights[indexOfFlight]
+                    .TripLength
+                );
+                if (tripLengthFloat < 1.0) {
+                  currentAirlineWithoutFlights.Flights.push(
+                    state.allAirlines[indexOfAirline].Flights[indexOfFlight]
+                  );
+                }
+                break;
+
+              case 1:
+                if (
+                  parseFloat(
+                    state.allAirlines[indexOfAirline].Flights[indexOfFlight]
+                      .TripLength
+                  ) >= 1.0 &&
+                  parseFloat(
+                    state.allAirlines[indexOfAirline].Flights[indexOfFlight]
+                      .TripLength
+                  ) <= 5.0
+                ) {
+                  currentAirlineWithoutFlights.Flights.push(
+                    state.allAirlines[indexOfAirline].Flights[indexOfFlight]
+                  );
+                }
+                break;
+
+              case 2:
+                if (
+                  parseFloat(
+                    state.allAirlines[indexOfAirline].Flights[indexOfFlight]
+                      .TripLength
+                  ) > 5.0
+                ) {
+                  currentAirlineWithoutFlights.Flights.push(
+                    state.allAirlines[indexOfAirline].Flights[indexOfFlight]
+                  );
+                }
+                break;
+            }
+          }
+        }
+
+        for (
+          var indexOfFilteredAirline = 0;
+          indexOfFilteredAirline < payload.selectedAirlines.length;
+          indexOfFilteredAirline++
+        ) {
+          if (
+            currentAirlineWithoutFlights.Id ===
+              payload.selectedAirlines[indexOfFilteredAirline].value ||
+            (payload.selectedAirlines === "" &&
+              currentAirlineWithoutFlights.Flights.length > 0)
+          ) {
+            airlinesToDisplay.push(currentAirlineWithoutFlights);
+            break;
+          }
+        }
+
+        if (
+          state.allAirlines[indexOfAirline].Id ===
+          payload.selectedAirlines[indexOfFilteredAirline].Id
+        ) {
+          if (payload.selectedAirlines === []) {
+            currentAirlineWithoutFlights =
+              state.allAirlines[indexOfAirline].Flights;
+          }
+
+          break;
+        }
+
+        airlinesToDisplay.push(currentAirlineWithoutFlights);
+      }
+      return { ...state, filteredAirlines: airlinesToDisplay };
+
+    case SEARCH:
+      var airlinesToDisplay = [];
+      for (
+        var indexOfAirline = 0;
+        indexOfAirline < state.allAirlines.length;
+        indexOfAirline++
+      ) {
+        var currentAirlineWithoutFlights = cloneDeep(
+          state.allAirlines[indexOfAirline]
+        );
+        var currentAirlineWithoutFlights = cloneDeep(
+          currentAirlineWithoutFlights
+        );
+        currentAirlineWithoutFlights.Flights = [];
+        for (
+          var indexOfFlight = 0;
+          indexOfFlight < state.allAirlines[indexOfAirline].Flights.length;
+          indexOfFlight++
+        ) {
+          var currentFlight =
+            state.allAirlines[indexOfAirline].Flights[indexOfFlight];
+
+          if (
+            currentFlight.To === payload.destination ||
+            (payload.destination === "" &&
+              currentFlight.Price -
+                currentAirlineWithoutFlights.Tickets.Business >=
+                payload.ticketPrice[0] &&
+              currentFlight.Price -
+                currentAirlineWithoutFlights.Tickets.Business <=
+                payload.ticketPrice[1]) ||
+            (currentFlight.Price -
+              currentAirlineWithoutFlights.Tickets.Economy >=
+              payload.ticketPrice[0] &&
+              currentFlight.Price -
+                currentAirlineWithoutFlights.Tickets.Economy <=
+                payload.ticketPrice[1] &&
+              currentFlight.DepartureDate === payload.departureDate) ||
+            (payload.departureDate === "" &&
+              currentFlight.ArivalDate === payload.arrivalDate) ||
+            payload.arrivalDate === ""
+          ) {
+            currentAirlineWithoutFlights.Flights.push(currentFlight);
+          }
+        }
+        if (currentAirlineWithoutFlights.Flights.length > 0) {
+          var airlineToPush = currentAirlineWithoutFlights;
+          airlinesToDisplay.push(airlineToPush);
+        }
+      }
+      return { ...state, airlines: airlinesToDisplay };
+
     case RESERVE_SEATS:
       for (
         var indexOfAirline = 0;
@@ -211,7 +368,10 @@ export default function flightReducer(state = initialState, { type, payload }) {
         }
       }
       break;
+
     default:
+      if (state.airlines === undefined)
+        return { ...state, airlines: state.allAirlines };
       return state;
   }
 }
