@@ -6,7 +6,13 @@ import { withStyles } from "@material-ui/core/styles";
 import Icon from '@mdi/react'
 import Button from '@material-ui/core/Button';
 import Rating from '@material-ui/lab/Rating';
-
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
 // ICONS 
 import SendRoundedIcon from '@material-ui/icons/SendRounded';
 //import AirlineSeatReclineNormalRoundedIcon from '@material-ui/icons/AirlineSeatReclineNormalRounded';
@@ -38,14 +44,20 @@ const styles = (theme) => ({
     },
     PurchaseOverlayContainer: {
         position: 'fixed',
+        flexDirection: "column",
         display: 'none',
-        width: '90%',
+        [theme.breakpoints.down("xs", "sm", "md")]: {
+            //margin: "5px",
+            width: "95%",
+            height: "700"
+        },
+        width: '60%',
         height: '80%',
         top: '10.0%',
-        left: '50%',
+        //left: '50%',
         justifyContent: 'center',
         alignItems: 'center',
-        opacity: '0.7',
+        opacity: '0.9',
         borderRadius: '20%',
         backgroundColor: 'black',
         zIndex: '2',
@@ -130,12 +142,49 @@ const styles = (theme) => ({
     orderButton: {
         backgroundColor: "#ff4d07",
     },
+    placesFinishDiv:{
+        display: "flex",
+        flexDirection: 'column',
+        [theme.breakpoints.down("xs", "sm", "md")]: {
+            width: "95%",
+        },
+        width: "40%",
+        height: '200px',
+        margin: "5px",
+        border: '10px solid #3F51B5',
+        borderRadius: '15px',
+        backgroundColor: "white",
+        
+
+    }
 });
+
+const StyledTableCell = withStyles((theme) => ({
+    head: {
+        backgroundColor: '#3F51B5',
+        color: 'white',
+        width: '10%',
+
+    },
+    body: {
+        color: 'black',
+        fontSize: 20,
+    },
+}))(TableCell);
+
+
+const StyledTableRow = withStyles((theme) => ({
+    root: {
+        '&:nth-of-type(odd)': {
+            backgroundColor: theme.palette.background.paper,
+            width: "95%"
+        },
+    },
+}))(TableRow);
 
 
 const CarOrdersModal = (props) => {
-
-
+    const [totalPrice, setTotalPrice] = React.useState(0)
     const purchaseOverlayModalRef = React.useRef(null)
     const spring = useSpring({
 
@@ -143,8 +192,15 @@ const CarOrdersModal = (props) => {
             duration: 3500
         },
         from: { opacity: 0 },
-        to: { opacity: 0.7 },
+        to: { opacity: 0.9 },
     })
+
+    React.useEffect(() => {
+        const { orderDetails } = props
+        const diffTime = Math.abs(orderDetails.datesForLease.endDate - orderDetails.datesForLease.startDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        setTotalPrice(vehicle.PriceADay * diffDays)
+    }, [])
 
     const onPurchaseOverlayModal = () => {
         const node = purchaseOverlayModalRef.current
@@ -155,12 +211,10 @@ const CarOrdersModal = (props) => {
         node.style.display = "none";
     }
 
-
     const { classes } = props
-    const { vehicle } = props
-    const { datesForLease } = props
-    const { LoggedInUser} = props
-
+    const { orderDetails } = props
+    const {vehicle} = props
+    const { LoggedInUser } = props
     return (
         <>
             <div className={classes.carOrderModalContainer}>
@@ -245,7 +299,59 @@ const CarOrdersModal = (props) => {
                     </div>
                 </div>
                 <animated.div style={spring} className={classes.PurchaseOverlayContainer} ref={purchaseOverlayModalRef} onClick={off}>
+                    <TableContainer component={Paper} style ={{width: '90%'}}>
+                        <Table className={classes.table} aria-label="customized table">
+                            <TableHead>
+                                <TableRow>
+                                    <StyledTableCell>Service</StyledTableCell>
+                                    <StyledTableCell align="right">Car Model</StyledTableCell>
+                                    <StyledTableCell align="right">Pick up date&nbsp;</StyledTableCell>
+                                    <StyledTableCell align="right">Drop off date&nbsp;</StyledTableCell>
+                                    <StyledTableCell align="right">Total Price&nbsp;($)</StyledTableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
 
+                                <StyledTableRow key={vehicle.Model}>
+                                    <StyledTableCell component="th" scope="row">
+                                        {orderDetails.service}
+                                    </StyledTableCell>
+                                    <StyledTableCell align="right">{vehicle.CarModel}</StyledTableCell>
+                                    <StyledTableCell align="right">{(orderDetails.datesForLease.startDate.getMonth() > 8)
+                                        ? (orderDetails.datesForLease.startDate.getMonth() + 1)
+                                        : ('0' + (orderDetails.datesForLease.startDate.getMonth() + 1)) + '/' +
+                                        ((orderDetails.datesForLease.startDate.getDate() > 9)
+                                        ? orderDetails.datesForLease.startDate.getDate()
+                                        : ('0' + orderDetails.datesForLease.startDate.getDate()))
+                                        + '/' + orderDetails.datesForLease.startDate.getFullYear()}</StyledTableCell>
+                                    <StyledTableCell align="right">{(orderDetails.datesForLease.endDate.getMonth() > 8)
+                                        ? (orderDetails.datesForLease.endDate.getMonth() + 1)
+                                        : ('0' + (orderDetails.datesForLease.endDate.getMonth() + 1)) + '/' +
+                                        ((orderDetails.datesForLease.endDate.getDate() > 9)
+                                        ? orderDetails.datesForLease.endDate.getDate()
+                                        : ('0' + orderDetails.datesForLease.endDate.getDate()))
+                                        + '/' + orderDetails.datesForLease.endDate.getFullYear()}</StyledTableCell>
+                                    <StyledTableCell align="right">{totalPrice}</StyledTableCell>
+
+                                </StyledTableRow>
+
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                    <div className ={classes.placesFinishDiv}>
+                        <p><h4 className={classes.modalHeaders}>Puck up place:</h4>{orderDetails.stations.pickUpStation}</p>
+                        <p><h4 className={classes.modalHeaders}>Drop off place:</h4>{orderDetails.stations.dropOffStation}</p>
+                    </div>
+                    <Button
+                            variant="contained"
+                            onClick={onPurchaseOverlayModal}
+                            color="primary"
+                            size="large"
+                            style= {{margin: "10px", backgroundColor: "#ff4d07", width: "200px", }}
+                            endIcon={<SendRoundedIcon />}
+                        >
+                            FINISH
+                </Button>
                 </animated.div>
 
             </div>

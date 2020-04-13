@@ -13,10 +13,13 @@ import Slider from "@material-ui/core/Slider";
 //ANIMATION
 import { useSpring, animated } from 'react-spring'
 
-import MomentUtils from "@date-io/moment";
+import 'date-fns';
+import DateFnsUtils from '@date-io/date-fns';
 import {
     MuiPickersUtilsProvider,
     DateTimePicker,
+
+
 } from "@material-ui/pickers";
 
 import CarOrdersModal from '../Utilities/CarOrdersModal'
@@ -60,7 +63,6 @@ const styles = (theme) => ({
             width: "95%"
         },
         width: "80%",
-
         height: '80%',
         //margin: "10px",
         alignItems: 'center',
@@ -159,6 +161,10 @@ const CarServiceSearch = (props) => {
         dropOffStation: null
 
     })
+    const [orderDetails, setOrderDetails] = useState({})
+
+    const [service, setService] = useState('');
+
     const spring = useSpring({
 
         config: {
@@ -190,7 +196,7 @@ const CarServiceSearch = (props) => {
     }
 
     const handleChangeSelectedService = (event) => {
-
+        setService(event.target.value.Title)
         setSelectedService(event.target.value);
     };
     const setLocationRefernce = (inputElement) => {
@@ -205,57 +211,59 @@ const CarServiceSearch = (props) => {
 
         setFilteredCars(filtered);
 
-        console.log(selectedService)
+        setOrderDetails({
+            service: selectedService.Title,
+            datesForLease,
+            stations
+        })
+        setService(selectedService.Title)
         setToggleSearch(true)
         setLocation('');
         setToggleSearch(true)
         setSelectedService({
             Title: ''
         });
-        setdatesForLease({
-            startDate: null,
-            tommorowFromStartDate: null,
-            endDate: null,
-        })
+        // setdatesForLease({
+        //     startDate: null,
+        //     tommorowFromStartDate: null,
+        //     endDate: null,
+        // })
     }
     const handleChangeStartDate = (date) => {
         let tommorowFromStartDate = new Date()
-        tommorowFromStartDate.setDate(date._d.getDate() + 1)
-        setdatesForLease({ ...datesForLease, startDate: date._d, tommorowFromStartDate });
+        tommorowFromStartDate.setDate(date.getDate() + 1)
+        setdatesForLease({ ...datesForLease, startDate: date, tommorowFromStartDate });
     }
     const handleChangeEndtDate = (date) => {
-        console.log(date, typeof (date))
-        setdatesForLease({ ...datesForLease, endDate: date._d });
+        setdatesForLease({ ...datesForLease, endDate: date });
     }
 
     useEffect(() => {
         const { rentACarServices } = props
-        //console.log(location)
         if (location !== '')
             setAvailableSerrvice(
                 rentACarServices.filter((service) => {
-                    //console.log(service)
+              
                     return (service.City === location)
                 })
             )
     }, [location])
-    useEffect(() => {
-        console.log(selectedService)
-    }, [availableServices, selectedService])
+
+ 
 
     useEffect(() => {
         locationField.focus()
 
     })
     useEffect(() => {
-        console.log(filteredCars, priceRange, numberOfPessangers, datesForLease)
+        const diffTime = Math.abs(datesForLease.endDate - datesForLease.startDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+ 
+    }, [datesForLease])
 
-    }, [filteredCars, priceRange, numberOfPessangers, datesForLease])
+
+
     const { classes } = props
-    //const { rentACarServices } = props
-
-
-
     const todayDate = new Date()
 
     return (
@@ -265,7 +273,7 @@ const CarServiceSearch = (props) => {
                     <h4 className={classes.searchHeaders}>Search for Rent A Car Service at specific location</h4>
                 </div>
 
-                <div className={classes.SearchSectionFlexContainerBox} style={{ margin: "10px" }}>
+                <div className={classes.SearchSectionFlexContainerBox} style={{ margin: "5px" }}>
                     <h6 className={classes.searchHeaders}>Step 1: Choose Rent A Car Service</h6>
                     {/* <div className={classes.serviceBox}> */}
                     <>
@@ -276,7 +284,7 @@ const CarServiceSearch = (props) => {
                             id="controlled-demo"
                             inputValue={location}
                             onChange={(event, newValue) => {
-                                //console.log(newValue)
+                               
                                 if (newValue === null) {
                                     setAvailableSerrvice(null)
                                     setLocation("")
@@ -338,13 +346,13 @@ const CarServiceSearch = (props) => {
 
 
                         <div className={classes.facilityBox}>
-                            <MuiPickersUtilsProvider utils={MomentUtils}>
+                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
 
                                 <InputLabel>Pick up date</InputLabel>
                                 <DateTimePicker
 
-                                    placeholder="MM/DD/YYYY/hh:mm a"
-                                    format={"MM/DD/YYYY/hh:mm a"}
+                                    placeholder="dd/MM/yyyy/hh:mm a"
+                                    format={"dd/MM/yyyy/hh:mm a"}
                                     mask={value =>
                                         value
                                             ? [/\d/, /\d/, "/", /\d/, /\d/, "/", /\d/, /\d/, /\d/, /\d/]
@@ -365,8 +373,8 @@ const CarServiceSearch = (props) => {
                                 <InputLabel>Pick up date</InputLabel>
                                 <DateTimePicker
                                     //keyboard
-                                    placeholder="MM/DD/YYYY/hh:mm a"
-                                    format={"MM/DD/YYYY/hh:mm a"}
+                                    placeholder="dd/MM/yyyy/hh:mm a"
+                                    format={"dd/MM/yyyy/hh:mm a"}
                                     // handle clearing outside => pass plain array if you are not controlling value outside
                                     mask={value =>
                                         value
@@ -385,14 +393,7 @@ const CarServiceSearch = (props) => {
                                         'aria-label': 'change date',
                                     }}
                                 />
-                                {/* <DateTimePicker
-                                    autoOk
-                                    ampm={false}
-                                    disableFuture
-                                    value={selectedDate}
-                                    onChange={handleDateChange}
-                                    label="24h clock"
-                                /> */}
+                                
                             </MuiPickersUtilsProvider>
                         </div>
 
@@ -405,7 +406,7 @@ const CarServiceSearch = (props) => {
                                 defaultValue={numberOfPessangers}
                                 onChange={(e) => {
                                     setNumberOfPessangers(e.target.value)
-                                    console.log(e.target.value)
+                                 
                                 }}
                                 InputLabelProps={{
                                     shrink: true,
@@ -415,7 +416,7 @@ const CarServiceSearch = (props) => {
                             <Slider
                                 onChange={(e, val) => {
                                     setPriceRange(val)
-                                    console.log(val);
+                                   
                                 }}
 
                                 orientation="horizontal"
@@ -530,8 +531,9 @@ const CarServiceSearch = (props) => {
                             (location !== '' &&
                                 !(Object.keys(selectedService).length === 0 && selectedService.constructor === Object) &&
                                 //datesForLease LOGIC ELIMINATION - Todo
-                                // ((datesForLease.startDate !== null && datesForLease.endDate !== null)) &&
-                                numberOfPessangers <= 10
+                                 ((datesForLease.startDate !== null && datesForLease.endDate !== null)) &&
+                                numberOfPessangers <= 10 &&
+                                (stations.pickUpStation != null  && stations.dropOffStation != null)
                             ) ? (false) : (true)}>
                         Search
                 </Button>
@@ -544,7 +546,7 @@ const CarServiceSearch = (props) => {
                 {(toggleSearch === true)
                     ? (
                         filteredCars.map((car, index) => (
-                            <CarOrdersModal key={index} vehicle={car} datesForLease={datesForLease} />
+                            <CarOrdersModal key={index} vehicle={car} orderDetails ={orderDetails}  />
                         ), selectedService.Vehicles)
                     ) : (<></>)
 
