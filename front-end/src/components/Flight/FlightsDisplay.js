@@ -122,13 +122,9 @@ class FlightsDisplay extends Component {
   };
 
   render() {
-    var airlinesToShow = [];
+    var airlinesToShow = this.props.allAirlines;
 
-    if (this.props.airlines.length > 0) {
-      airlinesToShow = this.props.airlines;
-    }
-
-    if (this.props.filteredAirlines.length > 0) {
+    if (this.props.filteredAirlines !== -1) {
       airlinesToShow = this.props.filteredAirlines;
     }
     return (

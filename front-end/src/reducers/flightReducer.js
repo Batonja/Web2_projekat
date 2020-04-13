@@ -172,7 +172,7 @@ const initialState = {
     },
   ],
 
-  filteredAirlines: [],
+  filteredAirlines: -1,
 };
 
 export default function flightReducer(state = initialState, { type, payload }) {
@@ -247,6 +247,7 @@ export default function flightReducer(state = initialState, { type, payload }) {
           }
         }
 
+        var passedAirlineTitleFilter = true;
         for (
           var indexOfFilteredAirline = 0;
           indexOfFilteredAirline < payload.selectedAirlines.length;
@@ -254,29 +255,31 @@ export default function flightReducer(state = initialState, { type, payload }) {
         ) {
           if (
             currentAirlineWithoutFlights.Id ===
-              payload.selectedAirlines[indexOfFilteredAirline].value ||
-            (payload.selectedAirlines === "" &&
-              currentAirlineWithoutFlights.Flights.length > 0)
+            payload.selectedAirlines[indexOfFilteredAirline].value
           ) {
-            airlinesToDisplay.push(currentAirlineWithoutFlights);
-            break;
+            if (payload.selectedTripLengths.length === 0) {
+              currentAirlineWithoutFlights.Flights =
+                state.allAirlines[indexOfAirline].Flights;
+            }
+          } else {
+            passedAirlineTitleFilter = false;
           }
         }
-
         if (
-          state.allAirlines[indexOfAirline].Id ===
-          payload.selectedAirlines[indexOfFilteredAirline].Id
+          passedAirlineTitleFilter &&
+          currentAirlineWithoutFlights.Flights.length > 0
         ) {
-          if (payload.selectedAirlines === []) {
-            currentAirlineWithoutFlights =
-              state.allAirlines[indexOfAirline].Flights;
-          }
-
-          break;
+          airlinesToDisplay.push(currentAirlineWithoutFlights);
         }
-
-        airlinesToDisplay.push(currentAirlineWithoutFlights);
       }
+
+      if (
+        payload.selectedTripLengths.length === 0 &&
+        payload.selectedAirlines.length === 0
+      ) {
+        airlinesToDisplay = -1;
+      }
+
       return { ...state, filteredAirlines: airlinesToDisplay };
 
     case SEARCH:
@@ -357,6 +360,11 @@ export default function flightReducer(state = initialState, { type, payload }) {
 
               return {
                 ...state,
+                AllAirlines: [
+                  ...state.allAirlines.slice(0, indexOfAirline),
+                  editedAirline,
+                  state.allAirlines.slice(indexOfAirline),
+                ],
                 Airlines: [
                   ...state.airlines.slice(0, indexOfAirline),
                   editedAirline,

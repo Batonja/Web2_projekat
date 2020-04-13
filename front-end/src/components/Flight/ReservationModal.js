@@ -4,6 +4,8 @@ import FirstStep from "./Reservation/FirstStep";
 import SecondStep from "./Reservation/SecondStep";
 import { connect } from "react-redux";
 import reserveSeats from "../../actions/Flight/reserveSeats";
+import loadingData from "../../actions/Loading/loadingData";
+import finishedLoading from "../../actions/Loading/finishedLoading";
 class ReservationModal extends Component {
   constructor(props) {
     super(props);
@@ -44,12 +46,14 @@ class ReservationModal extends Component {
     passengers.push(passenger);
     if (completedReservations === this.state.numOfReservations) {
       this.props.closeModal();
+
       this.props.OnReserveSeats(
         this.state.seats,
         passengers,
         this.props.airline.Id,
         this.props.flight.Id
       );
+
       return;
     }
 
@@ -104,6 +108,8 @@ class ReservationModal extends Component {
 const mapDispatchToProps = (dispatch) => ({
   OnReserveSeats: (seats, passengers, airlineId, flightId) =>
     dispatch(reserveSeats(seats, passengers, airlineId, flightId)),
+  OnLoading: () => dispatch(loadingData()),
+  OnFinishedLoading: () => dispatch(finishedLoading()),
 });
 
 export default connect(null, mapDispatchToProps)(ReservationModal);

@@ -49,6 +49,7 @@ class Filter extends Component {
       this.setState({ selectedTripLenghts: [] });
       event = "";
     }
+    this.setState({ selectedTripLenghts: event });
     this.onHandleSubmit(this.state.selectedAirlines, event);
   };
 
@@ -57,7 +58,7 @@ class Filter extends Component {
       this.setState({ selectedAirlines: [] });
       event = "";
     }
-
+    this.setState({ selectedAirlines: event });
     this.onHandleSubmit(event, this.state.selectedTripLenghts);
   };
   render() {
