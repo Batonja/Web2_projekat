@@ -14,6 +14,7 @@ const initialState = {
             Address: "Majora Gravrilovica 34",
             State: "Serbia",
             City: "Novi Sad",
+            Stations: ["Novi Sad, Zeleznicka stanica", 'Beograd Aerodrom', 'Nis, Aerodrom', 'Subotica, Palic',],
             Description: "Cheap and safe new car for your travel",
             Pricelist: [],
             Vehicles: [
@@ -50,7 +51,7 @@ const initialState = {
                     AverageCarGrade: 4
                 },
                 {
-                    Id: 2,
+                    Id: 3,
                     CarModel: "Toyota Hybrid C-HR",
                     PriceADay: 140,
                     RegistrationNumber: "NS-124-124",
@@ -91,6 +92,7 @@ const initialState = {
             Address: "Majora Gravrilovica 34",
             State: "Serbia",
             City: "Belgrade",
+            Stations: ["Novi Sad, Zeleznicka stanica", 'Beograd Aerodrom', 'Nis, Aerodrom', 'Subotica, Palic',],
             Description: "Cheap and safe new car for your travel",
             Pricelist: [],
             Vehicles: [
@@ -168,6 +170,7 @@ const initialState = {
             Address: "Majora Gravrilovica 34",
             State: "Serbia",
             City: "Nis",
+            Stations : ["Novi Sad, Zeleznicka stanica", 'Beograd Aerodrom', 'Nis, Aerodrom', 'Subotica, Palic',],
             Description: "Cheap and safe new car for your travel",
             Pricelist: [],
             Vehicles: [
@@ -245,6 +248,7 @@ const initialState = {
             Address: "Majora Gravrilovica 34",
             State: "Serbia",
             City: "Nis",
+            Stations : ["Novi Sad, Zeleznicka stanica", 'Beograd Aerodrom', 'Nis, Aerodrom', 'Subotica, Palic',],
             Description: "Cheap and safe new car for your travel",
             Pricelist: [],
             Vehicles: [
