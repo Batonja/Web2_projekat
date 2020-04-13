@@ -57,7 +57,11 @@ class FlightBasicInformation extends Component {
         <Col md="auto" className="flightItem">
           <TextField
             label="Trip Length"
-            value={tripLengthHours + " Hours " + tripLengthMinutes + " Minutes"}
+            value={
+              (tripLengthHours > 0 ? tripLengthHours + " Hours " : "") +
+              tripLengthMinutes +
+              " Minutes"
+            }
           />
         </Col>
       </>

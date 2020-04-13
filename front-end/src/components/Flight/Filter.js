@@ -14,9 +14,9 @@ class Filter extends Component {
     this.state = {
       airlinesOptions: [],
       tripLengthOptions: [
-        { value: 0, label: "> 1 Hour" },
+        { value: 0, label: "< 1 Hour" },
         { value: 1, label: "1-5 Hours" },
-        { value: 2, label: "< 5 Hours" },
+        { value: 2, label: "> 5 Hours" },
       ],
       selectedAirlines: [],
       selectedTripLenghts: [],
@@ -40,8 +40,8 @@ class Filter extends Component {
     this.setState({ airlinesOptions: airlinesOptions });
   }
 
-  onHandleSubmit = (selectedAirlines) => {
-    this.props.onApplyFilters(selectedAirlines);
+  onHandleSubmit = (selectedAirlines, selectedTripLenghts) => {
+    this.props.onApplyFilters(selectedAirlines, selectedTripLenghts);
   };
 
   onChangeTripLengthOptions = (event) => {
