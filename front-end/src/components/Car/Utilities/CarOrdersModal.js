@@ -208,7 +208,7 @@ const CarOrdersModal = (props) => {
     React.useEffect(() => {
         const { orderDetails } = props
         const diffTime = Math.abs(orderDetails.datesForLease.endDate - orderDetails.datesForLease.startDate);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
         setTotalPrice(vehicle.PriceADay * diffDays)
     }, [])
 

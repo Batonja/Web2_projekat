@@ -46,7 +46,7 @@ const styles = (theme) => ({
             height: "900px"
         },
         width: "55%",
-        height: "800px",
+        height: "650px",
         flexDirection: "column",
         borderRadius: '30px',
         justifyContent: 'center',
@@ -70,7 +70,6 @@ const styles = (theme) => ({
         textAlign: "center",
         borderRadius: '30px',
         backgroundColor: "#e5e5e5",
-
     },
 
     DatePickerSearch: {
@@ -241,13 +240,13 @@ const CarServiceSearch = (props) => {
         if (location !== '')
             setAvailableSerrvice(
                 rentACarServices.filter((service) => {
-              
+
                     return (service.City === location)
                 })
             )
     }, [location])
 
- 
+
 
     useEffect(() => {
         locationField.focus()
@@ -255,8 +254,8 @@ const CarServiceSearch = (props) => {
     })
     useEffect(() => {
         const diffTime = Math.abs(datesForLease.endDate - datesForLease.startDate);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
- 
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
     }, [datesForLease])
 
 
@@ -282,7 +281,7 @@ const CarServiceSearch = (props) => {
                             id="controlled-demo"
                             inputValue={location}
                             onChange={(event, newValue) => {
-                               
+
                                 if (newValue === null) {
                                     setAvailableSerrvice(null)
                                     setLocation("")
@@ -390,7 +389,7 @@ const CarServiceSearch = (props) => {
                                         'aria-label': 'change date',
                                     }}
                                 />
-                                
+
                             </MuiPickersUtilsProvider>
                         </div>
 
@@ -403,7 +402,7 @@ const CarServiceSearch = (props) => {
                                 defaultValue={numberOfPessangers}
                                 onChange={(e) => {
                                     setNumberOfPessangers(e.target.value)
-                                 
+
                                 }}
                                 InputLabelProps={{
                                     shrink: true,
@@ -413,7 +412,7 @@ const CarServiceSearch = (props) => {
                             <Slider
                                 onChange={(e, val) => {
                                     setPriceRange(val)
-                                   
+
                                 }}
 
                                 orientation="horizontal"
@@ -528,9 +527,9 @@ const CarServiceSearch = (props) => {
                             (location !== '' &&
                                 !(Object.keys(selectedService).length === 0 && selectedService.constructor === Object) &&
                                 //datesForLease LOGIC ELIMINATION - Todo
-                                 ((datesForLease.startDate !== null && datesForLease.endDate !== null)) &&
+                                ((datesForLease.startDate !== null && datesForLease.endDate !== null)) &&
                                 numberOfPessangers <= 10 &&
-                                (stations.pickUpStation != null  && stations.dropOffStation != null)
+                                (stations.pickUpStation != null && stations.dropOffStation != null)
                             ) ? (false) : (true)}>
                         Search
                 </Button>
@@ -543,7 +542,7 @@ const CarServiceSearch = (props) => {
                 {(toggleSearch === true)
                     ? (
                         filteredCars.map((car, index) => (
-                            <CarOrdersModal key={index} vehicle={car} orderDetails ={orderDetails}  setToggleSearch = {setToggleSearch} />
+                            <CarOrdersModal key={index} vehicle={car} orderDetails={orderDetails} setToggleSearch={setToggleSearch} />
                         ), selectedService.Vehicles)
                     ) : (<></>)
 
