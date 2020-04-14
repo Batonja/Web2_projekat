@@ -172,7 +172,7 @@ const initialState = {
     },
   ],
 
-  filteredAirlines: [],
+  filteredAirlines: -1,
 };
 
 export default function flightReducer(state = initialState, { type, payload }) {
@@ -182,7 +182,7 @@ export default function flightReducer(state = initialState, { type, payload }) {
 
       for (
         var indexOfAirline = 0;
-        indexOfAirline < state.allAirlines.length;
+        indexOfAirline < state.airlines.length;
         indexOfAirline++
       ) {
         var currentAirlineWithoutFlights = cloneDeep(
@@ -191,7 +191,7 @@ export default function flightReducer(state = initialState, { type, payload }) {
         currentAirlineWithoutFlights.Flights = [];
         for (
           var indexOfFlight = 0;
-          indexOfFlight < state.allAirlines[indexOfAirline].Flights.length;
+          indexOfFlight < state.airlines[indexOfAirline].Flights.length;
           indexOfFlight++
         ) {
           for (
@@ -204,12 +204,12 @@ export default function flightReducer(state = initialState, { type, payload }) {
             ) {
               case 0:
                 var tripLengthFloat = parseFloat(
-                  state.allAirlines[indexOfAirline].Flights[indexOfFlight]
+                  state.airlines[indexOfAirline].Flights[indexOfFlight]
                     .TripLength
                 );
                 if (tripLengthFloat < 1.0) {
                   currentAirlineWithoutFlights.Flights.push(
-                    state.allAirlines[indexOfAirline].Flights[indexOfFlight]
+                    state.airlines[indexOfAirline].Flights[indexOfFlight]
                   );
                 }
                 break;
@@ -217,16 +217,16 @@ export default function flightReducer(state = initialState, { type, payload }) {
               case 1:
                 if (
                   parseFloat(
-                    state.allAirlines[indexOfAirline].Flights[indexOfFlight]
+                    state.airlines[indexOfAirline].Flights[indexOfFlight]
                       .TripLength
                   ) >= 1.0 &&
                   parseFloat(
-                    state.allAirlines[indexOfAirline].Flights[indexOfFlight]
+                    state.airlines[indexOfAirline].Flights[indexOfFlight]
                       .TripLength
                   ) <= 5.0
                 ) {
                   currentAirlineWithoutFlights.Flights.push(
-                    state.allAirlines[indexOfAirline].Flights[indexOfFlight]
+                    state.airlines[indexOfAirline].Flights[indexOfFlight]
                   );
                 }
                 break;
@@ -234,12 +234,12 @@ export default function flightReducer(state = initialState, { type, payload }) {
               case 2:
                 if (
                   parseFloat(
-                    state.allAirlines[indexOfAirline].Flights[indexOfFlight]
+                    state.airlines[indexOfAirline].Flights[indexOfFlight]
                       .TripLength
                   ) > 5.0
                 ) {
                   currentAirlineWithoutFlights.Flights.push(
-                    state.allAirlines[indexOfAirline].Flights[indexOfFlight]
+                    state.airlines[indexOfAirline].Flights[indexOfFlight]
                   );
                 }
                 break;
@@ -247,6 +247,7 @@ export default function flightReducer(state = initialState, { type, payload }) {
           }
         }
 
+        var passedAirlineTitleFilter = true;
         for (
           var indexOfFilteredAirline = 0;
           indexOfFilteredAirline < payload.selectedAirlines.length;
@@ -254,29 +255,31 @@ export default function flightReducer(state = initialState, { type, payload }) {
         ) {
           if (
             currentAirlineWithoutFlights.Id ===
-              payload.selectedAirlines[indexOfFilteredAirline].value ||
-            (payload.selectedAirlines === "" &&
-              currentAirlineWithoutFlights.Flights.length > 0)
+            payload.selectedAirlines[indexOfFilteredAirline].value
           ) {
-            airlinesToDisplay.push(currentAirlineWithoutFlights);
-            break;
+            if (payload.selectedTripLengths.length === 0) {
+              currentAirlineWithoutFlights.Flights =
+                state.airlines[indexOfAirline].Flights;
+            }
+          } else {
+            passedAirlineTitleFilter = false;
           }
         }
-
         if (
-          state.allAirlines[indexOfAirline].Id ===
-          payload.selectedAirlines[indexOfFilteredAirline].Id
+          passedAirlineTitleFilter &&
+          currentAirlineWithoutFlights.Flights.length > 0
         ) {
-          if (payload.selectedAirlines === []) {
-            currentAirlineWithoutFlights =
-              state.allAirlines[indexOfAirline].Flights;
-          }
-
-          break;
+          airlinesToDisplay.push(currentAirlineWithoutFlights);
         }
-
-        airlinesToDisplay.push(currentAirlineWithoutFlights);
       }
+
+      if (
+        payload.selectedTripLengths.length === 0 &&
+        payload.selectedAirlines.length === 0
+      ) {
+        airlinesToDisplay = -1;
+      }
+
       return { ...state, filteredAirlines: airlinesToDisplay };
 
     case SEARCH:
@@ -289,9 +292,7 @@ export default function flightReducer(state = initialState, { type, payload }) {
         var currentAirlineWithoutFlights = cloneDeep(
           state.allAirlines[indexOfAirline]
         );
-        var currentAirlineWithoutFlights = cloneDeep(
-          currentAirlineWithoutFlights
-        );
+
         currentAirlineWithoutFlights.Flights = [];
         for (
           var indexOfFlight = 0;
@@ -303,25 +304,29 @@ export default function flightReducer(state = initialState, { type, payload }) {
 
           if (
             currentFlight.To === payload.destination ||
-            (payload.destination === "" &&
-              currentFlight.Price -
+            payload.destination === ""
+          ) {
+            if (
+              (currentFlight.Price -
                 currentAirlineWithoutFlights.Tickets.Business >=
                 payload.ticketPrice[0] &&
-              currentFlight.Price -
-                currentAirlineWithoutFlights.Tickets.Business <=
-                payload.ticketPrice[1]) ||
-            (currentFlight.Price -
-              currentAirlineWithoutFlights.Tickets.Economy >=
-              payload.ticketPrice[0] &&
-              currentFlight.Price -
-                currentAirlineWithoutFlights.Tickets.Economy <=
-                payload.ticketPrice[1] &&
-              currentFlight.DepartureDate === payload.departureDate) ||
-            (payload.departureDate === "" &&
-              currentFlight.ArivalDate === payload.arrivalDate) ||
-            payload.arrivalDate === ""
-          ) {
-            currentAirlineWithoutFlights.Flights.push(currentFlight);
+                currentFlight.Price -
+                  currentAirlineWithoutFlights.Tickets.Business <=
+                  payload.ticketPrice[1]) ||
+              (currentFlight.Price -
+                currentAirlineWithoutFlights.Tickets.Economy >=
+                payload.ticketPrice[0] &&
+                currentFlight.Price -
+                  currentAirlineWithoutFlights.Tickets.Economy <=
+                  payload.ticketPrice[1])
+            ) {
+              if (
+                currentFlight.DepartureDate === payload.departureDate &&
+                currentFlight.ArivalDate === payload.arrivalDate
+              ) {
+                currentAirlineWithoutFlights.Flights.push(currentFlight);
+              }
+            }
           }
         }
         if (currentAirlineWithoutFlights.Flights.length > 0) {
@@ -357,6 +362,11 @@ export default function flightReducer(state = initialState, { type, payload }) {
 
               return {
                 ...state,
+                AllAirlines: [
+                  ...state.allAirlines.slice(0, indexOfAirline),
+                  editedAirline,
+                  state.allAirlines.slice(indexOfAirline),
+                ],
                 Airlines: [
                   ...state.airlines.slice(0, indexOfAirline),
                   editedAirline,

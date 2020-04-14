@@ -8,8 +8,9 @@ import { Link } from "react-router-dom";
 import search from "../../actions/Flight/search";
 import Slider from "@material-ui/core/Slider";
 import Typography from "@material-ui/core/Typography";
-import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
+import "date-fns";
 import DateFnsUtils from "@date-io/date-fns";
+import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
 
 class Search extends Component {
   constructor(props) {
@@ -28,20 +29,26 @@ class Search extends Component {
 
   componentDidMount() {
     this.getDestinations();
-    this.props.onSearch(
-      [
-        this.state.sliderValue[0] * this.state.sliderScaleFactor,
-        this.state.sliderValue[1] * this.state.sliderScaleFactor,
-      ],
-      this.state.destination,
-      "",
-      ""
-    );
+
     this.setState({
-      departureDate: this.getTodaysDate(),
-      arrivalDate: this.getTodaysDate(),
+      departureDate: new Date(),
+      arrivalDate: new Date(),
     });
   }
+
+  parseDate = (date) => {
+    var dateFormat = new Date(date);
+    var dateString =
+      (dateFormat.getDate() < 10 ? "0" : "") +
+      dateFormat.getDate().toString() +
+      "/" +
+      (dateFormat.getMonth() < 10 ? "0" : "") +
+      (dateFormat.getMonth() + 1).toString() +
+      "/" +
+      dateFormat.getFullYear().toString();
+
+    return dateString;
+  };
 
   getDestinations() {
     var sortedDestinations = [];
@@ -66,28 +73,11 @@ class Search extends Component {
 
     this.setState({ destinations: sortedDestinations });
   }
+
   onHandleSubmit = (event) => {
     event.preventDefault();
-    var arrivalDate = this.state.arrivalDate;
-    var departureDate = this.state.departureDate;
-    if (this.state.arrivalDate !== "") {
-      var arrivalDateSplited = this.state.arrivalDate.split("-");
-      arrivalDate =
-        arrivalDateSplited[2] +
-        "/" +
-        arrivalDateSplited[1] +
-        "/" +
-        arrivalDateSplited[0];
-    }
-    if (this.state.departureDate !== "") {
-      var departureDateSplited = this.state.departureDate.split("-");
-      departureDate =
-        departureDateSplited[2] +
-        "/" +
-        departureDateSplited[1] +
-        "/" +
-        departureDateSplited[0];
-    }
+    var arrivalDate = this.parseDate(this.state.arrivalDate);
+    var departureDate = this.parseDate(this.state.departureDate);
 
     this.props.onSearch(
       [
@@ -118,12 +108,24 @@ class Search extends Component {
 
     return value;
   };
+  onHandleDateChange = (event, name) => {
+    if (name.includes("Arrival")) {
+      this.setState({ arrivalDate: event });
+    }
+    if (name.includes("Departure")) {
+      this.setState({ departureDate: event });
+    }
+  };
+
   onHandleChange = (e, newValue) => {
     if (e.target.parentElement.id === "slider-price") {
       this.setState({ sliderValue: newValue });
     }
 
-    if (e.target.id.includes("auto-complete-destinations")) {
+    if (
+      e.target.id.includes("auto-complete-destinations") ||
+      e.target.id === ""
+    ) {
       this.setState({ destination: e.target.textContent });
       return;
     }
@@ -170,9 +172,16 @@ class Search extends Component {
                 autoComplete
                 name="destination"
                 onChange={this.onHandleChange}
+                OnClea
                 includeInputInList
                 renderInput={(params) => (
-                  <TextField {...params} label="Destination" margin="normal" />
+                  <TextField
+                    {...params}
+                    onChange={this.onHandleChange}
+                    id="Lol"
+                    label="Destination"
+                    margin="normal"
+                  />
                 )}
               />
             </div>
@@ -187,8 +196,9 @@ class Search extends Component {
                   name="arrivalDate"
                   label="Arrival Date"
                   variant="inline"
-                  format="dd/MM/yyyy"
-                  onChange={this.onHandleChange}
+                  format={"dd/MM/yyyy"}
+                  onChange={(e) => this.onHandleDateChange(e, "dateArrival")}
+                  value={this.state.arrivalDate}
                 />
               </MuiPickersUtilsProvider>
             </div>
@@ -199,8 +209,9 @@ class Search extends Component {
                   label="Departure Date"
                   variant="inline"
                   name="departureDate"
-                  onChange={this.onHandleChange}
-                  format="dd/MM/yyyy"
+                  onChange={(e) => this.onHandleDateChange(e, "dateDeparture")}
+                  format={"dd/MM/yyyy"}
+                  value={this.state.departureDate}
                 />
               </MuiPickersUtilsProvider>
             </div>
