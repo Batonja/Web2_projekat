@@ -111,33 +111,33 @@ const AccountNavbarCollapse = (props) => {
             </MenuItem>
           </Menu>
         ) : (
-          <Menu
-            id="menu-collapsed"
-            anchorEl={anchorEl}
-            keepMounted
-            anchorOrigin={{
-              vertical: "top",
-              horizontal: "left",
-            }}
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "left",
-            }}
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
-          >
-            <MenuItem onClick={logOut} to={"/"} component={RouterLink}>
-              Log Out
-            </MenuItem>
-            <MenuItem
-              onClick={handleClose}
-              to={"/account"}
-              component={RouterLink}
+            <Menu
+              id="menu-collapsed"
+              anchorEl={anchorEl}
+              keepMounted
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "left",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "left",
+              }}
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
             >
-              My Account
+              <MenuItem onClick={logOut} to={"/"} component={RouterLink}>
+                Log Out
             </MenuItem>
-          </Menu>
-        )}
+              <MenuItem
+                onClick={handleClose}
+                to={"/account"}
+                component={RouterLink}
+              >
+                My Account
+            </MenuItem>
+            </Menu>
+          )}
       </div>
 
       <div
@@ -168,31 +168,29 @@ const AccountNavbarCollapse = (props) => {
                 <div className={classes.linkButtonDiv}>Login</div>
               </Link>
             </div>
-            <div className={classes.linkButtonDiv}>
-              <Link
-                variant="body2"
-                color="inherit"
-                to={"/signup"}
-                component={RouterLink}
-              >
-                Register
-              </Link>
-            </div>
+            <Link
+              variant="body2"
+              color="inherit"
+              to={"/signup"}
+              component={RouterLink}
+            >
+              <div className={classes.linkButtonDiv}>Register</div>
+            </Link>
           </>
         ) : (
-          <>
-            <div className={classes.linkButtonDiv}>
-              <Link
-                href=""
-                variant="body2"
-                color="inherit"
-                onClick={props.OnLogOff}
-              >
-                Logout
+            <>
+              <div className={classes.linkButtonDiv}>
+                <Link
+                  href=""
+                  variant="body2"
+                  color="inherit"
+                  onClick={props.OnLogOff}
+                >
+                  Logout
               </Link>
-            </div>
-          </>
-        )}
+              </div>
+            </>
+          )}
       </div>
     </div>
   );

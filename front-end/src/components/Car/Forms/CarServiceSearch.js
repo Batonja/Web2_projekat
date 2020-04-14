@@ -94,7 +94,7 @@ const styles = (theme) => ({
     },
     searchFormField: {
         width: "90%",
-        //textAlign: "left"
+        textAlign: "left"
     },
     modalHeaders: {
         textAlign: "center",
@@ -161,10 +161,10 @@ const CarServiceSearch = (props) => {
         dropOffStation: null
 
     })
-    const [orderDetails, setOrderDetails] = useState({})
-
     const [service, setService] = useState('');
 
+
+    const [orderDetails, setOrderDetails] = useState({})
     const spring = useSpring({
 
         config: {
@@ -202,15 +202,10 @@ const CarServiceSearch = (props) => {
     const setLocationRefernce = (inputElement) => {
         locationField = inputElement;
     }
-    // const handlePickup =(e) =>{
-    //     setStations
-    // }
 
     const handleSearch = () => {
         var filtered = selectedService.Vehicles.filter(filteringCars);
-
         setFilteredCars(filtered);
-
         setOrderDetails({
             service: selectedService.Title,
             datesForLease,
@@ -219,10 +214,13 @@ const CarServiceSearch = (props) => {
         setService(selectedService.Title)
         setToggleSearch(true)
         setLocation('');
-        setToggleSearch(true)
         setSelectedService({
             Title: ''
         });
+        setStations({
+            pickUpStation: null,
+            dropOffStation: null
+        })
         setdatesForLease({
             startDate: null,
             tommorowFromStartDate: null,
@@ -545,7 +543,7 @@ const CarServiceSearch = (props) => {
                 {(toggleSearch === true)
                     ? (
                         filteredCars.map((car, index) => (
-                            <CarOrdersModal key={index} vehicle={car} orderDetails ={orderDetails}  />
+                            <CarOrdersModal key={index} vehicle={car} orderDetails ={orderDetails}  setToggleSearch = {setToggleSearch} />
                         ), selectedService.Vehicles)
                     ) : (<></>)
 

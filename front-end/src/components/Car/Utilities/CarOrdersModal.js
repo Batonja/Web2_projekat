@@ -1,11 +1,16 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import carOrderToProfile from '../../../actions/User/carOrderToProfile.js'
+import { Redirect } from 'react-router-dom'
+import Link from "@material-ui/core/Link";
+import { Link as RouterLink } from "react-router-dom";
 
 //Material UI
 import { withStyles } from "@material-ui/core/styles";
 import Icon from '@mdi/react'
 import Button from '@material-ui/core/Button';
 import Rating from '@material-ui/lab/Rating';
+import Box from '@material-ui/core/Box';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -23,9 +28,11 @@ import { mdiAccountMultiple } from '@mdi/js';
 import { mdiBriefcase } from '@mdi/js';
 import { mdiCarShiftPattern } from '@mdi/js'; //Manual
 import { mdiAirConditioner } from '@mdi/js';
-import Box from '@material-ui/core/Box';
 //ANIMATION
 import { useSpring, animated } from 'react-spring'
+
+import isEmpty from 'lodash/isEmpty'
+
 
 const styles = (theme) => ({
     //------Level0
@@ -47,14 +54,12 @@ const styles = (theme) => ({
         flexDirection: "column",
         display: 'none',
         [theme.breakpoints.down("xs", "sm", "md")]: {
-            //margin: "5px",
             width: "95%",
             height: "700"
         },
         width: '50%',
         height: '80%',
         top: '10.0%',
-        //left: '50%',
         justifyContent: 'center',
         alignItems: 'center',
         opacity: '0.9',
@@ -143,7 +148,7 @@ const styles = (theme) => ({
     orderButton: {
         backgroundColor: "#ff4d07",
     },
-    placesFinishDiv:{
+    placesFinishDiv: {
         display: "flex",
         flexDirection: 'column',
         [theme.breakpoints.down("xs", "sm", "md")]: {
@@ -155,7 +160,7 @@ const styles = (theme) => ({
         border: '10px solid #3F51B5',
         borderRadius: '15px',
         backgroundColor: "white",
-        
+
 
     }
 });
@@ -173,7 +178,7 @@ const StyledTableCell = withStyles((theme) => ({
         color: 'black',
         textAlign: 'left',
         fontSize: 16,
-        
+
     },
 }))(TableCell);
 
@@ -211,15 +216,37 @@ const CarOrdersModal = (props) => {
         const node = purchaseOverlayModalRef.current
         node.style.display = "flex";
     }
+    const onFinishOrder = () => {
+        const { LoggedInUser } = props
+        const { carOrderToProfile } = props
+        const { orderDetails } = props
+        const { vehicle } = props
+        const order = {
+            orderDetails,//service, datesForLease, stations
+            vehicle,
+            totalPrice
+        }
+        props.setToggleSearch(false)
+        if (isEmpty(LoggedInUser)) {
+            console.log("Not Logged in: ", LoggedInUser)
+
+        } else {
+            console.log("Logged in: ", LoggedInUser)
+            carOrderToProfile(order, LoggedInUser.Email)
+        }
+    }
     const off = () => {
         const node = purchaseOverlayModalRef.current
         node.style.display = "none";
     }
-
+    const dateConversion = (date) => {
+        return date.toLocaleDateString('en-US');
+    }
     const { classes } = props
     const { orderDetails } = props
-    const {vehicle} = props
+    const { vehicle } = props
     const { LoggedInUser } = props
+    
     return (
         <>
             <div className={classes.carOrderModalContainer}>
@@ -304,7 +331,12 @@ const CarOrdersModal = (props) => {
                     </div>
                 </div>
                 <animated.div style={spring} className={classes.PurchaseOverlayContainer} ref={purchaseOverlayModalRef} onClick={off}>
-                    <TableContainer component={Paper} style ={{width: '90%'}}>
+                    <p><h4 className={classes.modalHeaders}>Puck up place:</h4>{orderDetails.stations.pickUpStation}</p>
+                    <div>
+                        <h3 className={classes.modalHeaders}>Drop off place:</h3>
+
+                    </div>
+                    <TableContainer component={Paper} style={{ width: '90%' }}>
                         <Table className={classes.table} aria-label="customized table">
                             <TableHead>
                                 <TableRow>
@@ -322,20 +354,12 @@ const CarOrdersModal = (props) => {
                                         {orderDetails.service}
                                     </StyledTableCell>
                                     <StyledTableCell align="right">{vehicle.CarModel}</StyledTableCell>
-                                    <StyledTableCell align="right">{(orderDetails.datesForLease.startDate.getMonth() > 8)
-                                        ? (orderDetails.datesForLease.startDate.getMonth() + 1)
-                                        : ('0' + (orderDetails.datesForLease.startDate.getMonth() + 1)) + '/' +
-                                        ((orderDetails.datesForLease.startDate.getDate() > 9)
-                                        ? orderDetails.datesForLease.startDate.getDate()
-                                        : ('0' + orderDetails.datesForLease.startDate.getDate()))
-                                        + '/' + orderDetails.datesForLease.startDate.getFullYear()}</StyledTableCell>
-                                    <StyledTableCell align="right">{(orderDetails.datesForLease.endDate.getMonth() > 8)
-                                        ? (orderDetails.datesForLease.endDate.getMonth() + 1)
-                                        : ('0' + (orderDetails.datesForLease.endDate.getMonth() + 1)) + '/' +
-                                        ((orderDetails.datesForLease.endDate.getDate() > 9)
-                                        ? orderDetails.datesForLease.endDate.getDate()
-                                        : ('0' + orderDetails.datesForLease.endDate.getDate()))
-                                        + '/' + orderDetails.datesForLease.endDate.getFullYear()}</StyledTableCell>
+                                    <StyledTableCell align="right">
+                                        {dateConversion(orderDetails.datesForLease.startDate)}
+                                    </StyledTableCell>
+                                    <StyledTableCell align="right">
+                                        {dateConversion(orderDetails.datesForLease.endDate)}
+                                    </StyledTableCell>
                                     <StyledTableCell align="right">{totalPrice}</StyledTableCell>
 
                                 </StyledTableRow>
@@ -343,20 +367,27 @@ const CarOrdersModal = (props) => {
                             </TableBody>
                         </Table>
                     </TableContainer>
-                    <div className ={classes.placesFinishDiv}>
+                    <div className={classes.placesFinishDiv}>
                         <p><h4 className={classes.modalHeaders}>Puck up place:</h4>{orderDetails.stations.pickUpStation}</p>
                         <p><h4 className={classes.modalHeaders}>Drop off place:</h4>{orderDetails.stations.dropOffStation}</p>
                     </div>
-                    <Button
+                    <Link
+                        variant="body2"
+                        color="inherit"
+                        to={(isEmpty(LoggedInUser)) ? "/signin" : "/cars"}
+                        component={RouterLink}
+                    >
+                        <Button
                             variant="contained"
-                            onClick={onPurchaseOverlayModal}
+                            onClick={onFinishOrder}
                             color="primary"
                             size="large"
-                            style= {{margin: "10px", backgroundColor: "#ff4d07", width: "200px", }}
+                            style={{ margin: "10px", backgroundColor: "#ff4d07", width: "200px", }}
                             endIcon={<SendRoundedIcon />}
                         >
                             FINISH
-                </Button>
+                        </Button>
+                    </Link>
                 </animated.div>
 
             </div>
@@ -371,4 +402,8 @@ const mapStateToProps = (state) => ({
     LoggedInUser: state.userReducer.LoggedInUser
 })
 
-export default connect(mapStateToProps)(withStyles(styles)(CarOrdersModal))
+const mapDispatchToProps = (dispatch) => ({
+    carOrderToProfile: (order, userEmail) => dispatch(carOrderToProfile(order, userEmail))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(CarOrdersModal))

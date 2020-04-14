@@ -18,7 +18,8 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-
+import Rating from '@material-ui/lab/Rating';
+import Box from '@material-ui/core/Box';
 
 const styles = theme => ({
   AcountFlexContainer: {
@@ -110,6 +111,7 @@ class Account extends Component {
         },
       ],
     };
+
     console.log(this.props.loggedInUser)
   }
 
@@ -176,9 +178,13 @@ class Account extends Component {
     });
   };
 
+  dateConversion = (date) => {
+    return date.toLocaleDateString('en-US');
+  }
+
   render() {
     const { classes } = this.props;
-
+    const { loggedInUser } = this.props;
     return (
       <div className={classes.AcountFlexContainer}>
         <div className={classes.AccountFormFlexBoxContainer}>
@@ -361,30 +367,42 @@ class Account extends Component {
               <TableHead>
                 <TableRow>
                   <StyledTableCell>Service</StyledTableCell>
-                  <StyledTableCell align="right">Car Model</StyledTableCell>
-                  <StyledTableCell align="right">Pick up date&nbsp;</StyledTableCell>
-                  <StyledTableCell align="right">Drop off date&nbsp;</StyledTableCell>
-                  <StyledTableCell align="right">Total Price&nbsp;($)</StyledTableCell>
-                  <StyledTableCell align="right">Grade</StyledTableCell>
+                  <StyledTableCell align="left">Car Model</StyledTableCell>
+                  <StyledTableCell align="left">Pick up date&nbsp;</StyledTableCell>
+                  <StyledTableCell align="left">Drop off date&nbsp;</StyledTableCell>
+                  <StyledTableCell align="left">Total Price&nbsp;($)</StyledTableCell>
+                  <StyledTableCell align="left">Service Grade</StyledTableCell>
+                  <StyledTableCell align="left">Car Grade</StyledTableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {
-                  this.state.AllFriends.map(friend => (
-                    <StyledTableRow key={friend.Email}>
+                  loggedInUser.CarOrders.map((order, index) => (
+                    <StyledTableRow key={index}>
                       <StyledTableCell component="th" scope="row">
-                        {friend.Email}
+                        {order.orderDetails.service}
                       </StyledTableCell>
-                      <StyledTableCell align="right">{friend.FirstName}</StyledTableCell>
-                      <StyledTableCell align="right">{friend.LastName}</StyledTableCell>
+                      <StyledTableCell align="left">{order.vehicle.CarModel}</StyledTableCell>
+                      <StyledTableCell align="left">
+                        {this.dateConversion(order.orderDetails.datesForLease.startDate)}
+                      </StyledTableCell>
+                      <StyledTableCell align="right">
+                        {this.dateConversion(order.orderDetails.datesForLease.endDate)}
+                      </StyledTableCell>
+                      <StyledTableCell align="left" > {order.totalPrice}</StyledTableCell>
+                      <StyledTableCell align="left">
+                        <Rating value={order.vehicle.AverageCarGrade} readOnly />
+                      </StyledTableCell>
+                      <StyledTableCell align="left">
+                        <Rating value={order.vehicle.AverageCarGrade} readOnly />
+                      </StyledTableCell>
                     </StyledTableRow>
-
                   ))
                 }
               </TableBody>
             </Table>
           </TableContainer>
-          <div >
+          <div>
             <h5 className={classes.accountHeaders}>You can grade your ordered and car and service after drop off</h5>
           </div>
         </div>
