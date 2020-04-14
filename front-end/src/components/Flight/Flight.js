@@ -26,6 +26,17 @@ class Flight extends Component {
             <Search />
             <br />
             <Filter />
+            <br />
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              style={{ width: "400px" }}
+              to="/flights/admin"
+              component={Link}
+            >
+              Flight Admin Panel
+            </Button>
           </div>
           <FlightsDisplay />
         </div>

@@ -8,11 +8,13 @@ import Account from "../components/AccountForms/Account";
 import Airlines from "../components/Flight/Airlines";
 import RegistrationForm from "../components/AccountForms/RegistrationForm";
 import LoginForm from "../components/AccountForms/LoginForm";
+import FlightAdminPanel from "../components/Flight/FlightAdminPanel/FlightAdminPanel";
 import "../App.css";
 
 export function Routes() {
   return (
     <Switch>
+      <Route path="/flights/admin" component={FlightAdminPanel} />
       <Route path="/flights/airlines" component={Airlines} />
       <Route path="/flights" component={Flight} />
       <Route path="/hotels" component={Hotel} />
