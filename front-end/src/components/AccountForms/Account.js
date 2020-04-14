@@ -6,7 +6,84 @@ import { connect } from "react-redux";
 //import TextField from "@material-ui/core/TextField";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 
+
+
+
+import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+
+
+const styles = theme => ({
+  AcountFlexContainer: {
+    width: "100%",
+    height: "100%",
+    display: "flex",
+    flexDirection: "row",
+    // justifyContent: 'center',
+    // alignItems: 'center',
+    // textAlign: "center",
+  },
+  AccountFormFlexBoxContainer: {
+    width: "15%",
+    height: "100%",
+    display: "flex",
+    margin: '10px',
+    flexDirection: "column",
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: "center",
+  },
+  tabelesFlexBoxContainer: {
+    width: "36%",
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: "left",
+  },
+
+  accountHeaders: {
+    textAlign: "center",
+    fontWeight: "bold",
+    margin: '10px'
+
+  },
+  tabele: {
+    alignItems: 'baseline'
+  }
+
+})
+
+const StyledTableCell = withStyles((theme) => ({
+  head: {
+    backgroundColor: '#3F51B5',
+    color: 'white',
+    width: '10%',
+    textAlign: 'left'
+  },
+  body: {
+    textAlign: 'left',
+    color: 'black',
+    fontSize: 13,
+  },
+}))(TableCell);
+const StyledTableRow = withStyles((theme) => ({
+  root: {
+    '&:nth-of-type(odd)': {
+      backgroundColor: theme.palette.background.paper,
+      width: "95%"
+    },
+  },
+}))(TableRow);
+
 class Account extends Component {
   constructor(props) {
     super(props);
@@ -20,8 +97,20 @@ class Account extends Component {
       Address: this.props.loggedInUser.Address,
       Phone: this.props.loggedInUser.Phone,
       AllEmails: [],
-      AllFriends: [],
+      AllFriends: [
+        {
+          FirstName: "Zivojin",
+          LastName: "Misic",
+          Email: "zivkozivkic@yahoo.com",
+        },
+        {
+          Email: "mileta@bode.com",
+          FirstName: "Milojica",
+          LastName: "Milovanov",
+        },
+      ],
     };
+    console.log(this.props.loggedInUser)
   }
 
   componentDidMount() {
@@ -88,26 +177,33 @@ class Account extends Component {
   };
 
   render() {
+    const { classes } = this.props;
+
     return (
-      <Container fluid>
-        <ValidatorForm onError={(errors) => console.log(errors)}>
-          <Row>
-            <Col md="auto">
-              <TextValidator
-                margin="normal"
-                label="First Name"
-                id="firstName-form"
-                name="FirstName"
-                onChange={this.handleChange}
-                validators={["required", "areLettersOnly"]}
-                value={this.state.FirstName}
-                errorMessages={[
-                  "This field is required",
-                  "First name must consist of letters only",
-                ]}
-              />
-            </Col>
-            <Col md="auto">
+      <div className={classes.AcountFlexContainer}>
+        <div className={classes.AccountFormFlexBoxContainer}>
+          <div >
+            <h3 className={classes.accountHeaders}>Account Details</h3>
+          </div>
+          <ValidatorForm onError={(errors) => console.log(errors)}>
+            <div>
+
+            </div>
+            <TextValidator
+              margin="normal"
+              label="First Name"
+              id="firstName-form"
+              name="FirstName"
+              onChange={this.handleChange}
+              validators={["required", "areLettersOnly"]}
+              value={this.state.FirstName}
+              errorMessages={[
+                "This field is required",
+                "First name must consist of letters only",
+              ]}
+            />
+            <div>
+
               <TextValidator
                 margin="normal"
                 label="Last Name"
@@ -121,8 +217,8 @@ class Account extends Component {
                   "Last name must consist of letters only",
                 ]}
               />
-            </Col>
-            <Col md="auto">
+            </div>
+            <div>
               <TextValidator
                 margin="normal"
                 label="Email"
@@ -137,8 +233,8 @@ class Account extends Component {
                   "user with this email already exists",
                 ]}
               />
-            </Col>
-            <Col md="auto">
+            </div>
+            <div>
               <TextValidator
                 margin="normal"
                 label="Password"
@@ -150,8 +246,8 @@ class Account extends Component {
                 validators={["required"]}
                 errorMessages={["this field is required"]}
               />
-            </Col>
-            <Col md="auto">
+            </div>
+            <div>
               <TextValidator
                 margin="normal"
                 label="Repeat Password"
@@ -164,8 +260,8 @@ class Account extends Component {
                 validators={["isPasswordMatch", "required"]}
                 errorMessages={["password mismatch", "this field is required"]}
               />
-            </Col>
-            <Col md="auto">
+            </div>
+            <div>
               <TextValidator
                 margin="normal"
                 label="Phone Number"
@@ -176,8 +272,8 @@ class Account extends Component {
                 validators={["required", "areNumbersOnly"]}
                 errorMessages={["this field is required"]}
               />
-            </Col>
-            <Col md="auto">
+            </div>
+            <div>
               <TextValidator
                 margin="normal"
                 label="Address"
@@ -188,29 +284,111 @@ class Account extends Component {
                 validators={["required"]}
                 errorMessages={["this field is required"]}
               />
-            </Col>
-            <Button variant="contained" color="primary">
-              Edit
+            </div>
+            <div>
+              <Button variant="contained" color="primary">
+                Edit
             </Button>
-          </Row>
-          <Row>
-            <Container>
-              <Row>
-                <Col lg="auto">
-                  <div className="tableFriendsTitle"> My Friends </div>
-                </Col>
-              </Row>
-              {Array.from(this.state.AllFriends).map((friend, index) => {
-                return (
-                  <Row>
-                    <Col md="auto"></Col>
-                  </Row>
-                );
-              })}
-            </Container>
-          </Row>
-        </ValidatorForm>
-      </Container>
+            </div>
+
+          </ValidatorForm>
+        </div>
+        <div className={classes.tabelesFlexBoxContainer}>
+          <div >
+            <h3 className={classes.accountHeaders}>My Friends</h3>
+          </div>
+          <TableContainer component={Paper} style={{ width: '90%' }}>
+            <Table className={classes.table} aria-label="customized table">
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell>Email</StyledTableCell>
+                  <StyledTableCell align="right">First Name</StyledTableCell>
+                  <StyledTableCell align="right">Last Name</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {
+                  this.state.AllFriends.map(friend => (
+                    <StyledTableRow key={friend.Email}>
+                      <StyledTableCell component="th" scope="row">
+                        {friend.Email}
+                      </StyledTableCell>
+                      <StyledTableCell align="right">{friend.FirstName}</StyledTableCell>
+                      <StyledTableCell align="right">{friend.LastName}</StyledTableCell>
+                    </StyledTableRow>
+
+                  ))
+                }
+              </TableBody>
+            </Table>
+          </TableContainer>
+
+        </div>
+        <div className={classes.tabelesFlexBoxContainer} style={{ width: '45%' }}>
+          <div >
+            <h3 className={classes.accountHeaders}>My Flights</h3>
+          </div>
+          <TableContainer component={Paper} style={{ width: '100%' }}>
+            <Table className={classes.table} aria-label="customized table">
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell>Email</StyledTableCell>
+                  <StyledTableCell align="right">First Name</StyledTableCell>
+                  <StyledTableCell align="right">Last Name</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {
+                  this.state.AllFriends.map(friend => (
+                    <StyledTableRow key={friend.Email}>
+                      <StyledTableCell component="th" scope="row">
+                        {friend.Email}
+                      </StyledTableCell>
+                      <StyledTableCell align="right">{friend.FirstName}</StyledTableCell>
+                      <StyledTableCell align="right">{friend.LastName}</StyledTableCell>
+                    </StyledTableRow>
+
+                  ))
+                }
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <div >
+            <h3 className={classes.accountHeaders}>My Rented Cars</h3>
+          </div>
+          <TableContainer component={Paper} style={{ width: '100%' }}>
+            <Table className={classes.table} aria-label="customized table">
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell>Service</StyledTableCell>
+                  <StyledTableCell align="right">Car Model</StyledTableCell>
+                  <StyledTableCell align="right">Pick up date&nbsp;</StyledTableCell>
+                  <StyledTableCell align="right">Drop off date&nbsp;</StyledTableCell>
+                  <StyledTableCell align="right">Total Price&nbsp;($)</StyledTableCell>
+                  <StyledTableCell align="right">Grade</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {
+                  this.state.AllFriends.map(friend => (
+                    <StyledTableRow key={friend.Email}>
+                      <StyledTableCell component="th" scope="row">
+                        {friend.Email}
+                      </StyledTableCell>
+                      <StyledTableCell align="right">{friend.FirstName}</StyledTableCell>
+                      <StyledTableCell align="right">{friend.LastName}</StyledTableCell>
+                    </StyledTableRow>
+
+                  ))
+                }
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <div >
+            <h5 className={classes.accountHeaders}>You can grade your ordered and car and service after drop off</h5>
+          </div>
+        </div>
+      </div>
     );
   }
 }
@@ -220,4 +398,4 @@ const mapStateToProps = (state) => ({
   loggedInUser: state.userReducer.LoggedInUser,
 });
 
-export default connect(mapStateToProps)(Account);
+export default connect(mapStateToProps)(withStyles(styles)(Account));

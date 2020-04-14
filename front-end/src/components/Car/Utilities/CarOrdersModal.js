@@ -51,13 +51,14 @@ const styles = (theme) => ({
             width: "95%",
             height: "700"
         },
-        width: '60%',
+        width: '50%',
         height: '80%',
         top: '10.0%',
         //left: '50%',
         justifyContent: 'center',
         alignItems: 'center',
         opacity: '0.9',
+        border: '',
         borderRadius: '20%',
         backgroundColor: 'black',
         zIndex: '2',
@@ -164,11 +165,15 @@ const StyledTableCell = withStyles((theme) => ({
         backgroundColor: '#3F51B5',
         color: 'white',
         width: '10%',
+        textAlign: 'left',
+        fontWeight: 'bold'
 
     },
     body: {
         color: 'black',
-        fontSize: 20,
+        textAlign: 'left',
+        fontSize: 16,
+        
     },
 }))(TableCell);
 

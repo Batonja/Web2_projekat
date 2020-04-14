@@ -223,11 +223,11 @@ const CarServiceSearch = (props) => {
         setSelectedService({
             Title: ''
         });
-        // setdatesForLease({
-        //     startDate: null,
-        //     tommorowFromStartDate: null,
-        //     endDate: null,
-        // })
+        setdatesForLease({
+            startDate: null,
+            tommorowFromStartDate: null,
+            endDate: null,
+        })
     }
     const handleChangeStartDate = (date) => {
         let tommorowFromStartDate = new Date()
@@ -350,7 +350,6 @@ const CarServiceSearch = (props) => {
 
                                 <InputLabel>Pick up date</InputLabel>
                                 <DateTimePicker
-
                                     placeholder="dd/MM/yyyy/hh:mm a"
                                     format={"dd/MM/yyyy/hh:mm a"}
                                     mask={value =>
@@ -370,7 +369,7 @@ const CarServiceSearch = (props) => {
                                         'aria-label': 'change date',
                                     }}
                                 />
-                                <InputLabel>Pick up date</InputLabel>
+                                <InputLabel>Drop off date</InputLabel>
                                 <DateTimePicker
                                     //keyboard
                                     placeholder="dd/MM/yyyy/hh:mm a"
