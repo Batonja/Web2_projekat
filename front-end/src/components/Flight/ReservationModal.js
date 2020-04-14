@@ -54,7 +54,11 @@ class ReservationModal extends Component {
         this.props.airline.Id,
         this.props.flight.Id
       );
-      this.props.OnOrderFlight(this.props.loggedInUser.Email, order);
+      this.props.OnOrderFlight(
+        this.props.loggedInUser.Email,
+        order,
+        passengers
+      );
       return;
     }
 
@@ -109,7 +113,7 @@ class ReservationModal extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  loggedInUser: state.userReducer.loggedInUser,
+  loggedInUser: state.userReducer.LoggedInUser,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -117,7 +121,8 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(reserveSeats(seats, passengers, airlineId, flightId)),
   OnLoading: () => dispatch(loadingData()),
   OnFinishedLoading: () => dispatch(finishedLoading()),
-  OnOrderFlight: (userEmail, order) => dispatch(orderFlight(userEmail, order)),
+  OnOrderFlight: (userEmail, order, passengers) =>
+    dispatch(orderFlight(userEmail, order, passengers)),
 });
 
-export default connect(null, mapDispatchToProps)(ReservationModal);
+export default connect(mapStateToProps, mapDispatchToProps)(ReservationModal);

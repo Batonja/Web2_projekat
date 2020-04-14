@@ -22,7 +22,7 @@ const initialState = {
       Friends: ["thestepa@gmail.com"],
       Phone: "0635352321",
       Role: ROLES.FLIGHT_ADMIN,
-      Orders: [],
+      FlightOrders: [],
     },
     {
       FirstName: "Stepa",
@@ -32,7 +32,7 @@ const initialState = {
       Address: "Zmaj Jove 13",
       Friends: ["mileta@bode.com", "zivkozivkic@yahoo.com"],
       Phone: "062214141",
-      Orders: [],
+      FlightOrders: [],
       CarOrders: [],
     },
     {

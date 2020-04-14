@@ -1,11 +1,11 @@
 .flightsTable {
   margin-left: 20px;
   margin-top: 10px;
-
-  border: 1px solid black;
+  margin-right: 10px;
   .flightWrap:not(:last-child) {
     border-bottom: 1px dashed grey;
   }
+
   .flightReserveButton {
     margin: 10px;
   }
