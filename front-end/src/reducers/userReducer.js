@@ -1,6 +1,7 @@
 import { SIGN_IN } from "../actions/User/signIn";
 import { SIGN_UP } from "../actions/User/signUp";
 import { LOG_OFF } from "../actions/User/logOff";
+import { ORDER_FLIGHT } from "../actions/User/orderFlight";
 export const ROLES = {
   FLIGHT_ADMIN: "flightAdmin",
   CAR_ADMIN: "carAdmin",
@@ -20,6 +21,7 @@ const initialState = {
       Friends: ["thestepa@gmail.com"],
       Phone: "0635352321",
       Role: ROLES.FLIGHT_ADMIN,
+      Orders: [],
     },
     {
       FirstName: "Stepa",
@@ -29,6 +31,7 @@ const initialState = {
       Address: "Zmaj Jove 13",
       Friends: ["mileta@bode.com", "zivkozivkic@yahoo.com"],
       Phone: "062214141",
+      Orders: [],
     },
     {
       Email: "mileta@bode.com",
@@ -38,12 +41,32 @@ const initialState = {
       Friends: ["thestepa@gmail.com"],
       Address: "Cika Zike 22",
       Phone: "0612114242",
+      FlightOrders: [],
     },
   ],
 };
 
 export default function userReducer(state = initialState, { type, payload }) {
   switch (type) {
+    case ORDER_FLIGHT:
+      for (var userIndex = 0; userIndex < state.AllUsers.length; userIndex++) {
+        if (state.AllUsers[userIndex].Email === payload.userEmail) {
+          var editedUser = state.AllUsers[userIndex];
+
+          editedUser.FlightOrders.push(payload.order);
+
+          return {
+            ...state,
+            AllUsers: [
+              ...state.AllUsers.slice(0, userIndex),
+              editedUser,
+              state.AllUsers.slice(userIndex),
+            ],
+            LoggedInUser: editedUser,
+          };
+        }
+      }
+
     case SIGN_UP:
       return {
         ...state,

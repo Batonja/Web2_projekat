@@ -12,8 +12,14 @@ class FlightAdminPanel extends Component {
         <h2 className="flightsTableTitle">Panel</h2>
         {Array.from(this.props.airlines).map((airline, index) => {
           {
-            Array.from(airline.Flights).map((flight, flightIndex) => {
-              return 123;
+            return Array.from(airline.Flights).map((flight, flightIndex) => {
+              return (
+                <Container fluid className="flightWrap">
+                  <Row className="flightPresentRow">
+                    <FlightBasicInformation airline={airline} flight={flight} />
+                  </Row>
+                </Container>
+              );
             });
           }
         })}

@@ -42,14 +42,14 @@ class FlightBasicInformation extends Component {
         <Col md="auto" className="flightItem">
           <TextField
             label="Economy"
-            value={this.props.flight.Price + this.props.airline.Tickets.Economy}
+            value={this.props.flight.Price - this.props.airline.Tickets.Economy}
           ></TextField>
         </Col>
         <Col md="auto" className="flightItem">
           <TextField
             label="Business"
             value={
-              this.props.flight.Price * 1.05 +
+              this.props.flight.Price * 1.05 -
               this.props.airline.Tickets.Business
             }
           ></TextField>

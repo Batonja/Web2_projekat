@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import reserveSeats from "../../actions/Flight/reserveSeats";
 import loadingData from "../../actions/Loading/loadingData";
 import finishedLoading from "../../actions/Loading/finishedLoading";
+import orderFlight from "../../actions/User/orderFlight";
 class ReservationModal extends Component {
   constructor(props) {
     super(props);
@@ -40,7 +41,7 @@ class ReservationModal extends Component {
     });
   };
 
-  reserveSeat = (passenger) => {
+  reserveSeat = (passenger, order) => {
     var completedReservations = this.state.numOfCompletedReservations + 1;
     var passengers = this.state.passengers;
     passengers.push(passenger);
@@ -53,7 +54,7 @@ class ReservationModal extends Component {
         this.props.airline.Id,
         this.props.flight.Id
       );
-
+      this.props.OnOrderFlight(this.props.loggedInUser.Email, order);
       return;
     }
 
@@ -93,7 +94,9 @@ class ReservationModal extends Component {
             flight={this.props.flight}
             numOfReservations={this.state.numOfReservations}
             numOfCompletedReservations={this.state.numOfCompletedReservations}
-            reserveSeat={(passenger) => this.reserveSeat(passenger)}
+            reserveSeat={(passenger, order) =>
+              this.reserveSeat(passenger, order)
+            }
             seats={this.state.seats}
             seatsIds={this.state.seatsIds}
           />
@@ -105,11 +108,16 @@ class ReservationModal extends Component {
   }
 }
 
+const mapStateToProps = (state) => ({
+  loggedInUser: state.userReducer.loggedInUser,
+});
+
 const mapDispatchToProps = (dispatch) => ({
   OnReserveSeats: (seats, passengers, airlineId, flightId) =>
     dispatch(reserveSeats(seats, passengers, airlineId, flightId)),
   OnLoading: () => dispatch(loadingData()),
   OnFinishedLoading: () => dispatch(finishedLoading()),
+  OnOrderFlight: (userEmail, order) => dispatch(orderFlight(userEmail, order)),
 });
 
 export default connect(null, mapDispatchToProps)(ReservationModal);

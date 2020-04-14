@@ -99,7 +99,20 @@ class SecondStep extends Component {
   };
 
   submitReservation(passenger) {
-    this.props.reserveSeat(passenger);
+    const order = {
+      AirlineTitle: this.props.airline.Title,
+      Destination: this.props.flight.To,
+      From: this.props.flight.From,
+      DepartureDate: this.props.flight.DepartureDate,
+      ArrivalDate: this.props.flight.ArivalDate,
+      Price:
+        this.state.ticketType === 0
+          ? this.props.flight.Price - this.props.airline.Tickets.Economy
+          : this.props.flight.Price * 1.05 -
+            this.props.airline.Tickets.Business,
+    };
+
+    this.props.reserveSeat(passenger, order);
   }
 
   getSelectedEmail = (email) => {
