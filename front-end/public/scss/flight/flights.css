@@ -1,7 +1,7 @@
 .flightsTable {
   margin-left: 20px;
   margin-top: 10px;
-  border: 1px solid black;
+  margin-right: 10px;
 }
 
 .flightsTable .flightWrap:not(:last-child) {

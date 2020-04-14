@@ -5,4 +5,3 @@ export default function editAirline(airline) {
     dispatch({ type: EDIT_AIRLINE, payload: { airline: airline } });
   };
 }
-6;

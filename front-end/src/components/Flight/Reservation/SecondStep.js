@@ -335,8 +335,6 @@ class SecondStep extends Component {
 
               <Button
                 onMouseDown={this.inviteFriend}
-                variant="contained"
-                color="primary"
                 style={{ "margin-top": "10px" }}
               >
                 Invite A Friend
