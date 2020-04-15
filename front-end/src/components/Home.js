@@ -66,8 +66,9 @@ const Home = (props) => {
             </TableCell>
           </TableBody>
         </Table>
-
+        <h1 style={{ fontWeight: "bold", }}>FLIGHT COMPANIES</h1>
         <Airlines/>
+        <h1 style={{ fontWeight: "bold", }}>RENT A CAR SERVICES</h1>
         <RentACarServices/>
       </div>
     );
