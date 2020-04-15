@@ -5,7 +5,8 @@ import FlightsDisplay from "./FlightsDisplay";
 import { Link } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 import Filter from "./Filter";
-
+import { connect } from "react-redux";
+import { ROLES } from "../../common/constants";
 const styles = (theme) => ({
   button: {
     margin: theme.spacing(1),
@@ -27,16 +28,20 @@ class Flight extends Component {
             <br />
             <Filter />
             <br />
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              style={{ width: "400px" }}
-              to="/flights/admin"
-              component={Link}
-            >
-              Flight Admin Panel
-            </Button>
+            {this.props.loggedInUser.Role === ROLES.FLIGHT_ADMIN ? (
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                style={{ width: "400px" }}
+                to="/flights/admin"
+                component={Link}
+              >
+                Flight Admin Panel
+              </Button>
+            ) : (
+              ""
+            )}
           </div>
           <FlightsDisplay />
         </div>
@@ -55,4 +60,8 @@ class Flight extends Component {
   }
 }
 
-export default withStyles(styles)(Flight);
+const mapStateToProps = (state) => ({
+  loggedInUser: state.userReducer.LoggedInUser,
+});
+
+export default connect(mapStateToProps)(withStyles(styles)(Flight));

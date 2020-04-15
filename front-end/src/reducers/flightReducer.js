@@ -179,13 +179,16 @@ const initialState = {
 export default function flightReducer(state = initialState, { type, payload }) {
   switch (type) {
     case EDIT_AIRLINE:
+      var indexOfAirlineToChange = -1;
+      var airlineToChange = -1;
       for (
         var indexOfAirline = 0;
         indexOfAirline < state.allAirlines.length;
         indexOfAirline++
       ) {
         if (state.allAirlines[indexOfAirline].Id === payload.airline.Id) {
-          var airlineToChange = cloneDeep(state.allAirlines[indexOfAirline]);
+          indexOfAirlineToChange = indexOfAirline;
+          airlineToChange = cloneDeep(state.allAirlines[indexOfAirline]);
           airlineToChange.Title = payload.airline.Title;
           airlineToChange.Address = payload.airline.Address;
           airlineToChange.Description = payload.airline.Description;
@@ -210,6 +213,21 @@ export default function flightReducer(state = initialState, { type, payload }) {
                 payload.airline.Flight.ArivalDate;
               airlineToChange.Flights[indexOfFlight].TripLength =
                 payload.airline.Flight.TripLength;
+
+              if (
+                airlineToChange.Flights[indexOfFlight].Seats.length >
+                payload.airline.Flight.Seats.length
+              ) {
+                var lastSeatIndex =
+                  airlineToChange.Flights[indexOfFlight].Seats.length - 1;
+                airlineToChange.Flights[
+                  indexOfFlight
+                ].Passengers = airlineToChange.Flights[
+                  indexOfFlight
+                ].Passengers.filter(
+                  (passenger) => passenger.SeatId !== lastSeatIndex
+                );
+              }
               airlineToChange.Flights[indexOfFlight].Seats =
                 payload.airline.Flight.Seats;
               airlineToChange.Flights[indexOfFlight].Price =
@@ -218,7 +236,19 @@ export default function flightReducer(state = initialState, { type, payload }) {
           }
         }
       }
-      break;
+      return {
+        ...state,
+        allAirlines: [
+          ...state.allAirlines.slice(0, indexOfAirlineToChange),
+          airlineToChange,
+          ...state.allAirlines.slice(indexOfAirlineToChange + 1),
+        ],
+        airlines: [
+          ...state.airlines.slice(0, indexOfAirlineToChange),
+          airlineToChange,
+          ...state.airlines.slice(indexOfAirlineToChange + 1),
+        ],
+      };
 
     case FILTER:
       var airlinesToDisplay = [];
@@ -405,15 +435,15 @@ export default function flightReducer(state = initialState, { type, payload }) {
 
               return {
                 ...state,
-                AllAirlines: [
+                allAirlines: [
                   ...state.allAirlines.slice(0, indexOfAirline),
                   editedAirline,
-                  state.allAirlines.slice(indexOfAirline),
+                  ...state.allAirlines.slice(indexOfAirline + 1),
                 ],
-                Airlines: [
+                airlines: [
                   ...state.airlines.slice(0, indexOfAirline),
                   editedAirline,
-                  state.airlines.slice(indexOfAirline),
+                  ...state.airlines.slice(indexOfAirline + 1),
                 ],
               };
             }

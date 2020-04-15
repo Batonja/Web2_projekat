@@ -3,12 +3,9 @@ import { SIGN_UP } from "../actions/User/signUp";
 import { LOG_OFF } from "../actions/User/logOff";
 import { ORDER_FLIGHT } from "../actions/User/orderFlight";
 import { CAR_ORDER_TO_PROFILE } from "../actions/User/carOrderToProfile";
-export const ROLES = {
-  FLIGHT_ADMIN: "flightAdmin",
-  CAR_ADMIN: "carAdmin",
-  ADMIN: "admin",
-  USER: "user",
-};
+import { CANCEL_ALL_FLIGHT_ORDERS } from "../actions/User/cancelAllFlightOrders";
+import { ROLES } from "../common/constants";
+import cloneDeep from "lodash/cloneDeep";
 
 const initialState = {
   LoggedInUser: {},
@@ -21,7 +18,8 @@ const initialState = {
       Address: "Sove Sovine 23",
       Friends: ["thestepa@gmail.com"],
       Phone: "0635352321",
-      Role: ROLES.FLIGHT_ADMIN,
+      PassportId: "1234",
+      Role: ROLES.USER,
       FlightOrders: [],
     },
     {
@@ -32,7 +30,9 @@ const initialState = {
       Address: "Zmaj Jove 13",
       Friends: ["mileta@bode.com", "zivkozivkic@yahoo.com"],
       Phone: "062214141",
+      PassportId: "5453",
       FlightOrders: [],
+      Role: ROLES.FLIGHT_ADMIN,
       CarOrders: [],
     },
     {
@@ -43,7 +43,9 @@ const initialState = {
       Friends: ["thestepa@gmail.com"],
       Address: "Cika Zike 22",
       Phone: "0612114242",
+      PassportId: "5214",
       FlightOrders: [],
+      Role: ROLES.USER,
       CarOrders: [],
     },
   ],
@@ -51,25 +53,71 @@ const initialState = {
 
 export default function userReducer(state = initialState, { type, payload }) {
   switch (type) {
-    case ORDER_FLIGHT:
-      for (var userIndex = 0; userIndex < state.AllUsers.length; userIndex++) {
-        if (state.AllUsers[userIndex].Email === payload.userEmail) {
-          var editedUser = state.AllUsers[userIndex];
-
-          editedUser.FlightOrders.push(payload.order);
-
-          return {
-            ...state,
-            AllUsers: [
-              ...state.AllUsers.slice(0, userIndex),
-              editedUser,
-              state.AllUsers.slice(userIndex),
-            ],
-            LoggedInUser: editedUser,
-          };
-        }
+    case CANCEL_ALL_FLIGHT_ORDERS:
+      var allUsersCopy = cloneDeep(state.AllUsers);
+      for (
+        var indexOfUser = 0;
+        indexOfUser < allUsersCopy.length;
+        indexOfUser++
+      ) {
+        allUsersCopy[indexOfUser].FlightOrders = allUsersCopy[
+          indexOfUser
+        ].FlightOrders.filter(
+          (order) =>
+            order.SeatId !== payload.seatId &&
+            order.AirlineId !== payload.airlineId &&
+            order.FlightId !== payload.flightId
+        );
       }
 
+      return { ...state, AllUsers: allUsersCopy };
+    case ORDER_FLIGHT:
+      var editedUserList = cloneDeep(state.AllUsers);
+      for (
+        var passengerIndex = 0;
+        passengerIndex < payload.passengers.length;
+        passengerIndex++
+      ) {
+        var found = false;
+        for (
+          var userIndex = 0;
+          userIndex < editedUserList.length;
+          userIndex++
+        ) {
+          if (
+            editedUserList[userIndex].Email ===
+            payload.passengers[passengerIndex].Email
+          ) {
+            found = true;
+            var editedUser = cloneDeep(state.AllUsers[userIndex]);
+
+            editedUserList[userIndex].FlightOrders.push(
+              payload.orders[passengerIndex]
+            );
+            break;
+          }
+        }
+        if (!found) {
+          var newUser = {
+            Email: payload.passengers[passengerIndex].Email,
+            FirstName: payload.passengers[passengerIndex].FirstName,
+            LastName: payload.passengers[passengerIndex].LastName,
+            PassportId: payload.passengers[passengerIndex].PassportId,
+            Password: "randomGenerisan",
+            Address: "",
+            Friends: [],
+            Phone: "",
+            FlightOrders: [payload.orders[passengerIndex]],
+            CarOrders: [],
+            Role: ROLES.USER,
+          };
+          editedUserList.push(newUser);
+        }
+      }
+      return {
+        ...state,
+        AllUsers: editedUserList,
+      };
     case SIGN_UP:
       return {
         ...state,

@@ -18,7 +18,8 @@ import { renderSeats } from "./Common/Helpers/renderSeats";
 import reserveSeats from "../../actions/Flight/reserveSeats";
 import MultiRef from "react-multi-ref";
 import Alert from "react-bootstrap/Alert";
-
+import orderFlight from "../../actions/User/orderFlight";
+import { withRouter } from "react-router-dom";
 const modalStyle = { "z-index": "1200" };
 
 class FlightsDisplay extends Component {
@@ -67,6 +68,7 @@ class FlightsDisplay extends Component {
 
   openModal(event, flightId) {
     event.preventDefault();
+    if (!this.props.loggedInUser.FirstName) this.props.history.push("/signUp");
 
     this.setState({ openedModal: flightId });
   }
@@ -75,7 +77,7 @@ class FlightsDisplay extends Component {
     this.setState({ openedModal: -1 });
   };
 
-  fastReservation = (event, seats, airlineId, flightId, passengers) => {
+  fastReservation = (event, seats, airline, flight, passengers) => {
     event.preventDefault();
     var foundSeat = false;
     var alreadyFlying = false;
@@ -87,29 +89,58 @@ class FlightsDisplay extends Component {
       if (
         passengers[indexOfPassenger].Email === this.props.loggedInUser.Email
       ) {
-        alreadyFlying = flightId;
+        alreadyFlying = flight.Id;
         this.setState({ fastReservationAlreadyFlying: alreadyFlying });
         break;
       }
     }
+
     if (!alreadyFlying) {
+      var numberOfSeat = -1;
       for (var indexOfSeat = 0; indexOfSeat < seats.length; indexOfSeat++) {
         if (seats[indexOfSeat] === -1) {
+          numberOfSeat = indexOfSeat;
           seats[indexOfSeat] = 0;
           foundSeat = true;
           break;
         }
       }
+
       if (foundSeat) {
+        const passenger = {
+          FirstName: this.props.loggedInUser.FirstName,
+          LastName: this.props.loggedInUser.LastName,
+          PassportId: this.props.loggedInUser.PassportId,
+
+          TicketType: this.state.ticketType,
+          Email: this.props.loggedInUser.Email,
+          SeatId: numberOfSeat,
+        };
+
+        const order = {
+          AirlineId: airline.Id,
+          AirlineTitle: airline.Title,
+          Destination: flight.To,
+          From: flight.From,
+          Luggage: airline.Luggage[0],
+          DepartureDate: flight.DepartureDate,
+          ArrivalDate: flight.ArivalDate,
+          TicketType: this.state.ticketType,
+          Price: flight.Price * 1.05 - airline.Tickets.Business,
+          SeatId: flight.Id,
+        };
         this.props.OnFastReservation(
           seats,
           this.props.loggedInUser,
-          airlineId,
-          flightId
+          airline.Id,
+          flight.Id
         );
-        this.setState({ fastReservationSuccess: flightId });
+
+        this.props.OnOrderFlight([order], [passenger]);
+
+        this.setState({ fastReservationSuccess: flight.Id });
       } else {
-        this.setState({ fastReservationError: flightId });
+        this.setState({ fastReservationError: flight.Id });
       }
     }
     setTimeout(() => {
@@ -210,8 +241,8 @@ class FlightsDisplay extends Component {
                                       this.fastReservation(
                                         e,
                                         flight.Seats,
-                                        airline.Id,
-                                        flight.Id,
+                                        airline,
+                                        flight,
                                         flight.Passengers
                                       )
                                     }
@@ -309,6 +340,11 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   OnFastReservation: (seats, passengers, airlineId, flightId) =>
     dispatch(reserveSeats(seats, passengers, airlineId, flightId)),
+  OnOrderFlight: (order, passengers) =>
+    dispatch(orderFlight(order, passengers)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(FlightsDisplay);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(FlightsDisplay));

@@ -16,5 +16,6 @@ export function parseStringToDate(string) {
   var date = new Date(
     splitedString[2] + "-" + splitedString[1] + "-" + splitedString[0]
   );
+
   return date;
 }

@@ -8,6 +8,7 @@ import Alert from "react-bootstrap/Alert";
 import FlightBasicInformation from "../Preview/FlightBasicInformation";
 import Modal from "react-bootstrap/Modal";
 import { renderSeatsWithMouseDown } from "../Common/Helpers/renderSeats";
+import EventSeatIcon from "@material-ui/icons/EventSeat";
 
 class FirstStep extends Component {
   constructor(props) {
@@ -120,6 +121,23 @@ class FirstStep extends Component {
             </Col>
           </Row>
         </Modal.Body>
+        <Modal.Footer>
+          <Row>
+            <EventSeatIcon color="primary" /> <h5> - Available Seat</h5>
+          </Row>
+          <br />
+          <Row>
+            <EventSeatIcon color="secondary" /> <h5> - Selected Seat</h5>
+          </Row>
+          <br />
+          <Row>
+            <EventSeatIcon color="disabled" /> <h5> - Taken Seat</h5>
+          </Row>
+          <br />
+          <Row>
+            <EventSeatIcon color="action" /> <h5> - Fast Reservation Seat</h5>
+          </Row>
+        </Modal.Footer>
       </>
     );
   }

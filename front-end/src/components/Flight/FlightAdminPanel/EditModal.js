@@ -14,6 +14,7 @@ import TextareaAutosize from "@material-ui/core/TextareaAutosize";
 import InputLabel from "@material-ui/core/InputLabel";
 import Tooltip from "@material-ui/core/Tooltip";
 import editAirline from "../../../actions/Flight/editAirline";
+import cancelAllFlightOrders from "../../../actions/User/cancelAllFlightOrders";
 import { connect } from "react-redux";
 
 class EditModal extends Component {
@@ -61,6 +62,7 @@ class EditModal extends Component {
     var departureDateFormated = format(this.state.departure, "dd/MM/yyyy");
     var arrivalDate = format(this.state.arrival, "dd/MM/yyyy");
     var airline = {
+      Id: this.props.airline.Id,
       Title: this.state.airlineTitle,
       Address: this.state.airlineAddress,
       Description: this.state.airlineDescription,
@@ -69,6 +71,7 @@ class EditModal extends Component {
         Business: this.state.businessDeduction,
       },
       Flight: {
+        Id: this.props.flight.Id,
         From: this.state.from,
         To: this.state.destination,
         DepartureDate: departureDateFormated,
@@ -85,6 +88,15 @@ class EditModal extends Component {
     this.setState({ seats: [...this.state.seats, 1] });
   }
   onRemoveSeat(event) {
+    if (this.state.seats[this.state.seats.length - 1] === 2) {
+      var seatId = this.state.seats.length - 1;
+
+      this.props.OnCancelAllOrders(
+        this.props.airline.Id,
+        this.props.flight.Id,
+        seatId
+      );
+    }
     this.setState({
       seats: this.state.seats.slice(0, this.state.seats.length - 1),
     });
@@ -313,6 +325,8 @@ class EditModal extends Component {
 
 const mapDispatchToProps = (dispatch) => ({
   onEditAirline: (airline) => dispatch(editAirline(airline)),
+  OnCancelAllOrders: (airlineId, flightId, seatId) =>
+    dispatch(cancelAllFlightOrders(airlineId, flightId, seatId)),
 });
 
 export default connect(null, mapDispatchToProps)(EditModal);

@@ -18,6 +18,7 @@ class ReservationModal extends Component {
       numOfReservations: 0,
       numOfCompletedReservations: 0,
       passengers: [],
+      orders: [],
     };
   }
 
@@ -44,6 +45,8 @@ class ReservationModal extends Component {
   reserveSeat = (passenger, order) => {
     var completedReservations = this.state.numOfCompletedReservations + 1;
     var passengers = this.state.passengers;
+    var orders = this.state.orders;
+    orders.push(order);
     passengers.push(passenger);
     if (completedReservations === this.state.numOfReservations) {
       this.props.closeModal();
@@ -54,17 +57,14 @@ class ReservationModal extends Component {
         this.props.airline.Id,
         this.props.flight.Id
       );
-      this.props.OnOrderFlight(
-        this.props.loggedInUser.Email,
-        order,
-        passengers
-      );
+      this.props.OnOrderFlight(orders, passengers);
       return;
     }
 
     this.setState({
       numOfCompletedReservations: completedReservations,
       passengers: passengers,
+      orders: orders,
     });
   };
 
@@ -121,8 +121,8 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(reserveSeats(seats, passengers, airlineId, flightId)),
   OnLoading: () => dispatch(loadingData()),
   OnFinishedLoading: () => dispatch(finishedLoading()),
-  OnOrderFlight: (userEmail, order, passengers) =>
-    dispatch(orderFlight(userEmail, order, passengers)),
+  OnOrderFlight: (order, passengers) =>
+    dispatch(orderFlight(order, passengers)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ReservationModal);

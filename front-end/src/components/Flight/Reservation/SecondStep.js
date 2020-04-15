@@ -60,11 +60,12 @@ class SecondStep extends Component {
     this.passportIdField.current.value = "";
     this.nameField.current.value = "";
     this.lastNameField.current.value = "";
+    this.emailField.current.value = "";
     // this.state.luggage = 0;
     // this.state.ticketType = 0;
     this.setState({
       ...this.state,
-      langguage: 0,
+      luggage: 0,
       ticketType: 0,
     });
   }
@@ -100,9 +101,11 @@ class SecondStep extends Component {
 
   submitReservation(passenger) {
     const order = {
+      AirlineId: this.props.airline.Id,
       AirlineTitle: this.props.airline.Title,
       Destination: this.props.flight.To,
       From: this.props.flight.From,
+      Luggage: this.state.luggage,
       DepartureDate: this.props.flight.DepartureDate,
       ArrivalDate: this.props.flight.ArivalDate,
       Price:
@@ -110,6 +113,8 @@ class SecondStep extends Component {
           ? this.props.flight.Price - this.props.airline.Tickets.Economy
           : this.props.flight.Price * 1.05 -
             this.props.airline.Tickets.Business,
+      TicketType: this.state.ticketType,
+      SeatId: passenger.SeatId,
     };
 
     this.props.reserveSeat(passenger, order);
