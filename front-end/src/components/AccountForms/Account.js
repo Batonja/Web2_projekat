@@ -5,7 +5,8 @@ import Col from "react-bootstrap/Col";
 import { connect } from "react-redux";
 //import TextField from "@material-ui/core/TextField";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
-
+import AddIcon from '@material-ui/icons/Add';
+import Fab from '@material-ui/core/Fab';
 
 
 
@@ -20,6 +21,10 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Rating from '@material-ui/lab/Rating';
 import Box from '@material-ui/core/Box';
+import Divider from "@material-ui/core/Divider";
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import TextField from '@material-ui/core/TextField';
+import addFriend from "../../actions/User/addFriend"
 
 const styles = theme => ({
   AcountFlexContainer: {
@@ -27,9 +32,8 @@ const styles = theme => ({
     height: "100%",
     display: "flex",
     flexDirection: "row",
-    // justifyContent: 'center',
-    // alignItems: 'center',
-    // textAlign: "center",
+    justifyContent: 'center',
+
   },
   AccountFormFlexBoxContainer: {
     width: "15%",
@@ -42,26 +46,58 @@ const styles = theme => ({
     textAlign: "center",
   },
   tabelesFlexBoxContainer: {
-    width: "36%",
+    width: "25%",
     height: "100%",
     display: "flex",
+    margin: "5px",
     flexDirection: "column",
     justifyContent: 'center',
     alignItems: 'center',
     textAlign: "left",
   },
-
+  addFriendFormOverlay: {
+    position: 'fixed',
+    flexDirection: "column",
+    display: 'none',
+    [theme.breakpoints.down("xs", "sm", "md")]: {
+      width: "95%",
+      height: "100%",
+      top: '10.0%',
+    },
+    width: '30%',
+    height: '50%',
+    top: '20.0%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: "center",
+    opacity: '0.9',
+    border: '',
+    borderRadius: '20%',
+    backgroundColor: 'black',
+    zIndex: '2',
+    cursor: 'pointer',
+  },
   accountHeaders: {
     textAlign: "center",
     fontWeight: "bold",
-    margin: '10px'
+    margin: '10px',
+    color: '#ff4d07'
 
   },
   tabele: {
     alignItems: 'baseline'
+  },
+  textFieldAddFriend:
+  {
+    zIndex: "2",
+    backgroundColor: "white",
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: "center",
   }
-
 })
+
+
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -98,52 +134,40 @@ class Account extends Component {
       Address: this.props.loggedInUser.Address,
       Phone: this.props.loggedInUser.Phone,
       AllEmails: [],
-      AllFriends: [
-        {
-          FirstName: "Zivojin",
-          LastName: "Misic",
-          Email: "zivkozivkic@yahoo.com",
-        },
-        {
-          Email: "mileta@bode.com",
-          FirstName: "Milojica",
-          LastName: "Milovanov",
-        },
-      ],
+      AllFriends: this.props.loggedInUser.Friends,
+      FriendsEmail: '',
+      airlineGrade: 0,
+      flightGrade: 0,
+      service: 0,
+      car: 0,
     };
 
+    this.addFriendOverlayRef = React.createRef(null);
     console.log(this.props.loggedInUser)
+  }
+
+  filterUsers(user) {
+    const { ROLES } = this.props
+    const { loggedInUser } = this.props
+
+    if (user.Role == ROLES.USER && user.Email != loggedInUser.Email && !loggedInUser.Friends.includes(user.Email))
+      return true
+    else
+      return false
   }
 
   componentDidMount() {
     const regexLettersOnly = /[^A-Za-z]+/;
     const regexNotANumber = /[^0-9]/;
-    //const regexAddress = /^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/;
+    const filteredUsers = this.props.allUsers.filter(this.filterUsers.bind(this))
 
-    const allEmails = [];
-    const allFriends = [];
-    for (var index = 0; index < this.state.AllUsers.length; index++) {
-      if (this.state.AllUsers[index].Email !== this.state.Email) {
-        allEmails.push(this.state.AllUsers[index].Email);
-      }
-      for (
-        var indexOfFriend = 0;
-        indexOfFriend < this.props.loggedInUser.Friends.length;
-        indexOfFriend++
-      ) {
-        if (
-          this.props.loggedInUser.Friends[indexOfFriend] ===
-          this.state.AllUsers[index].Email
-        ) {
-          allFriends.push(this.state.AllUsers[index]);
-        }
-      }
-    }
+    //const allEmails = [];
 
-    this.setState({ AllEmails: allEmails, AllFriends: allFriends });
-    //Email
+    const usersEmails = this.props.allUsers.map((user) => user.Email);
+
+    //isExistingUser
     ValidatorForm.addValidationRule("isExistingUser", (value) => {
-      let emailSearch = this.state.AllEmails.find((email) => email === value);
+      let emailSearch = filteredUsers.find((email) => email === value);
       return emailSearch !== undefined && emailSearch === value ? false : true;
     });
 
@@ -171,22 +195,59 @@ class Account extends Component {
     //ValidatorForm.removeValidationRule('isAddress');
   }
 
+
   handleChange = (e) => {
+
     this.setState({
       ...this.state,
       [e.target.name]: e.target.value,
     });
   };
 
-  dateConversion = (date) => {
+  parseDateToString = (date) => {
     return date.toLocaleDateString('en-US');
+  }
+  parseStringToDate(string) {
+    var splitedString = string.split("/");
+    var date = new Date(
+      splitedString[2] + "-" + splitedString[1] + "-" + splitedString[0]
+    );
+    return date;
+  }
+  handleAddFormToggle() {
+
+    //console.log("CLICKED: ", this)
+    const node = this.addFriendOverlayRef.current
+    node.style.display = "flex";
+
+  }
+  handleClickAddFriend = (e) => {
+    e.preventDefault()
+    const node = this.addFriendOverlayRef.current
+    node.style.display = "none";
+
+    console.log("ADDING EMAIL: ", this.state.FriendsEmail)
+
+    const { FriendsEmail } = this.state;
+    this.props.addFriend(FriendsEmail, this.props.loggedInUser.Email)
+    this.props.history.push("/account");
+    this.setState({
+      ...this.state,
+      FriendsEmail: '',
+    })
+
+
   }
 
   render() {
+
+    const today = new Date();
     const { classes } = this.props;
     const { loggedInUser } = this.props;
+    const { AllUsers } = this.props
     return (
       <div className={classes.AcountFlexContainer}>
+
         <div className={classes.AccountFormFlexBoxContainer}>
           <div >
             <h3 className={classes.accountHeaders}>Account Details</h3>
@@ -194,20 +255,20 @@ class Account extends Component {
           <ValidatorForm onError={(errors) => console.log(errors)}>
             <div>
 
+              <TextValidator
+                margin="normal"
+                label="First Name"
+                id="firstName-form"
+                name="FirstName"
+                onChange={this.handleChange}
+                validators={["required", "areLettersOnly"]}
+                value={this.state.FirstName}
+                errorMessages={[
+                  "This field is required",
+                  "First name must consist of letters only",
+                ]}
+              />
             </div>
-            <TextValidator
-              margin="normal"
-              label="First Name"
-              id="firstName-form"
-              name="FirstName"
-              onChange={this.handleChange}
-              validators={["required", "areLettersOnly"]}
-              value={this.state.FirstName}
-              errorMessages={[
-                "This field is required",
-                "First name must consist of letters only",
-              ]}
-            />
             <div>
 
               <TextValidator
@@ -303,34 +364,52 @@ class Account extends Component {
           <div >
             <h3 className={classes.accountHeaders}>My Friends</h3>
           </div>
-          <TableContainer component={Paper} style={{ width: '90%' }}>
+          <TableContainer component={Paper} style={{ width: '100%' }}>
             <Table className={classes.table} aria-label="customized table">
               <TableHead>
                 <TableRow>
                   <StyledTableCell>Email</StyledTableCell>
-                  <StyledTableCell align="right">First Name</StyledTableCell>
-                  <StyledTableCell align="right">Last Name</StyledTableCell>
+                  {/* <StyledTableCell align="right">First Name</StyledTableCell>
+                  <StyledTableCell align="right">Last Name</StyledTableCell> */}
                 </TableRow>
               </TableHead>
               <TableBody>
                 {
-                  this.state.AllFriends.map(friend => (
-                    <StyledTableRow key={friend.Email}>
-                      <StyledTableCell component="th" scope="row">
-                        {friend.Email}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">{friend.FirstName}</StyledTableCell>
-                      <StyledTableCell align="right">{friend.LastName}</StyledTableCell>
-                    </StyledTableRow>
+                  this.props.loggedInUser.Friends.map(friendsEmail => {
 
-                  ))
+                    var tempFriend = this.props.allUsers.find(user => {
+                      // console.log(user)
+                      return user.Email === friendsEmail
+                    })
+                    console.log(tempFriend)
+                    return (
+                      <StyledTableRow key={friendsEmail}>
+                        <StyledTableCell component="th" scope="row">
+                          {friendsEmail}
+                        </StyledTableCell>
+                        {/* <StyledTableCell align="right">{tempFriend.FirstName}</StyledTableCell>
+                      <StyledTableCell align="right">{tempFriend.LastName}</StyledTableCell> */}
+                      </StyledTableRow>
+
+                    )
+                  })
                 }
               </TableBody>
             </Table>
           </TableContainer>
-
+          <Button
+            variant="contained"
+            onClick={this.handleAddFormToggle.bind(this)}
+            color="primary"
+            size="large"
+            style={{ margin: "10px" }}
+          //endIcon={<SendRoundedIcon />}
+          >
+            Add Friend
+            </Button>
         </div>
-        <div className={classes.tabelesFlexBoxContainer} style={{ width: '45%' }}>
+
+        <div className={classes.tabelesFlexBoxContainer} style={{ width: '60%' }}>
           <div >
             <h3 className={classes.accountHeaders}>My Flights</h3>
           </div>
@@ -338,20 +417,67 @@ class Account extends Component {
             <Table className={classes.table} aria-label="customized table">
               <TableHead>
                 <TableRow>
-                  <StyledTableCell>Email</StyledTableCell>
-                  <StyledTableCell align="right">First Name</StyledTableCell>
-                  <StyledTableCell align="right">Last Name</StyledTableCell>
+                  <StyledTableCell>Airline</StyledTableCell>
+                  <StyledTableCell>Destination</StyledTableCell>
+                  <StyledTableCell align="right">Departure date</StyledTableCell>
+                  <StyledTableCell align="right">Arival date</StyledTableCell>
+                  <StyledTableCell align="right">Price&nbsp;($)</StyledTableCell>
+                  <StyledTableCell align="right">Airline Grade</StyledTableCell>
+                  <StyledTableCell align="right">Flight Grade</StyledTableCell>
+
                 </TableRow>
               </TableHead>
               <TableBody>
                 {
-                  this.state.AllFriends.map(friend => (
-                    <StyledTableRow key={friend.Email}>
-                      <StyledTableCell component="th" scope="row">
-                        {friend.Email}
+                  loggedInUser.FlightOrders.map((flight, index) => (
+                    <StyledTableRow key={index}>
+                      <StyledTableCell>{flight.AirlineTitle}</StyledTableCell>
+                      <StyledTableCell>{flight.Destination}</StyledTableCell>
+                      <StyledTableCell align="right">{flight.DepartureDate}</StyledTableCell>
+                      <StyledTableCell align="right">{flight.ArrivalDate}</StyledTableCell>
+                      <StyledTableCell align="right">{flight.Price}</StyledTableCell>
+                      <StyledTableCell align="right">
+                        {
+                          (flight.ArrivalDate > today)
+                            ? (
+                              <Rating name="disabled" value={0} disabled />
+                            ) : (
+                              <Rating
+                                name="simple-controlled"
+                                value={this.state.airlineGrade}
+                                onChange={(event, newValue) => {
+                                  this.setState({
+                                    ...this.state,
+                                    airlineGrade: newValue
+
+                                  })
+                        }}
+                              />
+                            )
+
+                        }
                       </StyledTableCell>
-                      <StyledTableCell align="right">{friend.FirstName}</StyledTableCell>
-                      <StyledTableCell align="right">{friend.LastName}</StyledTableCell>
+                      <StyledTableCell align="right">
+                        {
+                          (flight.ArrivalDate > today)
+                            ? (
+                              <Rating name="disabled" value={0} disabled />
+                            ) : (
+                              <Rating
+
+                                value={this.state.flightGrade}
+                                onChange={(event, newValue) => {
+                                  this.setState({
+                                    ...this.state,
+                                    flightGrade: newValue
+                                  
+                                  })
+                                }}
+                              />
+                            )
+
+                        }
+                      </StyledTableCell>
                     </StyledTableRow>
 
                   ))
@@ -359,6 +485,10 @@ class Account extends Component {
               </TableBody>
             </Table>
           </TableContainer>
+          <div>
+            <h5 className={classes.accountHeaders}>You can grade your flight and airline after arrival</h5>
+          </div>
+          <hr style={{ border: "2px solid black", width: "90%", borderRadius: "5px" }} />
           <div >
             <h3 className={classes.accountHeaders}>My Rented Cars</h3>
           </div>
@@ -384,17 +514,56 @@ class Account extends Component {
                       </StyledTableCell>
                       <StyledTableCell align="left">{order.vehicle.CarModel}</StyledTableCell>
                       <StyledTableCell align="left">
-                        {this.dateConversion(order.orderDetails.datesForLease.startDate)}
+                        {this.parseDateToString(order.orderDetails.datesForLease.startDate)}
                       </StyledTableCell>
                       <StyledTableCell align="right">
-                        {this.dateConversion(order.orderDetails.datesForLease.endDate)}
+                        {this.parseDateToString(order.orderDetails.datesForLease.endDate)}
                       </StyledTableCell>
                       <StyledTableCell align="left" > {order.totalPrice}</StyledTableCell>
                       <StyledTableCell align="left">
-                        <Rating value={order.vehicle.AverageCarGrade} readOnly />
+                        {
+                          (order.orderDetails.datesForLease.endDate > today)
+                            ? (
+                              <Rating name="disabled" value={this.state.service} disabled />
+                            ) : (
+                              <Rating
+                               
+                                value={this.state.service}
+                                onChange={(event, newValue) => {
+                                  this.setState({
+                                    ...this.state,
+                                    service: newValue
+                                    
+                                  })
+                                }}
+                              />
+                            )
+
+                        }
                       </StyledTableCell>
                       <StyledTableCell align="left">
-                        <Rating value={order.vehicle.AverageCarGrade} readOnly />
+                        {
+                          (order.orderDetails.datesForLease.endDate > today)
+                            ? (
+                              <Rating name="disabled" value={this.state.car} disabled />
+                            ) : (
+                              <Rating
+                                
+                                value={this.state.car}
+                                onChange={(event, newValue) => {
+                                  this.setState({
+                                    ...this.state,
+                                      car: newValue
+
+                                    
+                                  })
+                                }}
+                              />
+                            )
+
+                        }
+
+
                       </StyledTableCell>
                     </StyledTableRow>
                   ))
@@ -406,14 +575,53 @@ class Account extends Component {
             <h5 className={classes.accountHeaders}>You can grade your ordered and car and service after drop off</h5>
           </div>
         </div>
+
+        <div ref={this.addFriendOverlayRef} className={classes.addFriendFormOverlay}>
+          {/* // onClick={this.off}> */}
+          <div >
+            <h3 className={classes.accountHeaders}>Enter friends email</h3>
+            <ValidatorForm onError={(errors) => console.log(errors)}  >
+              <div style={{ border: "1px solid white", borderRadius: "20px", alignItems: "center", backgroundColor: "#3F51B5" }}>
+
+                <TextValidator
+                  margin="normal"
+                  label="Friends Email"
+                  id="firstName-form"
+                  name="FriendsEmail"
+                  className={classes.textFieldAddFriend}
+                  onChange={this.handleChange}
+                  validators={["required", "isExistingUser"]}
+                  value={this.state.FriendsEmail}
+                  errorMessages={[
+                    "This field is required", "Entered user doesn't exis"
+                  ]}
+                />
+              </div>
+            </ValidatorForm>
+
+            <Button type="submit"
+              variant="contained"
+              color="primary"
+              style={{ margin: "20px" }}
+              onClick={this.handleClickAddFriend}>
+              Register
+                </Button>
+          </div>
+        </div>
       </div>
     );
   }
 }
 
+
+const mapDispatchToProps = (dispatch) => ({
+  addFriend: (FriendsEmail, userEmail) => dispatch(addFriend(FriendsEmail, userEmail)),
+});
+
 const mapStateToProps = (state) => ({
   allUsers: state.userReducer.AllUsers,
   loggedInUser: state.userReducer.LoggedInUser,
+  ROLES: state.userReducer.ROLES,
 });
 
-export default connect(mapStateToProps)(withStyles(styles)(Account));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Account));

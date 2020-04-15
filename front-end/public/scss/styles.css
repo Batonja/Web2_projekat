@@ -16,7 +16,8 @@
   left: 0;
   bottom: 0;
   width: 100%;
-  background-color: #25159b;
+  height: 30px;
+  background-color: #3f51b5;
   color: white;
   text-align: center;
 }
@@ -221,6 +222,18 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+/* 
+#root{
+  background-image:url("../siteBackground.jpg") ;
+  background-position: center; /* Center the image */
+  background-repeat: repeat-y; /* Do not repeat the image */
+  background-size: cover; /* Resize the background image to cover the entire container */
+  height: 2000px; /* You must set a specified height */
+  width: 100%;
+  opacity: 1;
+  background-attachment: fixed;
+  color: white
+} */
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
@@ -232,7 +245,8 @@ code {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  color: #3F51B5;
+  color: #3f51b5;;
   font-weight: bold;
+  text-shadow: 2px 0 black, 1px 0px black, 3px 2px black, 0 1px black;
 }
 /*# sourceMappingURL=styles.css.map */

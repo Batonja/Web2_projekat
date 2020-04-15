@@ -7,18 +7,51 @@ import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
+import RentACarServices from './Car/Utilities/RentACarServices'
+import Airlines from  './Flight/Airlines'
 
-class Home extends Component {
+import { withStyles } from "@material-ui/core/styles";
 
+const styles = theme => ({
+  componentCarsSectionContainer: {
+      width: "100%",
+      height: "100%",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: 'center',
+      alignItems: 'center',
+      textAlign: "center",
+  },
 
-  render() {
+  tabeleHomeMain: {
+      width: "80%",
+      justifyContent: 'right',
+      alignItems: 'right',
+      textAlign: "right",
+      beckgroungColor: "#3F51B5",
+      color: "#3F51B5"
+  },
+  modalHeaders: {
+      textAlign: "left",
+      fontWeight: "bold",
+      color: "#ff4d07"
+      
+  },
+
+})
+
+const Home = (props) => {
+  
+
+ 
+    const {classes} = props
     return (
-      <div>
-        <h2>Greetings</h2>
-        <Table>
+      <div className ={classes.componentCarsSectionContainer}>
+
+        <Table className ={classes.tabeleHomeMain}>
           <TableHead>
-            <TableCell>Flights</TableCell>
-            <TableCell>Cars</TableCell>
+            <TableCell><h1 style={{ fontWeight: "bold", }}>Flights</h1></TableCell>
+            <TableCell><h1 style={{ fontWeight: "bold", }}>Rent A Car</h1></TableCell>
           </TableHead>
           <TableBody>
             <TableCell>
@@ -33,9 +66,12 @@ class Home extends Component {
             </TableCell>
           </TableBody>
         </Table>
+
+        <Airlines/>
+        <RentACarServices/>
       </div>
     );
-  }
+  
 }
 
-export default Home;
+export default withStyles(styles)(Home);
