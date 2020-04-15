@@ -10,6 +10,7 @@ import Select from '@material-ui/core/Select';
 import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
 import Slider from "@material-ui/core/Slider";
+import { Link } from "react-router-dom";
 //ANIMATION
 import { useSpring, animated } from 'react-spring'
 
@@ -535,7 +536,15 @@ const CarServiceSearch = (props) => {
                 </Button>
 
                 </div>
-
+                <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.orderButton}
+                    to="/carservices"
+                    component={Link}
+                >
+                    Rent A Car Services
+                </Button>
             </div>
 
             <div className={classes.componentSearchFlexContainer}>

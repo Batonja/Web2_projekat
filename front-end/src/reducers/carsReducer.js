@@ -11,7 +11,7 @@ const initialState = {
                 Phone: "062214141",
             },
             Title: "EuroCar",
-            Address: "Majora Gravrilovica 34",
+            Address: "Danila Kisa 34",
             State: "Serbia",
             City: "Novi Sad",
             Stations: ["Novi Sad, Zeleznicka stanica", 'Beograd Aerodrom', 'Nis, Aerodrom', 'Subotica, Palic',],
@@ -89,11 +89,11 @@ const initialState = {
                 Phone: "062214141",
             },
             Title: "Your Car",
-            Address: "Majora Gravrilovica 34",
+            Address: "Diane Budisavljevic 43",
             State: "Serbia",
             City: "Belgrade",
             Stations: ["Novi Sad, Zeleznicka stanica", 'Beograd Aerodrom', 'Nis, Aerodrom', 'Subotica, Palic',],
-            Description: "Cheap and safe new car for your travel",
+            Description: "Drive safe with us",
             Pricelist: [],
             Vehicles: [
                 {
@@ -153,8 +153,8 @@ const initialState = {
                     Manager: "Callahan Harry"
                 }
             ],
-            Grades: [5, 4, 2, 1],
-            AverageGrade: 4,
+            Grades: [3,3,3],
+            AverageGrade: 3,
         },
         {
             Administrator: {
@@ -167,11 +167,11 @@ const initialState = {
                 Phone: "062214141",
             },
             Title: "Car Solution",
-            Address: "Majora Gravrilovica 34",
+            Address: "Milunke Savic 65",
             State: "Serbia",
             City: "Nis",
             Stations : ["Novi Sad, Zeleznicka stanica", 'Beograd Aerodrom', 'Nis, Aerodrom', 'Subotica, Palic',],
-            Description: "Cheap and safe new car for your travel",
+            Description: "Be sure and safe with us",
             Pricelist: [],
             Vehicles: [
                 {
@@ -231,8 +231,8 @@ const initialState = {
                     Manager: "Callahan Harry"
                 }
             ],
-            Grades: [5, 4, 2, 1],
-            AverageGrade: 4,
+            Grades: [5, 5, 5, 5],
+            AverageGrade: 5,
         },
         {
             Administrator: {
@@ -245,11 +245,11 @@ const initialState = {
                 Phone: "062214141",
             },
             Title: "Express Car",
-            Address: "Majora Gravrilovica 34",
+            Address: "Sarganska 432",
             State: "Serbia",
             City: "Nis",
             Stations : ["Novi Sad, Zeleznicka stanica", 'Beograd Aerodrom', 'Nis, Aerodrom', 'Subotica, Palic',],
-            Description: "Cheap and safe new car for your travel",
+            Description: "Drive smart and cheap with us",
             Pricelist: [],
             Vehicles: [
                 {
@@ -309,8 +309,8 @@ const initialState = {
                     Manager: "Callahan Harry"
                 }
             ],
-            Grades: [5, 4, 2, 1],
-            AverageGrade: 4,
+            Grades: [1, 2, 2, 1],
+            AverageGrade: 2,
         },
     ]
 

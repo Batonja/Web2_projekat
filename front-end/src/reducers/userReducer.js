@@ -13,17 +13,7 @@ export const ROLES = {
 };
 
 const initialState = {
-  LoggedInUser: {
-    Id: 1,
-    FirstName: "Stepa",
-    LastName: "Stepanovic",
-    Email: "thestepa@gmail.com",
-    Password: "test",
-    Address: "Zmaj Jove 13",
-    Friends: ["mileta@bode.com",],
-    Phone: "062214141",
-    FlightOrders: [],
-    CarOrders: [],
+  LoggedInUser: { 
   },
   AllUsers: [
     {

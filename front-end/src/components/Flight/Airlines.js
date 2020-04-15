@@ -10,6 +10,36 @@ import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import { Collapse } from "react-collapse";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
+import { withStyles } from "@material-ui/core/styles";
+
+const styles = theme => ({
+  componentServicesContainer: {
+    width: "100%",
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: "center",
+  },
+
+  tabeleServices: {
+    width: "80%",
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: "center",
+    beckgroungColor: "#3F51B5",
+    color: "#3F51B5"
+  },
+  modalHeaders: {
+    textAlign: "left",
+    fontWeight: "bold",
+    color: "#ff4d07"
+  },
+
+})
+
+
 
 class Airlines extends Component {
   constructor(props) {
@@ -37,60 +67,68 @@ class Airlines extends Component {
     this.setState({ openedCollapsed: [...this.state.openedCollapsed, index] });
   }
   render() {
+    const { classes } = this.props
+
     return Array.from(this.props.airlines).length !== 0 ? (
-      <Table>
-        <TableHead>
-          <TableCell>
-            {Array.from(Object.keys(this.props.airlines[0]))[0]}
-          </TableCell>
+      <div className={classes.componentServicesContainer}>
+        <Table className={classes.tabeleServices}>
 
-          <TableCell>
-            {Array.from(Object.keys(this.props.airlines[0]))[1]}
-          </TableCell>
+          <TableHead>
+            <TableCell>
+              <h3 style={{ fontWeight: "bold", }}>    {Array.from(Object.keys(this.props.airlines[0]))[1]}</h3>
+            </TableCell>
+           
 
-          <TableCell>
-            {Array.from(Object.keys(this.props.airlines[0]))[2]}
-          </TableCell>
-          <TableCell></TableCell>
-        </TableHead>
+            <TableCell>
+              <h3 style={{ fontWeight: "bold", }}>    {Array.from(Object.keys(this.props.airlines[0]))[2]}</h3>
+            </TableCell>
+            <TableCell>
+              <h3 style={{ fontWeight: "bold", }}>  Description </h3>
+            </TableCell>
 
-        {Array.from(this.props.airlines).map((airline, i) => {
-          return (
-            <TableBody>
-              <TableRow onClick={() => this.openClose(i)}>
-                <TableCell>{airline.Title}</TableCell>
-                <TableCell>{airline.Address}</TableCell>
+            <TableCell></TableCell>
+          </TableHead>
 
-                <TableCell>{airline.Description}</TableCell>
-
-                <TableCell>
-                  {this.isOpened(i) ? (
-                    <KeyboardArrowUpIcon />
-                  ) : (
-                    <KeyboardArrowDownIcon />
-                  )}
-                </TableCell>
-              </TableRow>
-
-              <Collapse isOpened={this.isOpened(i)} eventKey={i}>
-                <TableRow>
-                  Destinations:{" "}
-                  <List>
-                    {Array.from(this.props.airlines[i].Destinations).map(
-                      (destination, i) => {
-                        return <ListItem>{destination}</ListItem>;
-                      }
-                    )}
-                  </List>{" "}
+          {Array.from(this.props.airlines).map((airline, i) => {
+            return (
+              <TableBody>
+                <TableRow onClick={() => this.openClose(i)}>
+                  <TableCell><h6 className={classes.modalHeaders}>{airline.Title}</h6></TableCell>
+                  <TableCell><h6 className={classes.modalHeaders}>{airline.Address}</h6></TableCell>
+                  <TableCell><h6 className={classes.modalHeaders}>{airline.Description}</h6></TableCell>
+                  <TableCell>
+                    {this.isOpened(i) ? (
+                      <KeyboardArrowUpIcon />
+                    ) : (
+                        <KeyboardArrowDownIcon />
+                      )}
+                  </TableCell>
                 </TableRow>
-              </Collapse>
-            </TableBody>
-          );
-        })}
-      </Table>
+
+                <Collapse isOpened={this.isOpened(i)} eventKey={i}>
+                  <TableRow>
+                    Destinations:{" "}
+                    <List>
+                      {Array.from(this.props.airlines[i].Destinations).map(
+                        (destination, i) => {
+                          return(
+                            <ListItem>
+                            {destination}
+                          </ListItem>
+                          )
+                        }
+                      )}
+                    </List>{" "}
+                  </TableRow>
+                </Collapse>
+              </TableBody>
+            );
+          })}
+        </Table>
+      </div>
     ) : (
-      ""
-    );
+        ""
+      );
   }
 }
 
@@ -98,4 +136,4 @@ const mapStateToProps = state => ({
   airlines: state.flightReducer.airlines
 });
 
-export default connect(mapStateToProps)(Airlines);
+export default connect(mapStateToProps)(withStyles(styles)(Airlines));
