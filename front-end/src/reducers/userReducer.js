@@ -4,7 +4,6 @@ import { LOG_OFF } from "../actions/User/logOff";
 import { ORDER_FLIGHT } from "../actions/User/orderFlight";
 import { CAR_ORDER_TO_PROFILE } from "../actions/User/carOrderToProfile";
 import { CANCEL_ALL_FLIGHT_ORDERS } from "../actions/User/cancelAllFlightOrders";
-import { ROLES } from "../common/constants";
 import cloneDeep from "lodash/cloneDeep";
 import { ADD_FRIEND_TO_LIST } from "../actions/User/addFriend";
 
