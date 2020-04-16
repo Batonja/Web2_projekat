@@ -331,11 +331,7 @@ const CarOrdersModal = (props) => {
                     </div>
                 </div>
                 <animated.div style={spring} className={classes.PurchaseOverlayContainer} ref={purchaseOverlayModalRef} onClick={off}>
-                    <p><h4 className={classes.modalHeaders}>Puck up place:</h4>{orderDetails.stations.pickUpStation}</p>
-                    <div>
-                        <h3 className={classes.modalHeaders}>Drop off place:</h3>
-
-                    </div>
+                    
                     <TableContainer component={Paper} style={{ width: '90%' }}>
                         <Table className={classes.table} aria-label="customized table">
                             <TableHead>

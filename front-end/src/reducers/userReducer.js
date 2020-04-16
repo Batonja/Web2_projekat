@@ -168,7 +168,7 @@ export default function userReducer(state = initialState, { type, payload }) {
         AllUsers: [...state.AllUsers, payload],
       };
     case SIGN_IN:
-      for (var index = 0; index < state.AllUsers.length; index++) {
+      for (var index = 0; index < state.AllUsers.length; index++)   {
         if (
           state.AllUsers[index].Email === payload.email &&
           state.AllUsers[index].Password === payload.password

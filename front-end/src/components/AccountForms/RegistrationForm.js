@@ -54,9 +54,7 @@ class RegistrationForm extends Component {
     ValidatorForm.addValidationRule("isPasswordMatch", (value) => {
       return value !== this.state.Password ? false : true;
     });
-    // ValidatorForm.addValidationRule("isLongerEqualThenSix", value => {
-    //   return (value.length < 6) ? false : true;
-    // })
+
     //First nad Last name
     ValidatorForm.addValidationRule("areLettersOnly", (value) => {
       return regexLettersOnly.test(value) ? false : true;
@@ -65,22 +63,14 @@ class RegistrationForm extends Component {
     ValidatorForm.addValidationRule("areNumbersOnly", (value) => {
       return regexNotANumber.test(value) ? false : true;
     });
-    // ValidatorForm.addValidationRule("isLongerEqualThenNine", value => {
-    //   return (value.length < 9) ? false : true;
-    // })
-    //Address
-    // ValidatorForm.addValidationRule("isAddress", value => {
-    //   return (!regexAddress.test(value)) ? false : true;
-    // })
+ 
   }
 
   componentWillUnmount() {
     ValidatorForm.removeValidationRule("isPasswordMatch");
-    //ValidatorForm.removeValidationRule('isLongerEqualThenSix');
     ValidatorForm.removeValidationRule("areLettersOnly");
     ValidatorForm.removeValidationRule("areNumbersOnly");
-    // ValidatorForm.removeValidationRule('isLongerEqualThenNine');
-    //ValidatorForm.removeValidationRule('isAddress');
+  
   }
 
   render() {
