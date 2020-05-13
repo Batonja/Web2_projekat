@@ -36,8 +36,9 @@ namespace Backend
             {
                 options.UseSqlServer(Configuration.GetConnectionString("MyConnectionString"));
             });
-
+            
             services.AddTransient<IRentACarBusiness, RentACarBusiness>(function => new RentACarBusiness(new RentACarDatabase()));
+            services.AddTransient<IAirlineBusiness, AirlineBusiness>(function => new AirlineBusiness(new AirlineDatabase()));
 
         }
 

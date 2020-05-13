@@ -10,7 +10,30 @@ namespace DatabaseLayer.DataAccess
 {
     public class DataContext : DbContext
     {
-        public DataContext(DbContextOptions<DataContext> options): base(options) { }
+        public DataContext(DbContextOptions options): base(options) { }
+        
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+        }
+
+
+        public class OptionsBuild
+        {
+            public OptionsBuild()
+            {
+                settings = new AppConfiguration();
+                optionsBuilder = new DbContextOptionsBuilder<DataContext>();
+                optionsBuilder.UseSqlServer(settings.sqlConnectionString);
+                dbOptions = optionsBuilder.Options;
+            }
+
+            public DbContextOptionsBuilder optionsBuilder { get; set; }
+            public DbContextOptions dbOptions { get; set; }
+            private AppConfiguration settings { get; set; }
+        }
+
+        public static OptionsBuild ops = new OptionsBuild();
 
 
         public DbSet<BranchOffice> BranchOffice { get; set; }
