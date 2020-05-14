@@ -18,7 +18,7 @@ namespace Common.Models.Airline
         [Required]
         public DateTime ArrivalDate { get; set; }
 
-        [Column(TypeName ="decimal(3,2)")]
+        [Column(TypeName ="decimal(5,2)")]
         public decimal TripLength { get; set; }
         public double Price { get; set; }
         public int NumOfChangeovers { get; set; }

@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20200514190619_fixingFlightLuggagePrice.cs" />
     <Compile Remove="Migrations\Airline\20200429003941_airlineEntitiesRefactored.cs" />
     <Compile Remove="Migrations\Airline\20200429004510_airlineEntitiesRefactored2.cs" />
     <Compile Remove="Migrations\Airline\20200429004814_airlineEntitiesRefactored.cs" />

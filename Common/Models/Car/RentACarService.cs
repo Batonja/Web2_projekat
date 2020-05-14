@@ -24,7 +24,7 @@ namespace Common.Models.Car
         [MaxLength(100)]
         public string Destination { get; set; }
 
-        [Column(TypeName = "decimal(2,2)")]
+        [Column(TypeName = "decimal(4,2)")]
         public decimal AverageGrade { get; set; }
 
         public virtual ICollection<Grade> Grades { get; set; }

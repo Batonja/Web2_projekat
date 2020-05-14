@@ -4,14 +4,16 @@ using DatabaseLayer.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DatabaseLayer.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200514191008_fixingFlightLuggagePrice")]
+    partial class fixingFlightLuggagePrice
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -84,7 +86,7 @@ namespace DatabaseLayer.Migrations
                     b.Property<int>("ToDestionationDestinationId");
 
                     b.Property<decimal>("TripLength")
-                        .HasColumnType("decimal(5,2)");
+                        .HasColumnType("decimal(3,2)");
 
                     b.HasKey("FlightId");
 
@@ -155,7 +157,7 @@ namespace DatabaseLayer.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(8,4)");
+                        .HasColumnType("decimal(4,4)");
 
                     b.Property<int>("Type");
 
@@ -297,7 +299,7 @@ namespace DatabaseLayer.Migrations
                     b.Property<int?>("AdministratorUserId");
 
                     b.Property<decimal>("AverageGrade")
-                        .HasColumnType("decimal(4,2)");
+                        .HasColumnType("decimal(2,2)");
 
                     b.Property<string>("Destination")
                         .HasMaxLength(100);
@@ -369,7 +371,7 @@ namespace DatabaseLayer.Migrations
                     b.Property<int>("NumberOfSuitcases");
 
                     b.Property<decimal>("PriceADay")
-                        .HasColumnType("decimal(8,4)");
+                        .HasColumnType("decimal(4,4)");
 
                     b.Property<string>("RegistrationNumber")
                         .IsRequired()

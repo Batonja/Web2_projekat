@@ -1,4 +1,5 @@
-﻿using Common.Models.Airline;
+﻿using Common.ErrorObjects;
+using Common.Models.Airline;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,7 +10,13 @@ namespace BusinessLayer.Interfaces
     {
 
         List<Airline> Get();
-        bool AddAirline(Airline airline);
+        Airline Get(int id);
+        Holder<Airline> AddAirline(Airline airline);
+        Holder<Airline> EditAirline(Airline airline);
+        Holder<Airline> DeleteAirline(int airlineId);
 
+        List<FlightLuggage> GetFlightLuggage();
+        Holder<FlightLuggage> AddFlightLuggage(FlightLuggage flightLuggage);
+        FlightLuggage GetFlightLuggage(int id);
     }
 }

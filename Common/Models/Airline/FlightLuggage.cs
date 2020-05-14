@@ -13,7 +13,7 @@ namespace Common.Models.Airline
         
         public FlightLuggageType FlightLuggageType { get; set; }
         [Required]
-        [Column(TypeName ="decimal(4,4)")]
+        [Column(TypeName ="decimal(6,2)")]
         public decimal Price { get; set; }
 
     }

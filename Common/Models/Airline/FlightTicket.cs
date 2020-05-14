@@ -12,7 +12,7 @@ namespace Common.Models.Airline
         public int FlightTicketId { get; set; }
         
         public FlightTicketType Type { get; set; }
-        [Column(TypeName = "decimal(4,4)")]
+        [Column(TypeName = "decimal(8,4)")]
         [Required]
         public decimal Price { get; set; }
         

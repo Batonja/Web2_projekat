@@ -18,7 +18,7 @@ namespace Common.Models.Car
         public string CarModel { get; set; }
 
         [Required]
-        [Column(TypeName = "decimal(4,4)")]
+        [Column(TypeName = "decimal(8,4)")]
         public decimal PriceADay { get; set; }
 
         
