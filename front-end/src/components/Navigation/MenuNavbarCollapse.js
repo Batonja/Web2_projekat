@@ -12,6 +12,8 @@ import IconButton from "@material-ui/core/IconButton";
 import DrowerNavbarCollapsed from "./DrowerNavbarCollapsed";
 import { Link as RouterLink } from "react-router-dom";
 import Link from "@material-ui/core/Link";
+import { ToastContainer, Zoom } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const styles = (theme) => ({
   menu: {
@@ -103,6 +105,16 @@ const MenuNavbarCollapse = (props) => {
           </Link>
         </div>
       </div>
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        closeOnClick
+        pauseOnFocusLoss={false}
+        transition={Zoom}
+        draggable
+        pauseOnHover={false}
+      />
     </div>
   );
 };

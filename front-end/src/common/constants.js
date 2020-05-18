@@ -8,3 +8,7 @@ export const ROLES = {
 export default {
   ROLES,
 };
+
+export const luggageTypes = ["HAND", "CHECKED"];
+
+export const ConnectTo = "https://localhost:44328/api/";

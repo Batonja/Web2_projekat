@@ -3,7 +3,9 @@ import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import Button from "@material-ui/core/Button";
 import { connect } from "react-redux";
 import signIn from "../../actions/User/signIn";
-
+import GoogleLogin from "react-google-login";
+import { FacebookProvider, LoginButton } from "react-facebook";
+import { toast } from "react-toastify";
 class LoginForm extends Component {
   constructor(props) {
     super(props);
@@ -15,6 +17,10 @@ class LoginForm extends Component {
 
     this.handleSubmit = this.handleSubmit.bind(this);
   }
+
+  responseGoogle = (response) => {
+    alert(response.profileObj.name);
+  };
 
   handleChange = (e) => {
     this.setState({
@@ -41,9 +47,7 @@ class LoginForm extends Component {
             errorMessages={["this field is required", "email is not valid"]}
             onChange={this.handleChange}
           />
-
           <br />
-
           <TextValidator
             margin="normal"
             label="Password"
@@ -54,8 +58,24 @@ class LoginForm extends Component {
             errorMessages={["Password field is required"]}
             onChange={this.handleChange}
           />
-
           <br />
+          <GoogleLogin
+            clientId="84415640380-49oeo2vcou5rg5fdd2o4qgbsncu40v8e.apps.googleusercontent.com"
+            buttonText="Login"
+            onSuccess={this.responseGoogle}
+            onFailure={this.responseGoogle}
+            cookiePolicy={"single_host_origin"}
+          />
+
+          <FacebookProvider appId="585388678821501">
+            <LoginButton
+              scope="email"
+              onCompleted={this.handleResponse}
+              onError={this.handleError}
+            >
+              <span>Login via Facebook</span>
+            </LoginButton>
+          </FacebookProvider>
           <div className="signInBtn">
             <Button
               variant="contained"

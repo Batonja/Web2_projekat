@@ -2,6 +2,10 @@ import { RESERVE_SEATS } from "../actions/Flight/reserveSeats";
 import { SEARCH } from "../actions/Flight/search";
 import { FILTER } from "../actions/Flight/filter";
 import { EDIT_AIRLINE } from "../actions/Flight/editAirline";
+import { ADD_AIRLINE } from "../actions/Flight/addAirline";
+import { GET_FLIGHT_LUGGAGE } from "../actions/Flight/getFlightLuggage";
+import { GET_AIRLINES } from "../actions/Flight/getAirlines";
+import { GET_DESTINATIONS } from "../actions/Flight/getDestinations";
 import cloneDeep from "lodash/cloneDeep";
 const initialState = {
   allAirlines: [
@@ -172,12 +176,26 @@ const initialState = {
       ],
     },
   ],
-
+  flightLuggage: [],
   filteredAirlines: -1,
+  allDestinations: [],
 };
 
 export default function flightReducer(state = initialState, { type, payload }) {
   switch (type) {
+    case GET_DESTINATIONS:
+      return { ...state, allDestinations: payload };
+    case GET_AIRLINES:
+      return { ...state, allAirlines: payload };
+
+    case GET_FLIGHT_LUGGAGE:
+      return { ...state, flightLuggage: payload };
+
+    case ADD_AIRLINE:
+      var airlines = state.allAirlines;
+      airlines.push(payload.airline);
+      return { ...state, allAirlines: airlines };
+
     case EDIT_AIRLINE:
       var indexOfAirlineToChange = -1;
       var airlineToChange = -1;

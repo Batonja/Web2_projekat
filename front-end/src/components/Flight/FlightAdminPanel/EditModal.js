@@ -16,28 +16,51 @@ import Tooltip from "@material-ui/core/Tooltip";
 import editAirline from "../../../actions/Flight/editAirline";
 import cancelAllFlightOrders from "../../../actions/User/cancelAllFlightOrders";
 import { connect } from "react-redux";
+import addAirline from "../../../actions/Flight/addAirline";
 
 class EditModal extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      airlineTitle: this.props.airline.Title,
-      airlineAddress: this.props.airline.Address,
-      airlineDescription: this.props.airline.Description,
-      economyDeduction: this.props.airline.Tickets.Economy,
-      businessDeduction: this.props.airline.Tickets.Business,
-      price: this.props.flight.Price,
-      from: this.props.flight.From,
-      destination: this.props.flight.To,
-      departure: parseStringToDate(this.props.flight.DepartureDate),
-      arrival: parseStringToDate(this.props.flight.ArivalDate),
+      airlineTitle:
+        this.props.airline === undefined ? "" : this.props.airline.Title,
+      airlineAddress:
+        this.props.airline === undefined ? "" : this.props.airline.Address,
+      airlineDescription:
+        this.props.airline === undefined ? "" : this.props.airline.Description,
+      economyDeduction:
+        this.props.airline === undefined
+          ? ""
+          : this.props.airline.Tickets.Economy,
+      businessDeduction:
+        this.props.airline === undefined
+          ? ""
+          : this.props.airline.Tickets.Business,
+      price: this.props.flight === undefined ? "" : this.props.flight.Price,
+      from: this.props.flight === undefined ? "" : this.props.flight.From,
+      destination: this.props.flight === undefined ? "" : this.props.flight.To,
+      departure:
+        this.props.flight === undefined
+          ? new Date()
+          : parseStringToDate(this.props.flight.DepartureDate),
+      arrival:
+        this.props.flight === undefined
+          ? new Date()
+          : parseStringToDate(this.props.flight.ArivalDate),
       economyTicket:
-        this.props.flight.Price - this.props.airline.Tickets.Economy,
+        this.props.flight === undefined
+          ? ""
+          : this.props.flight.Price - this.props.airline.Tickets.Economy,
       busiessTicket:
-        this.props.flight.Price * 1.05 - this.props.airline.Tickets.Business,
-      tripLength: this.props.flight.TripLength,
-      seats: this.props.flight.Seats,
+        this.props.flight === undefined
+          ? ""
+          : this.props.flight.Price * 1.05 -
+            this.props.airline.Tickets.Business,
+      tripLength:
+        this.props.flight === undefined ? "" : this.props.flight.TripLength,
+      seats: this.props.flight === undefined ? "" : this.props.flight.Seats,
+      mode: this.props.mode,
     };
   }
 
@@ -81,7 +104,9 @@ class EditModal extends Component {
         Price: this.state.price,
       },
     };
-    this.props.onEditAirline(airline);
+
+    if (this.state.mode === "EDIT") this.props.onEditAirline(airline);
+    else this.props.onAddAirline(airline);
   }
 
   onAddSeat(event) {
@@ -117,7 +142,9 @@ class EditModal extends Component {
     return (
       <>
         <Modal.Header>
-          <h2 style={{ "margin-left": "35%" }}>Add Passenger Information</h2>
+          <h2 style={{ "margin-left": "35%" }}>
+            {this.state.mode === "EDIT" ? "Edit Flight" : "Add Flight"}
+          </h2>
         </Modal.Header>
         <Modal.Body>
           <ValidatorForm>
@@ -322,11 +349,14 @@ class EditModal extends Component {
     );
   }
 }
-
+const mapStateToProps = (state) => ({
+  airlines: state.flightReducer.allAirlines,
+});
 const mapDispatchToProps = (dispatch) => ({
   onEditAirline: (airline) => dispatch(editAirline(airline)),
   OnCancelAllOrders: (airlineId, flightId, seatId) =>
     dispatch(cancelAllFlightOrders(airlineId, flightId, seatId)),
+  onAddAirline: (airline) => dispatch(addAirline(airline)),
 });
 
 export default connect(null, mapDispatchToProps)(EditModal);
