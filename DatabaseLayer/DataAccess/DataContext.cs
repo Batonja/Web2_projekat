@@ -17,6 +17,12 @@ namespace DatabaseLayer.DataAccess
             base.OnConfiguring(optionsBuilder);
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<AirlineDestination>().HasKey(ad => new { ad.AirlineId, ad.DestinationId });
+            modelBuilder.Entity<AirlineFlightLuggage>().HasKey(afl => new { afl.AirlineId, afl.FlightLuggageId });
+        }
+
 
         public class OptionsBuild
         {

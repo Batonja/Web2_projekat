@@ -21,7 +21,7 @@ namespace BusinessLayer.Implementations
         {
             Airline airlineFromDB = _airlineDatabase.Get(airline.AirlineId);
 
-            if (airlineFromDB.AirlineId >= 0)
+            if (airlineFromDB != null)
                 return CheckAirline(airline, 404, "Airline you're trying to add already exists");
            
 
@@ -38,7 +38,7 @@ namespace BusinessLayer.Implementations
             if (airlineFromDb.AirlineId <= 0)
                 return CheckAirline(new Airline(), 404, "Airline you'retrying to delete doesn't exists");
 
-            if (_airlineDatabase.DeleteAirline(airlineId))
+            if (_airlineDatabase.DeleteAirline(airlineId)) 
                 return CheckAirline(new Airline(), 200, "");
 
             return CheckAirline(new Airline(), 400, "Unable to delete airline");
@@ -60,7 +60,9 @@ namespace BusinessLayer.Implementations
 
         public List<Airline> Get()
         {
-            return _airlineDatabase.Get();
+            List<Airline> retVal = _airlineDatabase.Get();
+
+            return retVal;
         }
 
         public Airline Get(int id)
@@ -99,6 +101,28 @@ namespace BusinessLayer.Implementations
             return _airlineDatabase.GetFlightLuggage(id);
         }
 
+
+        public Holder<Destination> AddDestination(Destination destination)
+        {
+            List<Destination> destinationsFromDB = _airlineDatabase.GetDestinations();
+
+            foreach (var destinationFromDB in destinationsFromDB)
+            {
+                if (destinationFromDB.Title == destination.Title)
+                    return CheckDestination(destination, 400, "This destination already exists in database");
+            }
+
+            if (_airlineDatabase.AddDestination(destination))
+                return CheckDestination(destination, 200, "");
+
+            return CheckDestination(destination, 500, "Error while trying to add destination");
+        }
+
+        public List<Destination> GetDestinations()
+        {
+            return _airlineDatabase.GetDestinations();
+        }
+
         #region helpers
 
         Holder<Airline> CheckAirline(Airline airline, int errorCode, string description) =>
@@ -107,6 +131,10 @@ namespace BusinessLayer.Implementations
         Holder<FlightLuggage> CheckFlightLuggage(FlightLuggage flightLuggage, int errorCode, string description) =>
             errorCode == 200 ? Holder<FlightLuggage>.Success(flightLuggage) : Holder<FlightLuggage>.Fail(errorCode, description);
 
+        Holder<Destination> CheckDestination(Destination destination, int errorCode, string description) =>
+            errorCode == 200 ? Holder<Destination>.Success(destination) : Holder<Destination>.Fail(errorCode, description);
+
+        
         #endregion
     }
 }

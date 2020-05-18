@@ -4,14 +4,16 @@ using DatabaseLayer.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DatabaseLayer.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200516182324_addingListOfAirlinesToDestinations")]
+    partial class addingListOfAirlinesToDestinations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -55,19 +57,6 @@ namespace DatabaseLayer.Migrations
                     b.HasIndex("DestinationId");
 
                     b.ToTable("AirlineDestination");
-                });
-
-            modelBuilder.Entity("Common.Models.Airline.AirlineFlightLuggage", b =>
-                {
-                    b.Property<int>("AirlineId");
-
-                    b.Property<int>("FlightLuggageId");
-
-                    b.HasKey("AirlineId", "FlightLuggageId");
-
-                    b.HasIndex("FlightLuggageId");
-
-                    b.ToTable("AirlineFlightLuggage");
                 });
 
             modelBuilder.Entity("Common.Models.Airline.Destination", b =>
@@ -125,12 +114,16 @@ namespace DatabaseLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("AirlineId");
+
                     b.Property<int>("FlightLuggageType");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(6,2)");
 
                     b.HasKey("FlightLuggageId");
+
+                    b.HasIndex("AirlineId");
 
                     b.ToTable("FlightLuggage");
                 });
@@ -467,19 +460,6 @@ namespace DatabaseLayer.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Common.Models.Airline.AirlineFlightLuggage", b =>
-                {
-                    b.HasOne("Common.Models.Airline.Airline", "Airline")
-                        .WithMany("AvailableFlightLuggage")
-                        .HasForeignKey("AirlineId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Common.Models.Airline.FlightLuggage", "FlightLuggage")
-                        .WithMany("AvailableFlightLuggage")
-                        .HasForeignKey("FlightLuggageId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("Common.Models.Airline.Flight", b =>
                 {
                     b.HasOne("Common.Models.Airline.Airline", "Airline")
@@ -494,6 +474,13 @@ namespace DatabaseLayer.Migrations
                         .WithMany()
                         .HasForeignKey("ToDestionationDestinationId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Common.Models.Airline.FlightLuggage", b =>
+                {
+                    b.HasOne("Common.Models.Airline.Airline")
+                        .WithMany("AvailableFlightLuggage")
+                        .HasForeignKey("AirlineId");
                 });
 
             modelBuilder.Entity("Common.Models.Airline.FlightOrder", b =>

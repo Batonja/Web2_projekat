@@ -7,6 +7,8 @@ namespace Common.Models.Airline
 {
     public class Airline
     {
+        
+
         public int AirlineId { get; set; }
         
         public User Administrator { get; set; }
@@ -21,9 +23,9 @@ namespace Common.Models.Airline
         [MaxLength(100)]
         public string Description { get; set; }
 
-        public virtual ICollection<FlightLuggage> AvailableFlightLuggage { get; set; }
+        public virtual ICollection<AirlineFlightLuggage> AvailableFlightLuggage { get; set; }
         public virtual ICollection<Flight> Flights { get; set; }
-        public virtual ICollection<Destination> Destinations { get; set; }
+        public virtual ICollection<AirlineDestination> AirlineDestinations { get; set; }
 
     }
 }

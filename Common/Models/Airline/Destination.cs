@@ -7,12 +7,14 @@ namespace Common.Models.Airline
 {
     public class Destination
     {
+        
+
         public int DestinationId { get; set; }
 
         [Required]
         [MaxLength(200)]
         public string Title { get; set; }
 
-
+        public virtual ICollection<AirlineDestination> AirlineDestinations { get;set; }
     }
 }

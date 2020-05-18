@@ -15,11 +15,15 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.Net.Http.Headers;
 
 namespace Backend
 {
     public class Startup
     {
+
+        readonly string AllowedOrigins = "_allowedOrigins";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -31,7 +35,17 @@ namespace Backend
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-          
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(AllowedOrigins, builder =>
+                {
+                    builder.WithOrigins("http://localhost:3000").WithHeaders(HeaderNames.ContentType, "Access-Control-Allow-Origin").AllowAnyMethod();
+
+
+                });
+            });
+
             services.AddDbContext<DataContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("MyConnectionString"));
@@ -54,7 +68,7 @@ namespace Backend
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
+            app.UseCors(AllowedOrigins);
             app.UseHttpsRedirection();
             app.UseMvc();
         }

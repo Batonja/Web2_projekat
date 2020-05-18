@@ -55,7 +55,27 @@ namespace Backend.Controllers
         [HttpPost]
         public Holder<Airline> AddAirline([FromBody] Airline airline)
         {
-            return _airlineBusiness.AddAirline(airline);
+
+            Holder<Airline> retValu = _airlineBusiness.AddAirline(airline);
+
+            
+
+            return retValu;
+        }
+
+        [HttpPost]
+        public Holder<Destination> AddDestination([FromBody] Destination destination)
+        {
+            Holder<Destination> retVal = _airlineBusiness.AddDestination(destination);
+
+            return retVal;
+        }
+
+        [HttpGet]
+        public List<Destination> GetDestinations()
+        {
+
+            return _airlineBusiness.GetDestinations();
         }
 
         [HttpPost]

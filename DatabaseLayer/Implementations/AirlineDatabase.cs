@@ -18,7 +18,7 @@ namespace DatabaseLayer.Implementations
 
             using (var context = new DataContext(DataContext.ops.dbOptions))
             {
-                airlines = context.Airline.Include(airline => airline.AvailableFlightLuggage).Include(airline => airline.Flights).Include(airline => airline.Destinations).ToList();
+                airlines = context.Airline.Include(airline => airline.AvailableFlightLuggage).Include(airline => airline.Flights).Include(airline => airline.AirlineDestinations).ToList();
 
             }
             return airlines;
@@ -46,7 +46,7 @@ namespace DatabaseLayer.Implementations
 
             using (var context = new DataContext(DataContext.ops.dbOptions))
             {
-                airline = context.Airline.Include(theAirline => theAirline.AvailableFlightLuggage).Include(theAirline => theAirline.Flights).Include(theAirline => theAirline.Destinations).Where(theAirline => theAirline.AirlineId == id).SingleOrDefault();
+                airline = context.Airline.Include(theAirline => theAirline.AvailableFlightLuggage).Include(theAirline => theAirline.Flights).Include(theAirline => theAirline.AirlineDestinations).Where(theAirline => theAirline.AirlineId == id).SingleOrDefault();
                 
             }
 
@@ -58,7 +58,7 @@ namespace DatabaseLayer.Implementations
             int rowsEffected = -1;
             using (var context = new DataContext(DataContext.ops.dbOptions))
             {
-                Airline airlineFromDB = context.Airline.Include(theAirline => theAirline.AvailableFlightLuggage).Include(theAirline => theAirline.Flights).Include(theAirline => theAirline.Destinations).Where(theAirline => theAirline.AirlineId == airline.AirlineId).SingleOrDefault();
+                Airline airlineFromDB = context.Airline.Include(theAirline => theAirline.AvailableFlightLuggage).Include(theAirline => theAirline.Flights).Include(theAirline => theAirline.AirlineDestinations).Where(theAirline => theAirline.AirlineId == airline.AirlineId).SingleOrDefault();
 
                 airlineFromDB = airline;
 
@@ -132,6 +132,36 @@ namespace DatabaseLayer.Implementations
             }
 
             return flightLuggage;
+        }
+
+        public bool AddDestination(Destination destination)
+        {
+            int rowsEffected = -1;
+
+            using (var context = new DataContext(DataContext.ops.dbOptions))
+            {
+                context.Add(destination);
+                rowsEffected = context.SaveChanges();
+
+            }
+
+            if (rowsEffected > 0)
+                return true;
+
+            return false;
+        }
+
+        public List<Destination> GetDestinations()
+        {
+            List<Destination> destinations = new List<Destination>();
+
+            using(var context = new DataContext(DataContext.ops.dbOptions))
+            {
+                destinations = context.Destination.ToList();
+
+            }
+
+            return destinations;
         }
     }
 
