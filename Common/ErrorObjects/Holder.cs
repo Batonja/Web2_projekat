@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
@@ -34,7 +35,7 @@ namespace Common.ErrorObjects
             Holder<T> holder = new Holder<T>(errorCode, description);
             return holder;
         }
-
+    
         public T Value { get; set; }
         public HttpStatusCode ErrorCode { get; set; }
         public string Description { get; set; }
