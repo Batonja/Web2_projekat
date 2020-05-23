@@ -4,32 +4,40 @@ import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 
 import signUp from "../../actions/User/signUp";
 import { connect } from "react-redux";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 class RegistrationForm extends Component {
+  constructor(props) {
+    super(props);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
   state = {
     FirstName: "",
     LastName: "",
     Email: "",
-    Password: "",
-    PasswordConfirm: "",
+    Key: "",
+    KeyConfirm: "",
     Address: "",
     Phone: "",
+    PassportId: "",
+    Salt: "salt",
   };
 
   handleSubmit = (e) => {
     e.preventDefault();
 
-    this.props.OnSignUp(this.state);
-    this.props.history.push("/signIn");
-    this.setState({
+    this.props.OnSignUp(this.state, this.props.history);
+
+    /* this.setState({
       FirstName: "",
       LastName: "",
       Email: "",
-      Password: "",
-      PasswordConfirm: "",
+      Key: "",
+      KeyConfirm: "",
       Address: "",
       Phone: "",
-    });
+      Salt: "",
+    });*/
   };
 
   handleChange = (e) => {
@@ -52,7 +60,7 @@ class RegistrationForm extends Component {
 
     //Password
     ValidatorForm.addValidationRule("isPasswordMatch", (value) => {
-      return value !== this.state.Password ? false : true;
+      return value !== this.state.Key ? false : true;
     });
 
     //First nad Last name
@@ -63,18 +71,18 @@ class RegistrationForm extends Component {
     ValidatorForm.addValidationRule("areNumbersOnly", (value) => {
       return regexNotANumber.test(value) ? false : true;
     });
- 
   }
 
   componentWillUnmount() {
     ValidatorForm.removeValidationRule("isPasswordMatch");
     ValidatorForm.removeValidationRule("areLettersOnly");
     ValidatorForm.removeValidationRule("areNumbersOnly");
-  
   }
 
   render() {
-    return (
+    return this.props.loading ? (
+      <CircularProgress />
+    ) : (
       <div className="account-form-div">
         <div className="forms-in">
           <div className="form-text-field">
@@ -107,8 +115,8 @@ class RegistrationForm extends Component {
                 type="password"
                 onChange={this.handleChange}
                 id="password-form"
-                name="Password"
-                value={this.state.Password}
+                name="Key"
+                value={this.state.Key}
                 validators={["required"]}
                 errorMessages={["this field is required"]}
               />
@@ -118,10 +126,10 @@ class RegistrationForm extends Component {
                 margin="normal"
                 label="Repeat Password"
                 type="password"
-                name="PasswordConfirm"
+                name="KeyConfirm"
                 onChange={this.handleChange}
                 id="password-form-confirm"
-                value={this.state.PasswordConfirm}
+                value={this.state.KeyConfirm}
                 validators={["isPasswordMatch", "required"]}
                 errorMessages={["password mismatch", "this field is required"]}
               />
@@ -180,7 +188,19 @@ class RegistrationForm extends Component {
                 errorMessages={["this field is required"]}
               />
             </div>
-            <br />
+
+            <div className="form-text-field">
+              <TextValidator
+                margin="normal"
+                label="Passport Id"
+                onChange={this.handleChange}
+                id="passportId-form"
+                name="PassportId"
+                value={this.state.PassportId}
+                validators={["required", "areNumbersOnly"]}
+                errorMessages={["this field is required"]}
+              />
+            </div>
             <div className="form-text-field">
               <div>
                 <Button type="submit" variant="contained" color="primary">
@@ -198,6 +218,7 @@ class RegistrationForm extends Component {
 
 const mapStateToProps = (state) => ({
   AllUsers: state.userReducer.AllUsers,
+  loading: state.loadingReducer.loading,
 });
 
 const mpaDispatchToProps = (dispatch) => ({

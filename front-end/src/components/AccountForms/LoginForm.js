@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import signIn from "../../actions/User/signIn";
 import GoogleLogin from "react-google-login";
 import { FacebookProvider, LoginButton } from "react-facebook";
-import { toast } from "react-toastify";
+
 class LoginForm extends Component {
   constructor(props) {
     super(props);
@@ -30,8 +30,11 @@ class LoginForm extends Component {
   };
 
   handleSubmit() {
-    this.props.OnLogIn(this.state.email, this.state.password);
-    this.props.history.push("/");
+    this.props.OnLogIn(
+      this.state.email,
+      this.state.password,
+      this.props.history
+    );
   }
   render() {
     return (

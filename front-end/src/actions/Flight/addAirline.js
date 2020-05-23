@@ -1,6 +1,6 @@
 import axios from "axios";
-import LOADING_DATA from "../Loading/loadingData";
-import FINISHED_LOADING from "../Loading/finishedLoading";
+import loadingData from "../Loading/loadingData";
+import finishedLoading from "../Loading/finishedLoading";
 import { ConnectTo } from "../../common/constants";
 import { toast } from "react-toastify";
 export const ADD_AIRLINE = "flight:addAirline";
@@ -13,35 +13,26 @@ export default function addAirline(
   availableDestinations
 ) {
   return (dispatch) => {
-    dispatch({ type: LOADING_DATA });
-
-    const options = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({
+    dispatch(loadingData());
+    axios
+      .post(ConnectTo + "airline/addAirline", {
         Title: title,
         Address: address,
         Description: description,
         AvailableFlightLuggage: availableLuggages,
         AirlineDestinations: availableDestinations,
-      }),
-    };
-    fetch(ConnectTo + "airline/addAirline", options)
-      .then((response) => {
-        return response.ok ? response.text() : null;
       })
       .then((response) => {
-        return response !== null
-          ? (dispatch({ type: ADD_AIRLINE, payload: response.value }),
-            toast.dark("Airline added successfully"))
+        return response.data.errorCode === 200
+          ? (dispatch({ type: ADD_AIRLINE, payload: response.data.value }),
+            toast.dark("Airline added successfully"),
+            dispatch(finishedLoading()))
           : (alert("AddAirlineError: " + response),
-            dispatch({ type: FINISHED_LOADING }));
+            dispatch(finishedLoading()));
       })
       .catch((exception) => {
         toast.error("AddAirlineException: " + exception.message);
+        dispatch(finishedLoading());
       });
   };
 }

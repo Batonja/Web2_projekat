@@ -13,6 +13,7 @@ import AddFligthForm from "./AddFlightForm";
 import getAirlines from "../../../actions/Flight/getAirlines";
 import AddDestinationForm from "./AddDestinationForm";
 import getDestinations from "../../../actions/Flight/getDestinations";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const modalStyle = { "z-index": "1200" };
 
@@ -56,7 +57,9 @@ class FlightAdminPanel extends Component {
     this.setState({ openedModal: id });
   };
   render() {
-    return (
+    return this.props.loading ? (
+      <CircularProgress />
+    ) : (
       <div className="flightsTable">
         <h2 className="flightsTableTitle">Panel</h2>
         <br />
@@ -94,6 +97,8 @@ class FlightAdminPanel extends Component {
           <AddFligthForm
             airlines={this.props.airlines}
             flightLuggage={this.props.flightLuggage}
+            destinations={this.props.allDestinations}
+            closeForm={this.openCloseAddFlightModal}
           />
         </Modal>
 
@@ -127,9 +132,9 @@ class FlightAdminPanel extends Component {
           ? ""
           : Array.from(this.props.airlines).map((airline, index) => {
               {
-                return airline.Flights === undefined
+                return airline.flights === undefined
                   ? ""
-                  : Array.from(airline.Flights).map((flight, flightIndex) => {
+                  : Array.from(airline.flights).map((flight, flightIndex) => {
                       return (
                         <Container fluid className="flightWrap">
                           <Row className="flightPresentRow">

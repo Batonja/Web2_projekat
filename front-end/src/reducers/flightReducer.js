@@ -6,7 +6,10 @@ import { ADD_AIRLINE } from "../actions/Flight/addAirline";
 import { GET_FLIGHT_LUGGAGE } from "../actions/Flight/getFlightLuggage";
 import { GET_AIRLINES } from "../actions/Flight/getAirlines";
 import { GET_DESTINATIONS } from "../actions/Flight/getDestinations";
+import {ADD_FLIGHT} from "../actions/Flight/addFlight"
 import cloneDeep from "lodash/cloneDeep";
+
+
 const initialState = {
   allAirlines: [
     {
@@ -183,6 +186,9 @@ const initialState = {
 
 export default function flightReducer(state = initialState, { type, payload }) {
   switch (type) {
+    case ADD_FLIGHT:
+      return {...state}
+
     case GET_DESTINATIONS:
       return { ...state, allDestinations: payload };
     case GET_AIRLINES:
