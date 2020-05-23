@@ -101,9 +101,7 @@ namespace DatabaseLayer.Migrations
 
                     b.Property<int>("NumOfChangeovers");
 
-                    b.Property<double>("Price");
-
-                    b.Property<int>("ToDestionationDestinationId");
+                    b.Property<int>("ToDestinationDestinationId");
 
                     b.Property<decimal>("TripLength")
                         .HasColumnType("decimal(5,2)");
@@ -114,7 +112,7 @@ namespace DatabaseLayer.Migrations
 
                     b.HasIndex("FromDestinationDestinationId");
 
-                    b.HasIndex("ToDestionationDestinationId");
+                    b.HasIndex("ToDestinationDestinationId");
 
                     b.ToTable("Flight");
                 });
@@ -172,12 +170,16 @@ namespace DatabaseLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("FlightId");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(8,4)");
 
                     b.Property<int>("Type");
 
                     b.HasKey("FlightTicketId");
+
+                    b.HasIndex("FlightId");
 
                     b.ToTable("FlightTicket");
                 });
@@ -423,7 +425,6 @@ namespace DatabaseLayer.Migrations
                         .HasMaxLength(100);
 
                     b.Property<string>("Key")
-                        .IsRequired()
                         .HasColumnType("varchar(50)")
                         .HasMaxLength(50);
 
@@ -438,7 +439,6 @@ namespace DatabaseLayer.Migrations
                     b.Property<int>("Role");
 
                     b.Property<string>("Salt")
-                        .IsRequired()
                         .HasColumnType("varchar(50)")
                         .HasMaxLength(50);
 
@@ -490,9 +490,9 @@ namespace DatabaseLayer.Migrations
                         .WithMany()
                         .HasForeignKey("FromDestinationDestinationId");
 
-                    b.HasOne("Common.Models.Airline.Destination", "ToDestionation")
+                    b.HasOne("Common.Models.Airline.Destination", "ToDestination")
                         .WithMany()
-                        .HasForeignKey("ToDestionationDestinationId")
+                        .HasForeignKey("ToDestinationDestinationId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -519,6 +519,13 @@ namespace DatabaseLayer.Migrations
                     b.HasOne("Common.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("Common.Models.Airline.FlightTicket", b =>
+                {
+                    b.HasOne("Common.Models.Airline.Flight")
+                        .WithMany("Tickets")
+                        .HasForeignKey("FlightId");
                 });
 
             modelBuilder.Entity("Common.Models.Airline.Seat", b =>

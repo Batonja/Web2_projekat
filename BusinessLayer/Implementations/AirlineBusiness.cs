@@ -123,6 +123,15 @@ namespace BusinessLayer.Implementations
             return _airlineDatabase.GetDestinations();
         }
 
+
+        public Holder<Flight> AddFlight(Flight flight)
+        {
+            if (flight.FlightId < 0)
+                flight.FlightId = 0;
+
+            return _airlineDatabase.AddFlight(flight) ? CheckFlight(flight, 200, "") : CheckFlight(flight, 500, "Flight cannot be added");
+        }
+
         #region helpers
 
         Holder<Airline> CheckAirline(Airline airline, int errorCode, string description) =>
@@ -134,7 +143,10 @@ namespace BusinessLayer.Implementations
         Holder<Destination> CheckDestination(Destination destination, int errorCode, string description) =>
             errorCode == 200 ? Holder<Destination>.Success(destination) : Holder<Destination>.Fail(errorCode, description);
 
-        
+        Holder<Flight> CheckFlight(Flight flight, int errorCode, string description) =>
+            errorCode == 200 ? Holder<Flight>.Success(flight) : Holder<Flight>.Fail(errorCode, description);
+
+
         #endregion
     }
 }

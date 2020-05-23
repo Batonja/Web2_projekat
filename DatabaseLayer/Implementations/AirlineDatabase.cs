@@ -15,12 +15,20 @@ namespace DatabaseLayer.Implementations
         public List<Airline> Get()
         {
             List<Airline> airlines = new List<Airline>();
-
+            List<Flight> flights = new List<Flight>();
             using (var context = new DataContext(DataContext.ops.dbOptions))
             {
-                airlines = context.Airline.Include(airline => airline.AvailableFlightLuggage).Include(airline => airline.Flights).Include(airline => airline.AirlineDestinations).ToList();
-
+                airlines = context.Airline.Include(airline => airline.AvailableFlightLuggage).Include(airline => airline.Flights).ThenInclude(flight => flight.Tickets).
+                    Include(airline => airline.Flights).ThenInclude(flight => flight.FlightOrders).
+                    Include(airline => airline.Flights).ThenInclude(flight => flight.Seats).
+                    Include(airline => airline.Flights).ThenInclude(flight => flight.ToDestination).
+                    Include(airline => airline.Flights).ThenInclude(flight => flight.FromDestination).
+                    Include(airline => airline.AirlineDestinations).ToList();
+                
             }
+
+            
+
             return airlines;
         }
 
@@ -162,6 +170,23 @@ namespace DatabaseLayer.Implementations
             }
 
             return destinations;
+        }
+
+        
+        public bool AddFlight(Flight flight)
+        {
+            int rowsEffected = 0;
+
+            using (var context = new DataContext(DataContext.ops.dbOptions))
+            {
+                context.Update(flight.Airline);
+                context.Update(flight.ToDestination);
+                context.Update(flight.FromDestination);
+                context.Add(flight);
+                rowsEffected = context.SaveChanges();
+            }
+
+            return rowsEffected > 0 ? true : false;
         }
     }
 

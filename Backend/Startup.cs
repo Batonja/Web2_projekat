@@ -53,6 +53,7 @@ namespace Backend
             
             services.AddTransient<IRentACarBusiness, RentACarBusiness>(function => new RentACarBusiness(new RentACarDatabase()));
             services.AddTransient<IAirlineBusiness, AirlineBusiness>(function => new AirlineBusiness(new AirlineDatabase()));
+            services.AddTransient<IUserBusiness, UserBusiness>(function => new UserBusiness(new UserDatabase()));
 
         }
 

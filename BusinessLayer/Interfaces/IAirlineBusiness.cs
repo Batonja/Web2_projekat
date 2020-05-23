@@ -15,7 +15,7 @@ namespace BusinessLayer.Interfaces
         Holder<Airline> EditAirline(Airline airline);
         Holder<Airline> DeleteAirline(int airlineId);
         Holder<Destination> AddDestination(Destination destination);
-
+        Holder<Flight> AddFlight(Flight flight);
         List<Destination> GetDestinations();
         List<FlightLuggage> GetFlightLuggage();
         Holder<FlightLuggage> AddFlightLuggage(FlightLuggage flightLuggage);

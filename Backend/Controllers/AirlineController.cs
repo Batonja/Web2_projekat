@@ -29,7 +29,10 @@ namespace Backend.Controllers
         [HttpGet]
         public List<Airline> Get()
         {
-            return _airlineBusiness.Get();
+
+            List<Airline> retVal = _airlineBusiness.Get();
+
+            return retVal;
         }
 
         [HttpGet]
@@ -76,6 +79,15 @@ namespace Backend.Controllers
         {
 
             return _airlineBusiness.GetDestinations();
+        }
+
+
+        [HttpPost]
+        public Holder<Flight> AddFlight([FromBody]Flight flight)
+        {
+            Holder<Flight> retval = _airlineBusiness.AddFlight(flight);
+
+            return retval;
         }
 
         [HttpPost]

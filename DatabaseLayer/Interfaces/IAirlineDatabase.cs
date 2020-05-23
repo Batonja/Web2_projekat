@@ -9,12 +9,15 @@ namespace DatabaseLayer.Interfaces
     {
         List<Airline> Get();
         Airline Get(int id);
+        
 
         bool EditAirline(Airline airline);
         bool AddAirline(Airline airline);
         bool DeleteAirline(int airlineId);
         bool AddDestination(Destination destination);
         bool AddFlightLuggage(FlightLuggage flightLuggage);
+        bool AddFlight(Flight flight);
+
 
         List<FlightLuggage> GetFlightLuggage();
         List<Destination> GetDestinations();

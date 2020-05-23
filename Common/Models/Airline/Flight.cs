@@ -10,7 +10,7 @@ namespace Common.Models.Airline
     {
         public int FlightId { get; set; }
         [Required]
-        public Destination ToDestionation { get; set; }
+        public Destination ToDestination { get; set; }
         
         public Destination FromDestination { get; set; }
         [Required]
@@ -20,12 +20,13 @@ namespace Common.Models.Airline
 
         [Column(TypeName ="decimal(5,2)")]
         public decimal TripLength { get; set; }
-        public double Price { get; set; }
+        
         public int NumOfChangeovers { get; set; }
 
         
         public Airline Airline { get; set; }
 
+        public ICollection<FlightTicket> Tickets { get; set; }
         public ICollection<FlightOrder> FlightOrders { get; set; }
         public ICollection<Seat> Seats { get; set; }
 

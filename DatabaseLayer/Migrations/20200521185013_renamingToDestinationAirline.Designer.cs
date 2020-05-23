@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DatabaseLayer.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20200514191008_fixingFlightLuggagePrice")]
-    partial class fixingFlightLuggagePrice
+    [Migration("20200521185013_renamingToDestinationAirline")]
+    partial class renamingToDestinationAirline
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -46,21 +46,43 @@ namespace DatabaseLayer.Migrations
                     b.ToTable("Airline");
                 });
 
+            modelBuilder.Entity("Common.Models.Airline.AirlineDestination", b =>
+                {
+                    b.Property<int>("AirlineId");
+
+                    b.Property<int>("DestinationId");
+
+                    b.HasKey("AirlineId", "DestinationId");
+
+                    b.HasIndex("DestinationId");
+
+                    b.ToTable("AirlineDestination");
+                });
+
+            modelBuilder.Entity("Common.Models.Airline.AirlineFlightLuggage", b =>
+                {
+                    b.Property<int>("AirlineId");
+
+                    b.Property<int>("FlightLuggageId");
+
+                    b.HasKey("AirlineId", "FlightLuggageId");
+
+                    b.HasIndex("FlightLuggageId");
+
+                    b.ToTable("AirlineFlightLuggage");
+                });
+
             modelBuilder.Entity("Common.Models.Airline.Destination", b =>
                 {
                     b.Property<int>("DestinationId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("AirlineId");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(200);
 
                     b.HasKey("DestinationId");
-
-                    b.HasIndex("AirlineId");
 
                     b.ToTable("Destination");
                 });
@@ -81,12 +103,10 @@ namespace DatabaseLayer.Migrations
 
                     b.Property<int>("NumOfChangeovers");
 
-                    b.Property<double>("Price");
-
-                    b.Property<int>("ToDestionationDestinationId");
+                    b.Property<int>("ToDestinationDestinationId");
 
                     b.Property<decimal>("TripLength")
-                        .HasColumnType("decimal(3,2)");
+                        .HasColumnType("decimal(5,2)");
 
                     b.HasKey("FlightId");
 
@@ -94,7 +114,7 @@ namespace DatabaseLayer.Migrations
 
                     b.HasIndex("FromDestinationDestinationId");
 
-                    b.HasIndex("ToDestionationDestinationId");
+                    b.HasIndex("ToDestinationDestinationId");
 
                     b.ToTable("Flight");
                 });
@@ -105,16 +125,12 @@ namespace DatabaseLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("AirlineId");
-
                     b.Property<int>("FlightLuggageType");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(6,2)");
 
                     b.HasKey("FlightLuggageId");
-
-                    b.HasIndex("AirlineId");
 
                     b.ToTable("FlightLuggage");
                 });
@@ -156,12 +172,16 @@ namespace DatabaseLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("FlightId");
+
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(4,4)");
+                        .HasColumnType("decimal(8,4)");
 
                     b.Property<int>("Type");
 
                     b.HasKey("FlightTicketId");
+
+                    b.HasIndex("FlightId");
 
                     b.ToTable("FlightTicket");
                 });
@@ -299,7 +319,7 @@ namespace DatabaseLayer.Migrations
                     b.Property<int?>("AdministratorUserId");
 
                     b.Property<decimal>("AverageGrade")
-                        .HasColumnType("decimal(2,2)");
+                        .HasColumnType("decimal(4,2)");
 
                     b.Property<string>("Destination")
                         .HasMaxLength(100);
@@ -371,7 +391,7 @@ namespace DatabaseLayer.Migrations
                     b.Property<int>("NumberOfSuitcases");
 
                     b.Property<decimal>("PriceADay")
-                        .HasColumnType("decimal(4,4)");
+                        .HasColumnType("decimal(8,4)");
 
                     b.Property<string>("RegistrationNumber")
                         .IsRequired()
@@ -438,11 +458,30 @@ namespace DatabaseLayer.Migrations
                         .HasForeignKey("AdministratorUserId");
                 });
 
-            modelBuilder.Entity("Common.Models.Airline.Destination", b =>
+            modelBuilder.Entity("Common.Models.Airline.AirlineDestination", b =>
                 {
-                    b.HasOne("Common.Models.Airline.Airline")
-                        .WithMany("Destinations")
-                        .HasForeignKey("AirlineId");
+                    b.HasOne("Common.Models.Airline.Airline", "Airline")
+                        .WithMany("AirlineDestinations")
+                        .HasForeignKey("AirlineId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Common.Models.Airline.Destination", "Destination")
+                        .WithMany("AirlineDestinations")
+                        .HasForeignKey("DestinationId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Common.Models.Airline.AirlineFlightLuggage", b =>
+                {
+                    b.HasOne("Common.Models.Airline.Airline", "Airline")
+                        .WithMany("AvailableFlightLuggage")
+                        .HasForeignKey("AirlineId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Common.Models.Airline.FlightLuggage", "FlightLuggage")
+                        .WithMany("AvailableFlightLuggage")
+                        .HasForeignKey("FlightLuggageId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Common.Models.Airline.Flight", b =>
@@ -457,15 +496,8 @@ namespace DatabaseLayer.Migrations
 
                     b.HasOne("Common.Models.Airline.Destination", "ToDestination")
                         .WithMany()
-                        .HasForeignKey("ToDestionationDestinationId")
+                        .HasForeignKey("ToDestinationDestinationId")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Common.Models.Airline.FlightLuggage", b =>
-                {
-                    b.HasOne("Common.Models.Airline.Airline")
-                        .WithMany("AvailableFlightLuggage")
-                        .HasForeignKey("AirlineId");
                 });
 
             modelBuilder.Entity("Common.Models.Airline.FlightOrder", b =>
@@ -491,6 +523,13 @@ namespace DatabaseLayer.Migrations
                     b.HasOne("Common.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("Common.Models.Airline.FlightTicket", b =>
+                {
+                    b.HasOne("Common.Models.Airline.Flight")
+                        .WithMany("Tickets")
+                        .HasForeignKey("FlightId");
                 });
 
             modelBuilder.Entity("Common.Models.Airline.Seat", b =>

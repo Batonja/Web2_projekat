@@ -492,7 +492,7 @@ namespace DatabaseLayer.Migrations
                         .WithMany()
                         .HasForeignKey("FromDestinationDestinationId");
 
-                    b.HasOne("Common.Models.Airline.Destination", "ToDestionation")
+                    b.HasOne("Common.Models.Airline.Destination", "ToDestination")
                         .WithMany()
                         .HasForeignKey("ToDestionationDestinationId")
                         .OnDelete(DeleteBehavior.Cascade);

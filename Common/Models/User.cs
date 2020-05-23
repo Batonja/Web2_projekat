@@ -11,6 +11,10 @@ namespace Common.Models
 {
     public class User
     {
+        public User()
+        {
+        }
+
         public int UserId { get; set; }
         [Required]
         [MaxLength(100)]
@@ -21,11 +25,11 @@ namespace Common.Models
         [Required]
         [MaxLength(100)]
         public string Email { get; set; }
-        [Required]
+     
         [MaxLength(50)]
         [Column(TypeName = "varchar(50)")]
         public string Salt { get; set; }
-        [Required]
+      
         [MaxLength(50)]
         [Column(TypeName = "varchar(50)")]
         public string Key { get; set; }

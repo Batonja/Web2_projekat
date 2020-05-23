@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Common.Models.Airline
 {
     public class Airline
     {
-        
 
+        
         public int AirlineId { get; set; }
         
         public User Administrator { get; set; }
