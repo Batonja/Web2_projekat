@@ -1,10 +1,85 @@
 import React, { Component } from "react";
 import Button from "@material-ui/core/Button";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
+import { withStyles } from '@material-ui/core/styles'
 
 import signUp from "../../actions/User/signUp";
 import { connect } from "react-redux";
 import CircularProgress from "@material-ui/core/CircularProgress";
+
+
+
+const styles = (theme) => ({
+  register: {
+    with: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+
+  },
+  registerForm: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: "100%",
+    justifyContent: 'center',
+    textAlign: 'center',
+    alignItems: 'center',
+    margin: '5px 5px 5px 5px',
+  },
+  registerHeader: {
+    //textAlign: 'center'
+  },
+  registerFormField: {
+    margin: '5px 5px 5px 5px',
+    width: "300px"
+  },
+  registerButton: {
+    width: '50%',
+    [theme.breakpoints.down("xs", "sm", "md", "lg")]: {
+      width: "70%",
+
+    },
+    margin: '10px 10px 10px 10px',
+  },
+  socialsRegister: {
+
+    display: 'flex',
+    justifyContent: 'center',
+    width: "100%",
+  },
+  socialsregisterModal: {
+    [theme.breakpoints.down("xs", "sm", "md")]: {
+      width: "90%",
+
+    },
+    display: 'flex',
+    width: "30%",
+    height: '100px',
+    justifyContent: 'center',
+    textAlign: 'center',
+    alignItems: 'center',
+    background: "#C4C4C4",
+    border: '2px solid black',
+    borderRadius: '30px',
+  },
+  socialButton: {
+    fontSize: '30px',
+    width: '150px',
+    height: "40px",
+    textAlign: 'center',
+
+  },
+  logoImgDiv: {
+    width: "100%",
+    height: '30vh'
+  },
+  logoImg: {
+    maxWidth: '100%',
+    maxHeight: '100%'
+  }
+})
+
+
 
 class RegistrationForm extends Component {
   constructor(props) {
@@ -80,20 +155,24 @@ class RegistrationForm extends Component {
   }
 
   render() {
+    const { classes } = this.props
+
     return this.props.loading ? (
       <CircularProgress />
     ) : (
-      <div className="account-form-div">
-        <div className="forms-in">
-          <div className="form-text-field">
-            <h1>Sign up</h1>
+        <div className={classes.register}>
+          
+          <div className={classes.registerForm}>
+          <div className={classes.logoImgDiv}>
+            <img className={classes.logoImg} src={require('./add-account.png')} />
           </div>
-          <ValidatorForm
-            onSubmit={this.handleSubmit}
-            onError={(errors) => console.log(errors)}
-          >
-            <div className="form-text-field">
+            <ValidatorForm
+              onSubmit={this.handleSubmit}
+              onError={(errors) => console.log(errors)}
+            >
+              <br />
               <TextValidator
+                className={classes.registerFormField}
                 margin="normal"
                 label="Email"
                 onChange={this.handleChange}
@@ -107,9 +186,9 @@ class RegistrationForm extends Component {
                   "user with this email already exists",
                 ]}
               />
-            </div>
-            <div className="form-text-field">
+              <br />
               <TextValidator
+                className={classes.registerFormField}
                 margin="normal"
                 label="Password"
                 type="password"
@@ -120,9 +199,9 @@ class RegistrationForm extends Component {
                 validators={["required"]}
                 errorMessages={["this field is required"]}
               />
-            </div>
-            <div className="form-text-field">
+              <br />
               <TextValidator
+                className={classes.registerFormField}
                 margin="normal"
                 label="Repeat Password"
                 type="password"
@@ -133,9 +212,9 @@ class RegistrationForm extends Component {
                 validators={["isPasswordMatch", "required"]}
                 errorMessages={["password mismatch", "this field is required"]}
               />
-            </div>
-            <div className="form-text-field">
+              <br />
               <TextValidator
+                className={classes.registerFormField}
                 margin="normal"
                 label="First Name"
                 onChange={this.handleChange}
@@ -148,9 +227,9 @@ class RegistrationForm extends Component {
                   "First name must consist of letters only",
                 ]}
               />
-            </div>
-            <div className="form-text-field">
+              <br />
               <TextValidator
+                className={classes.registerFormField}
                 margin="normal"
                 label="Last Name"
                 onChange={this.handleChange}
@@ -163,9 +242,9 @@ class RegistrationForm extends Component {
                   "Last name must consist of letters only",
                 ]}
               />
-            </div>
-            <div className="form-text-field">
+              <br />
               <TextValidator
+                className={classes.registerFormField}
                 margin="normal"
                 label="Phone Number"
                 onChange={this.handleChange}
@@ -175,9 +254,9 @@ class RegistrationForm extends Component {
                 validators={["required", "areNumbersOnly"]}
                 errorMessages={["this field is required"]}
               />
-            </div>
-            <div className="form-text-field">
+              <br />
               <TextValidator
+                className={classes.registerFormField}
                 margin="normal"
                 label="Address"
                 onChange={this.handleChange}
@@ -187,10 +266,9 @@ class RegistrationForm extends Component {
                 validators={["required"]}
                 errorMessages={["this field is required"]}
               />
-            </div>
-
-            <div className="form-text-field">
+              <br />
               <TextValidator
+                className={classes.registerFormField}
                 margin="normal"
                 label="Passport Id"
                 onChange={this.handleChange}
@@ -200,19 +278,16 @@ class RegistrationForm extends Component {
                 validators={["required", "areNumbersOnly"]}
                 errorMessages={["this field is required"]}
               />
-            </div>
-            <div className="form-text-field">
-              <div>
-                <Button type="submit" variant="contained" color="primary">
-                  Register
+              <br />
+              <Button className={classes.registerButton} type="submit" variant="contained" color="primary">
+                Register
                 </Button>
-              </div>
-            </div>
-            <br />
-          </ValidatorForm>
+
+
+            </ValidatorForm>
+          </div>
         </div>
-      </div>
-    );
+      );
   }
 }
 
@@ -225,4 +300,4 @@ const mpaDispatchToProps = (dispatch) => ({
   OnSignUp: (user) => dispatch(signUp(user)),
 });
 
-export default connect(mapStateToProps, mpaDispatchToProps)(RegistrationForm);
+export default connect(mapStateToProps, mpaDispatchToProps)(withStyles(styles)(RegistrationForm));
