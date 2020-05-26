@@ -104,6 +104,17 @@ const MenuNavbarCollapse = (props) => {
             <div className={classes.linkButtonDiv}>Rent A Car</div>
           </Link>
         </div>
+        <div>
+          <Link
+            variant="body2"
+            color="inherit"
+            to={"/cars-admin-home"}
+            component={RouterLink}
+            style={{ margin: "20px", itemAlign: "center" }}
+          >
+            <div className={classes.linkButtonDiv}>Admin</div>
+          </Link>
+        </div>
       </div>
       <ToastContainer
         position="top-center"
