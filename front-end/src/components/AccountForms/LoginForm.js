@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import Button from "@material-ui/core/Button";
 import { connect } from "react-redux";
-import signIn from "../../actions/User/signIn";
+import googleSignIn from "../../actions/User/googleSignIn";
 import GoogleLogin from "react-google-login";
 import { FacebookProvider, LoginButton } from "react-facebook";
 
@@ -20,6 +20,14 @@ class LoginForm extends Component {
 
   responseGoogle = (response) => {
     alert(response.profileObj.name);
+
+    var user = {
+      name: response.profileObj.name,
+      password: response.profileObj.password,
+      email: response.profileObj.email,
+    };
+
+    this.props.OnLogIn();
   };
 
   handleChange = (e) => {
@@ -95,7 +103,7 @@ class LoginForm extends Component {
   }
 }
 const mapDispatchToProps = (dispatch) => ({
-  OnLogIn: (email, password) => dispatch(signIn(email, password)),
+  OnLogIn: (user, history) => dispatch(googleSignIn(email, history)),
 });
 
 export default connect(null, mapDispatchToProps)(LoginForm);
