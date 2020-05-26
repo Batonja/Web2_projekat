@@ -176,7 +176,7 @@ class LoginForm extends Component {
   y;
 }
 const mapDispatchToProps = (dispatch) => ({
-  OnLogIn: (user, history) => dispatch(googleSignIn(email, history)),
+  OnLogIn: (user, history) => dispatch(googleSignIn(user, history)),
 });
 
 export default connect(null, mapDispatchToProps)(withStyles(styles)(LoginForm));
