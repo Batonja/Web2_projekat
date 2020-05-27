@@ -13,7 +13,7 @@ function App(props) {
     <div >
       <Router>
         <Navbar  />
-        <br/><br/><br/><br/>
+        <br/><br/><br/>
         <div>
           <Routes/>
         </div>

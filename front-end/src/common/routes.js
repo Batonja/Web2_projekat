@@ -22,13 +22,13 @@ export function Routes() {
       
       <Route path="/cars" component={Car} />
       <Route path="/carservices" component={CarServices} />
-      <Route path="/cars-admin-home" component={CarAdminHome}/>
+      <Route path="/cars-admin-home"  component={CarAdminHome}/>
       
 
       <Route path="/account" component={Account} />
       <Route path="/signIn" component={LoginForm} />
       <Route path="/signUp" component={RegistrationForm} className="forms" />
-      <Route path="/" exact component={Home} />
+      <Route path="/"  component={Home} />
 
     </Switch>
   );

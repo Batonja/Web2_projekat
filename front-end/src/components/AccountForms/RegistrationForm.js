@@ -297,7 +297,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mpaDispatchToProps = (dispatch) => ({
-  OnSignUp: (user) => dispatch(signUp(user)),
+  OnSignUp: (user,history) => dispatch(signUp(user,history)),
 });
 
 export default connect(mapStateToProps, mpaDispatchToProps)(withStyles(styles)(RegistrationForm));
