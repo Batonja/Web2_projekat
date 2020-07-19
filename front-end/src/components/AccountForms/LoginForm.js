@@ -121,7 +121,7 @@ class LoginForm extends Component {
       <div className={classes.signIn}>
         <div className={classes.signInForm}>
           <div className={classes.logoImgDiv}>
-            <img className={classes.logoImg} src={require("../../logo.png")} />
+            <img alt='User Avatar Image' className={classes.logoImg} src={require("../../logo.png")} />
           </div>
           <ValidatorForm onError={(errors) => console.log(errors)}>
             <TextValidator
