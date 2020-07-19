@@ -3,8 +3,15 @@ using BusinessLayer.Interfaces;
 using Common.ErrorObjects;
 using Common.Models;
 using DatabaseLayer.Interfaces;
+using Google.Apis.Auth;
+using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Net;
+using System.Net.Http;
+using System.Security.Claims;
 using System.Text;
 
 namespace BusinessLayer.Implementations
@@ -68,16 +75,40 @@ namespace BusinessLayer.Implementations
             if(userFromDb.UserId == 0)
                 return CheckUser(user, 404, "User doesn't exists");
 
-            return PasswordHelper.Autheticate(userFromDb.Key, userFromDb.Salt, user.Key) ? CheckUser(user, 200, "") : CheckUser(user, 400, "User invalid");
+            return PasswordHelper.Autheticate(userFromDb.Key, userFromDb.Salt, user.Key) ? CheckUser(userFromDb, 200, "") : CheckUser(user, 400, "User invalid");
 
           
+        }
+
+        public string Encrypt(string secret)
+        {
+
+            string ret = PasswordHelper.EncryptPassword(secret)[0];
+
+
+            return ret;
+
+        }
+
+        public List<User> GetUsers()
+        {
+            return _userDatabase.GetUsers();
+        }
+
+        public User FindUserOrAdd(User user)
+        {
+            return _userDatabase.FindUserOrAdd(user);
         }
 
         #region helpers
 
         public Holder<User> CheckUser(User user, int errorCode, string description) =>
             errorCode == 200 ? Holder<User>.Success(user) : Holder<User>.Fail(errorCode, description);
+
         
+
+
+
         #endregion
     }
 }

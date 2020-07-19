@@ -4,14 +4,16 @@ using DatabaseLayer.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DatabaseLayer.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200718141316_friendsTable6")]
+    partial class friendsTable6
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -408,13 +410,9 @@ namespace DatabaseLayer.Migrations
 
             modelBuilder.Entity("Common.Models.Friend", b =>
                 {
-                    b.Property<int>("FriendOfId");
+                    b.Property<int>("FriendId");
 
-                    b.Property<int>("FriendWithId");
-
-                    b.HasKey("FriendOfId", "FriendWithId");
-
-                    b.HasIndex("FriendWithId");
+                    b.HasKey("FriendId");
 
                     b.ToTable("Friend");
                 });
@@ -621,15 +619,10 @@ namespace DatabaseLayer.Migrations
 
             modelBuilder.Entity("Common.Models.Friend", b =>
                 {
-                    b.HasOne("Common.Models.User", "FriendOf")
-                        .WithMany("FriendsOf")
-                        .HasForeignKey("FriendOfId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Common.Models.User", "FriendWith")
-                        .WithMany("FriendsWith")
-                        .HasForeignKey("FriendWithId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                    b.HasOne("Common.Models.User", "FriendInfo")
+                        .WithMany("Friends")
+                        .HasForeignKey("FriendId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

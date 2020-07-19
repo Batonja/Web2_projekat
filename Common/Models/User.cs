@@ -33,15 +33,21 @@ namespace Common.Models
         [MaxLength(50)]
         [Column(TypeName = "varchar(50)")]
         public string Key { get; set; }
-        [Required]
+     
         [MaxLength(100)]
         public string Address { get; set; }
         public long Phone { get; set; }
-        [Required]
+       
         public long PassportId { get; set; }
         public Roles Role { get; set; }
 
-        ICollection<FlightOrder> FlightOrders { get; set; }
-        ICollection<CarOrder> CarOrders { get; set; }
+        
+        public string TokenId { get; set; }
+
+        public virtual ICollection<FlightOrder> FlightOrders { get; set; }
+        public virtual ICollection<CarOrder> CarOrders { get; set; }
+        public virtual ICollection<Friend> FriendsOf { get; set; }
+        public virtual ICollection<Friend> FriendsWith { get; set; }
+        
     }
 }

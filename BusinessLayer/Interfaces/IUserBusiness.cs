@@ -2,6 +2,7 @@
 using Common.Models;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
 namespace BusinessLayer.Interfaces
@@ -11,5 +12,11 @@ namespace BusinessLayer.Interfaces
         Holder<User> SignIn(User user);
 
         Holder<User> SignUp(User user);
+
+        string Encrypt(string secret);
+
+        User FindUserOrAdd(User user);
+        List<User> GetUsers();
+
     }
 }

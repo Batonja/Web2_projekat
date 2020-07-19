@@ -2,10 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <AspNetCoreHostingModel>InProcess </AspNetCoreHostingModel>
+    
   </PropertyGroup>
 
   <ItemGroup>
+   <PackageReference Include="Google.Apis.Auth" Version="1.45.0" />
+    <PackageReference Include="Google.Apis.Core" Version="1.45.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.2.6">
@@ -13,6 +16,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
+    <PackageReference Include="NETCore.Encrypt" Version="2.0.9" />
   </ItemGroup>
 
   <ItemGroup>

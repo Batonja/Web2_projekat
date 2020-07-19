@@ -4,14 +4,16 @@ using DatabaseLayer.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DatabaseLayer.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200718142209_friendsTable7")]
+    partial class friendsTable7
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -408,11 +410,17 @@ namespace DatabaseLayer.Migrations
 
             modelBuilder.Entity("Common.Models.Friend", b =>
                 {
+                    b.Property<int>("FriendshipId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
                     b.Property<int>("FriendOfId");
 
                     b.Property<int>("FriendWithId");
 
-                    b.HasKey("FriendOfId", "FriendWithId");
+                    b.HasKey("FriendshipId");
+
+                    b.HasIndex("FriendOfId");
 
                     b.HasIndex("FriendWithId");
 

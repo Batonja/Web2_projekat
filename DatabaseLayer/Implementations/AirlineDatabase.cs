@@ -23,7 +23,7 @@ namespace DatabaseLayer.Implementations
                     Include(airline => airline.Flights).ThenInclude(flight => flight.Seats).
                     Include(airline => airline.Flights).ThenInclude(flight => flight.ToDestination).
                     Include(airline => airline.Flights).ThenInclude(flight => flight.FromDestination).
-                    Include(airline => airline.AirlineDestinations).ToList();
+                    Include(airline => airline.AirlineDestinations).ThenInclude(ad => ad.Destination).ToList();
                 
             }
 

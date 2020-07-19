@@ -8,6 +8,15 @@
     <Compile Remove="Migrations\20200514190619_fixingFlightLuggagePrice.cs" />
     <Compile Remove="Migrations\20200516144648_addingListOfAirlinesToDestinations.cs" />
     <Compile Remove="Migrations\20200518151636_setEmailAsUserKey.cs" />
+    <Compile Remove="Migrations\20200717181148_friendsTable3.cs" />
+    <Compile Remove="Migrations\20200717184411_friendsTable4.cs" />
+    <Compile Remove="Migrations\20200718133338_friendsList5.cs" />
+    <Compile Remove="Migrations\20200718133603_friendsList5.cs" />
+    <Compile Remove="Migrations\20200718134112_friendsList5.cs" />
+    <Compile Remove="Migrations\20200718135833_friendlist5.cs" />
+    <Compile Remove="Migrations\20200718140248_friendlist5.cs" />
+    <Compile Remove="Migrations\20200718141924_friendsTable7.cs" />
+    <Compile Remove="Migrations\20200718142030_friendsTable7.cs" />
     <Compile Remove="Migrations\Airline\20200429003941_airlineEntitiesRefactored.cs" />
     <Compile Remove="Migrations\Airline\20200429004510_airlineEntitiesRefactored2.cs" />
     <Compile Remove="Migrations\Airline\20200429004814_airlineEntitiesRefactored.cs" />

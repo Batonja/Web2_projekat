@@ -21,6 +21,15 @@ namespace DatabaseLayer.DataAccess
         {
             modelBuilder.Entity<AirlineDestination>().HasKey(ad => new { ad.AirlineId, ad.DestinationId });
             modelBuilder.Entity<AirlineFlightLuggage>().HasKey(afl => new { afl.AirlineId, afl.FlightLuggageId });
+            modelBuilder.Entity<User>().HasMany(u => u.FriendsOf).WithOne(fr => fr.FriendOf).HasForeignKey(fr => fr.FriendOfId).OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Friend>().HasKey(fr => new { fr.FriendOfId, fr.FriendWithId });
+            modelBuilder.Entity<User>().HasMany(u => u.FriendsWith).WithOne(fr => fr.FriendWith).HasForeignKey(fr => fr.FriendWithId).OnDelete(DeleteBehavior.Restrict);
+
+          
+           
+
+ 
+            modelBuilder.Ignore<AppSettings>();
         }
 
 

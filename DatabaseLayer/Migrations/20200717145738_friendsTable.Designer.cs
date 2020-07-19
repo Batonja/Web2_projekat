@@ -4,14 +4,16 @@ using DatabaseLayer.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DatabaseLayer.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200717145738_friendsTable")]
+    partial class friendsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -406,17 +408,19 @@ namespace DatabaseLayer.Migrations
                     b.ToTable("Vehicle");
                 });
 
-            modelBuilder.Entity("Common.Models.Friend", b =>
+            modelBuilder.Entity("Common.Models.Friendship", b =>
                 {
-                    b.Property<int>("FriendOfId");
+                    b.Property<int>("Friend1Id");
 
-                    b.Property<int>("FriendWithId");
+                    b.Property<int>("Friend2Id");
 
-                    b.HasKey("FriendOfId", "FriendWithId");
+                    b.Property<int?>("UserId");
 
-                    b.HasIndex("FriendWithId");
+                    b.HasKey("Friend1Id", "Friend2Id");
 
-                    b.ToTable("Friend");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Friendship");
                 });
 
             modelBuilder.Entity("Common.Models.User", b =>
@@ -619,17 +623,11 @@ namespace DatabaseLayer.Migrations
                         .HasForeignKey("RentACarServiceId");
                 });
 
-            modelBuilder.Entity("Common.Models.Friend", b =>
+            modelBuilder.Entity("Common.Models.Friendship", b =>
                 {
-                    b.HasOne("Common.Models.User", "FriendOf")
-                        .WithMany("FriendsOf")
-                        .HasForeignKey("FriendOfId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Common.Models.User", "FriendWith")
-                        .WithMany("FriendsWith")
-                        .HasForeignKey("FriendWithId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                    b.HasOne("Common.Models.User")
+                        .WithMany("Friendship")
+                        .HasForeignKey("UserId");
                 });
 #pragma warning restore 612, 618
         }
