@@ -3,7 +3,7 @@ import loadingData from "../Loading/loadingData";
 import finishedLoading from "../Loading/finishedLoading";
 import { ConnectTo } from "../../common/constants";
 import { toast } from "react-toastify";
-export const SIGN_UP = "user:signIn";
+export const SIGN_UP = "user:signUp";
 
 export default function signUp(user, history) {
   return (dispatch) => {

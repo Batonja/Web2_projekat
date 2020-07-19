@@ -76,10 +76,10 @@ const AccountNavbarCollapse = (props) => {
           className={classes.toggleDrawer}
         >
           <AccountCircleIcon />
-          {props.loggedInUser.FirstName ? props.loggedInUser.FirstName : ""}
+          {props.loggedInUser.email ? props.loggedInUser.email : ""}
         </IconButton>
 
-        {!props.loggedInUser.FirstName ? (
+        {!props.loggedInUser.email ? (
           <Menu
             id="menu-collapsed"
             anchorEl={anchorEl}
@@ -111,33 +111,33 @@ const AccountNavbarCollapse = (props) => {
             </MenuItem>
           </Menu>
         ) : (
-            <Menu
-              id="menu-collapsed"
-              anchorEl={anchorEl}
-              keepMounted
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
+          <Menu
+            id="menu-collapsed"
+            anchorEl={anchorEl}
+            keepMounted
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "left",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "left",
+            }}
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+          >
+            <MenuItem onClick={logOut} to={"/"} component={RouterLink}>
+              Log Out
+            </MenuItem>
+            <MenuItem
+              onClick={handleClose}
+              to={"/account"}
+              component={RouterLink}
             >
-              <MenuItem onClick={logOut} to={"/"} component={RouterLink}>
-                Log Out
+              My Account
             </MenuItem>
-              <MenuItem
-                onClick={handleClose}
-                to={"/account"}
-                component={RouterLink}
-              >
-                My Account
-            </MenuItem>
-            </Menu>
-          )}
+          </Menu>
+        )}
       </div>
 
       <div
@@ -149,14 +149,14 @@ const AccountNavbarCollapse = (props) => {
             color="inherit"
             aria-label="Menu"
             className={classes.toggleDrawer}
-            to={!props.loggedInUser.FirstName ? false : "/account"}
+            to={!props.loggedInUser.Email ? false : "/account"}
             component={RouterLink}
           >
             <AccountCircleIcon />
-            {props.loggedInUser.FirstName ? props.loggedInUser.FirstName : ""}
+            {props.loggedInUser.email ? props.loggedInUser.email : ""}
           </IconButton>
         </div>
-        {!props.loggedInUser.FirstName ? (
+        {!props.loggedInUser.email ? (
           <>
             <div className={classes.linkButtonDiv}>
               <Link
@@ -178,19 +178,14 @@ const AccountNavbarCollapse = (props) => {
             </Link>
           </>
         ) : (
-            <>
-              <div className={classes.linkButtonDiv}>
-                <Link
-                  href=""
-                  variant="body2"
-                  color="inherit"
-                  onClick={props.OnLogOff}
-                >
-                  Logout
+          <>
+            <div className={classes.linkButtonDiv}>
+              <Link href="" variant="body2" color="inherit" onClick={logOut}>
+                Logout
               </Link>
-              </div>
-            </>
-          )}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
@@ -201,7 +196,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  OnLoggOff: () => dispatch(logOff()),
+  OnLogOff: () => dispatch(logOff()),
 });
 
 export default compose(

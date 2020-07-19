@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import siteName from "../common/siteName";
+
 class Header extends Component {
   render() {
     return (

@@ -54,22 +54,29 @@ class Search extends Component {
     var sortedDestinations = [];
 
     for (let num = 0; num < this.props.airlines.length; num++) {
-      for (
-        let numOfFlight = 0;
-        numOfFlight < this.props.airlines[num].Destinations.length;
-        numOfFlight++
-      ) {
-        if (
-          !sortedDestinations.includes(
-            this.props.airlines[num].Destinations[numOfFlight]
+      if (this.props.airlines[num].airlineDestinations) {
+        for (
+          let numOfFlight = 0;
+          numOfFlight < this.props.airlines[num].airlineDestinations.length;
+          numOfFlight++
+        ) {
+          if (
+            !sortedDestinations.includes(
+              this.props.airlines[num].airlineDestinations[numOfFlight]
+                .destination
+            )
           )
-        )
-          sortedDestinations.push(
-            this.props.airlines[num].Destinations[numOfFlight]
-          );
+            sortedDestinations.push(
+              this.props.airlines[num].airlineDestinations[numOfFlight]
+                .destination
+            );
+        }
       }
     }
-    sortedDestinations = sortedDestinations.sort((a, b) => a.localeCompare(b));
+    if (sortedDestinations.length > 0)
+      sortedDestinations = sortedDestinations.sort((a, b) =>
+        a.title.localeCompare(b.title)
+      );
 
     this.setState({ destinations: sortedDestinations });
   }

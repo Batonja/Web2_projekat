@@ -18,8 +18,11 @@ import { renderSeats } from "./Common/Helpers/renderSeats";
 import reserveSeats from "../../actions/Flight/reserveSeats";
 import MultiRef from "react-multi-ref";
 import Alert from "react-bootstrap/Alert";
+
 import orderFlight from "../../actions/User/orderFlight";
 import { withRouter } from "react-router-dom";
+import { getSeatPrice } from "../Flight/Common/Helpers/ticketPriceHelpers";
+
 const modalStyle = { "z-index": "1200" };
 
 class FlightsDisplay extends Component {
@@ -68,7 +71,7 @@ class FlightsDisplay extends Component {
 
   openModal(event, flightId) {
     event.preventDefault();
-    if (!this.props.loggedInUser.FirstName) this.props.history.push("/signUp");
+    if (!this.props.loggedInUser.email) this.props.history.push("/signUp");
 
     this.setState({ openedModal: flightId });
   }
@@ -161,167 +164,170 @@ class FlightsDisplay extends Component {
     return (
       <div className="flightsTable">
         {airlinesToShow.length > 0 ? (
-          this.props.loading ? (
-            <Spinner animation="border" />
-          ) : (
-            <>
-              <h2 className="flightsTableTitle">Flights</h2>
-              {Array.from(airlinesToShow).map((airline, i) => {
-                return (
-                  <>
-                    {Array.from(airline.Flights).map((flight) => {
-                      return (
-                        <Container fluid className="flightWrap">
-                          <Row className="flightPresentRow">
-                            <FlightBasicInformation
-                              airline={airline}
-                              flight={flight}
-                            />
+          <>
+            <h2 className="flightsTableTitle">Flights</h2>
 
-                            <Col md="auto" className="flightArrow">
-                              <Button
-                                onClick={(e) => this.openClose(e, flight.Id)}
-                              >
-                                {this.isOpened(flight.Id) ? (
-                                  <KeyboardArrowUpIcon />
-                                ) : (
-                                  <KeyboardArrowDownIcon />
-                                )}
-                              </Button>
-                            </Col>
-                          </Row>
-                          <Collapse isOpened={this.isOpened(flight.Id)}>
+            {Array.from(airlinesToShow).map((airline, i) => {
+              return (
+                <>
+                  {airline.flights
+                    ? Array.from(airline.flights).map((flight) => {
+                        return (
+                          <Container fluid className="flightWrap">
                             <Row className="flightPresentRow">
-                              <Col md="auto" className="flightItem">
-                                {this.props.isLoading ? (
-                                  <Spinner animation="border" />
-                                ) : (
-                                  renderSeats(flight.Seats)
-                                )}
-                              </Col>
+                              <FlightBasicInformation
+                                airline={airline}
+                                flight={flight}
+                              />
 
-                              <Col md="auto" className="flightItem">
-                                <InputLabel
-                                  style={{
-                                    "margin-left": "10px",
-                                  }}
-                                  id="chooseTicketLabel"
+                              <Col md="auto" className="flightArrow">
+                                <Button
+                                  onClick={(e) => this.openClose(e, flight.Id)}
                                 >
-                                  Ticket / Price
-                                </InputLabel>
-                                <Select
-                                  style={{
-                                    "margin-left": "10px",
-                                    "margin-top": "5px",
-                                  }}
-                                  labelId="chooseTicketLabel"
-                                  onChange={this.onHandleTicketTypeChange}
-                                  value={this.state.ticketType}
-                                >
-                                  <MenuItem value={0}>
-                                    {"Economy" +
-                                      " / " +
-                                      (flight.Price -
-                                        airline.Tickets.Economy)}{" "}
-                                  </MenuItem>
-                                  <MenuItem value={1}>
-                                    {"Business" +
-                                      " / " +
-                                      (flight.Price - airline.Tickets.Business)}
-                                  </MenuItem>
-                                </Select>
-                                <br />
-                                {this.props.loggedInUser.FirstName ? (
+                                  {this.isOpened(flight.Id) ? (
+                                    <KeyboardArrowUpIcon />
+                                  ) : (
+                                    <KeyboardArrowDownIcon />
+                                  )}
+                                </Button>
+                              </Col>
+                            </Row>
+                            <Collapse isOpened={this.isOpened(flight.Id)}>
+                              <Row className="flightPresentRow">
+                                <Col md="auto" className="flightItem">
+                                  {this.props.isLoading ? (
+                                    <Spinner animation="border" />
+                                  ) : (
+                                    renderSeats(flight.seats)
+                                  )}
+                                </Col>
+
+                                <Col md="auto" className="flightItem">
+                                  <InputLabel
+                                    style={{
+                                      "margin-left": "10px",
+                                    }}
+                                    id="chooseTicketLabel"
+                                  >
+                                    Ticket / Price
+                                  </InputLabel>
+                                  <Select
+                                    style={{
+                                      "margin-left": "10px",
+                                      "margin-top": "5px",
+                                    }}
+                                    labelId="chooseTicketLabel"
+                                    onChange={this.onHandleTicketTypeChange}
+                                    value={this.state.ticketType}
+                                  >
+                                    <MenuItem value={0}>
+                                      {"Economy" +
+                                        " / " +
+                                        flight.tickets[1].price}
+                                    </MenuItem>
+                                    <MenuItem value={1}>
+                                      {"Business" +
+                                        " / " +
+                                        flight.tickets[0].price}
+                                    </MenuItem>
+                                  </Select>
+                                  <br />
+
+                                  {this.props.loggedInUser.FirstName ? (
+                                    <Button
+                                      ref={this.fastReservationRef.ref(
+                                        flight.Id
+                                      )}
+                                      className="flightReserveButton"
+                                      color="primary"
+                                      variant="contained"
+                                      onClick={(e) =>
+                                        this.fastReservation(
+                                          e,
+                                          flight.Seats,
+                                          airline,
+                                          flight,
+                                          flight.Passengers
+                                        )
+                                      }
+                                    >
+                                      Fast Reservation
+                                    </Button>
+                                  ) : (
+                                    ""
+                                  )}
+
+                                  {this.state.fastReservationError ===
+                                  flight.Id ? (
+                                    <Alert variant="warning">
+                                      Sorry but this flight doesn't have any
+                                      fast reservation seat available, next time
+                                      you should be faster
+                                    </Alert>
+                                  ) : (
+                                    ""
+                                  )}
+
+                                  {this.state.fastReservationAlreadyFlying ===
+                                  flight.Id ? (
+                                    <Alert variant="warning">
+                                      You are already on this flight
+                                    </Alert>
+                                  ) : (
+                                    ""
+                                  )}
+                                  {this.state.fastReservationSuccess ===
+                                  flight.Id ? (
+                                    <Alert variant="success">
+                                      You have successfully reserved your flight
+                                    </Alert>
+                                  ) : (
+                                    ""
+                                  )}
+                                  <br />
+                                  <br />
                                   <Button
-                                    ref={this.fastReservationRef.ref(flight.Id)}
                                     className="flightReserveButton"
                                     color="primary"
                                     variant="contained"
                                     onClick={(e) =>
-                                      this.fastReservation(
-                                        e,
-                                        flight.Seats,
-                                        airline,
-                                        flight,
-                                        flight.Passengers
-                                      )
+                                      this.openModal(e, flight.Id)
                                     }
                                   >
-                                    Fast Reservation
+                                    More Info
                                   </Button>
-                                ) : (
-                                  ""
-                                )}
 
-                                {this.state.fastReservationError ===
-                                flight.Id ? (
-                                  <Alert variant="warning">
-                                    Sorry but this flight doesn't have any fast
-                                    reservation seat available, next time you
-                                    should be faster
-                                  </Alert>
-                                ) : (
-                                  ""
-                                )}
-
-                                {this.state.fastReservationAlreadyFlying ===
-                                flight.Id ? (
-                                  <Alert variant="warning">
-                                    You are already on this flight
-                                  </Alert>
-                                ) : (
-                                  ""
-                                )}
-                                {this.state.fastReservationSuccess ===
-                                flight.Id ? (
-                                  <Alert variant="success">
-                                    You have successfully reserved your flight
-                                  </Alert>
-                                ) : (
-                                  ""
-                                )}
-                                <br />
-                                <br />
-                                <Button
-                                  className="flightReserveButton"
-                                  color="primary"
-                                  variant="contained"
-                                  onClick={(e) => this.openModal(e, flight.Id)}
-                                >
-                                  More Info
-                                </Button>
-
-                                <div className="flightReservationModal">
-                                  <Modal
-                                    size="lg"
-                                    onHide={(e) => this.closeModal(e)}
-                                    style={modalStyle}
-                                    ariaHideApp={false}
-                                    show={
-                                      flight.Id === this.state.openedModal
-                                        ? true
-                                        : false
-                                    }
-                                    onRequestClose={(e) => this.closeModal(e)}
-                                  >
-                                    <ReservationModal
-                                      airline={airline}
-                                      flight={flight}
-                                      closeModal={this.closeModal}
-                                    />
-                                  </Modal>
-                                </div>
-                              </Col>
-                            </Row>
-                          </Collapse>
-                        </Container>
-                      );
-                    })}
-                  </>
-                );
-              })}
-            </>
-          )
+                                  <div className="flightReservationModal">
+                                    <Modal
+                                      size="lg"
+                                      onHide={(e) => this.closeModal(e)}
+                                      style={modalStyle}
+                                      ariaHideApp={false}
+                                      show={
+                                        flight.Id === this.state.openedModal
+                                          ? true
+                                          : false
+                                      }
+                                      onRequestClose={(e) => this.closeModal(e)}
+                                    >
+                                      <ReservationModal
+                                        airline={airline}
+                                        flight={flight}
+                                        closeModal={this.closeModal}
+                                      />
+                                    </Modal>
+                                  </div>
+                                </Col>
+                              </Row>
+                            </Collapse>
+                          </Container>
+                        );
+                      })
+                    : ""}
+                </>
+              );
+            })}
+          </>
         ) : (
           ""
         )}
@@ -334,7 +340,6 @@ const mapStateToProps = (state) => ({
   airlines: state.flightReducer.airlines,
   loggedInUser: state.userReducer.LoggedInUser,
   filteredAirlines: state.flightReducer.filteredAirlines,
-  loading: state.loadingReducer.loading,
 });
 
 const mapDispatchToProps = (dispatch) => ({

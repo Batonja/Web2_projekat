@@ -3,9 +3,11 @@ import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import Button from "@material-ui/core/Button";
 import { connect } from "react-redux";
 import googleSignIn from "../../actions/User/googleSignIn";
+import signIn from "../../actions/User/signIn";
 import GoogleLogin from "react-google-login";
 import { withStyles } from "@material-ui/core/styles";
 import config from "../../config.json";
+import Spinner from "react-bootstrap/Spinner";
 
 const styles = (theme) => ({
   signIn: {
@@ -85,15 +87,14 @@ class LoginForm extends Component {
   }
 
   responseGoogle = (response) => {
-    alert(response.profileObj.name);
-
     var user = {
       name: response.profileObj.name,
       password: response.profileObj.password,
       email: response.profileObj.email,
+      tokenId: response.tokenId,
     };
 
-    this.props.OnLogIn();
+    this.props.OnLogIn(user, this.props.history);
   };
 
   handleChange = (e) => {
@@ -116,7 +117,7 @@ class LoginForm extends Component {
 
   render() {
     const { classes } = this.props;
-    return (
+    return !this.props.loading ? (
       <div className={classes.signIn}>
         <div className={classes.signInForm}>
           <div className={classes.logoImgDiv}>
@@ -171,12 +172,21 @@ class LoginForm extends Component {
           </div>
         </div>
       </div>
+    ) : (
+      <Spinner animation="border" />
     );
   }
   y;
 }
-const mapDispatchToProps = (dispatch) => ({
-  OnLogIn: (user, history) => dispatch(googleSignIn(user, history)),
+const mapStateToProps = (state) => ({
+  loading: state.loadingReducer.loading,
 });
 
-export default connect(null, mapDispatchToProps)(withStyles(styles)(LoginForm));
+const mapDispatchToProps = (dispatch) => ({
+  OnLogIn: (user, history) => dispatch(signIn(user, history)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(styles)(LoginForm));

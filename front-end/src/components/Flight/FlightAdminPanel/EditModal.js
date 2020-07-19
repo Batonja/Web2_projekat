@@ -1,18 +1,21 @@
 import React, { Component } from "react";
-import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
+import {
+  ValidatorForm,
+  TextValidator,
+  SelectValidator,
+} from "react-material-ui-form-validator";
 import Modal from "react-bootstrap/Modal";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import "date-fns";
-import { format } from "date-fns";
 import DateFnsUtils from "@date-io/date-fns";
 import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
-import { parseStringToDate } from "../Common/Helpers/dateHelper";
 import { renderSeats } from "../Common/Helpers/renderSeats";
 import Button from "@material-ui/core/Button";
 import TextareaAutosize from "@material-ui/core/TextareaAutosize";
 import InputLabel from "@material-ui/core/InputLabel";
-import Tooltip from "@material-ui/core/Tooltip";
+import MenuItem from "@material-ui/core/MenuItem";
+
 import editAirline from "../../../actions/Flight/editAirline";
 import cancelAllFlightOrders from "../../../actions/User/cancelAllFlightOrders";
 import { connect } from "react-redux";
@@ -24,42 +27,38 @@ class EditModal extends Component {
 
     this.state = {
       airlineTitle:
-        this.props.airline === undefined ? "" : this.props.airline.Title,
+        this.props.airline === undefined ? "" : this.props.airline.title,
       airlineAddress:
-        this.props.airline === undefined ? "" : this.props.airline.Address,
+        this.props.airline === undefined ? "" : this.props.airline.address,
       airlineDescription:
-        this.props.airline === undefined ? "" : this.props.airline.Description,
-      economyDeduction:
-        this.props.airline === undefined
+        this.props.airline === undefined ? "" : this.props.airline.description,
+
+      from:
+        this.props.flight === undefined
           ? ""
-          : this.props.airline.Tickets.Economy,
-      businessDeduction:
-        this.props.airline === undefined
-          ? ""
-          : this.props.airline.Tickets.Business,
-      price: this.props.flight === undefined ? "" : this.props.flight.Price,
-      from: this.props.flight === undefined ? "" : this.props.flight.From,
-      destination: this.props.flight === undefined ? "" : this.props.flight.To,
+          : this.props.flight.fromDestination,
+      destination:
+        this.props.flight === undefined ? "" : this.props.flight.toDestination,
       departure:
         this.props.flight === undefined
           ? new Date()
-          : parseStringToDate(this.props.flight.DepartureDate),
+          : this.props.flight.departureDate,
+
       arrival:
         this.props.flight === undefined
           ? new Date()
-          : parseStringToDate(this.props.flight.ArivalDate),
+          : this.props.flight.arrivalDate,
       economyTicket:
-        this.props.flight === undefined
+        this.props.flight.tickets[1] === undefined
           ? ""
-          : this.props.flight.Price - this.props.airline.Tickets.Economy,
-      busiessTicket:
-        this.props.flight === undefined
+          : this.props.flight.tickets[1],
+      businessTicket:
+        this.props.flight.tickets[0] === undefined
           ? ""
-          : this.props.flight.Price * 1.05 -
-            this.props.airline.Tickets.Business,
+          : this.props.flight.tickets[0],
       tripLength:
-        this.props.flight === undefined ? "" : this.props.flight.TripLength,
-      seats: this.props.flight === undefined ? "" : this.props.flight.Seats,
+        this.props.flight === undefined ? "" : this.props.flight.tripLength,
+      seats: this.props.flight === undefined ? "" : this.props.flight.seats,
       mode: this.props.mode,
     };
   }
@@ -82,25 +81,36 @@ class EditModal extends Component {
               airlineToChange.Flights[indexOfFlight].Price =
                 payload.airline.Flight.Price; */
 
-    var departureDateFormated = format(this.state.departure, "dd/MM/yyyy");
-    var arrivalDate = format(this.state.arrival, "dd/MM/yyyy");
+    /*var departureDateFormated = format(this.state.departure, "dd/MM/yyyy");
+    var arrivalDate = format(this.state.arrival, "dd/MM/yyyy");*/
+
+    var seatObjects = [];
+
+    for (var i = 0; i < this.state.seats.length; i++) {
+      var seat = {
+        SeatId: i,
+        SeatNumber: i,
+        SeatState: this.state.seats[i],
+      };
+
+      seatObjects.push(seat);
+    }
+
     var airline = {
       Id: this.props.airline.Id,
       Title: this.state.airlineTitle,
       Address: this.state.airlineAddress,
       Description: this.state.airlineDescription,
-      Tickets: {
-        Economy: this.state.economyDeduction,
-        Business: this.state.businessDeduction,
-      },
+
       Flight: {
-        Id: this.props.flight.Id,
-        From: this.state.from,
-        To: this.state.destination,
-        DepartureDate: departureDateFormated,
-        ArivalDate: arrivalDate,
+        FlightId: this.props.flight.Id,
+        FromDestination: this.state.from.title,
+        ToDestination: this.state.destination.title,
+        DepartureDate: this.state.departure,
+        ArrivalDate: this.state.arrival,
         TripLength: this.state.tripLength,
-        Seats: this.state.seats,
+        Tickets: [this.state.businessTicket, this.state.economyTicket],
+        Seats: seatObjects,
         Price: this.state.price,
       },
     };
@@ -127,7 +137,15 @@ class EditModal extends Component {
     });
   }
   onHandleChange(e) {
-    this.setState({ [e.target.name]: e.target.value });
+    if (e.target.name === "economyPrice")
+      this.setState({
+        economyTicket: { ...this.state.economyTicket, price: e.target.value },
+      });
+    else if (e.target.name === "businessPrice")
+      this.setState({
+        businessTicket: { ...this.state.businessTicket, price: e.target.value },
+      });
+    else this.setState({ [e.target.name]: e.target.value });
   }
 
   onHandleDateChange(event, name) {
@@ -187,51 +205,26 @@ class EditModal extends Component {
                 </div>
               </Col>
               <Col md="auto">
-                <Tooltip
-                  title="Price - Economy Deduction = Economy Ticket Price"
-                  interactive
-                >
-                  <TextValidator
-                    margin="normal"
-                    label="Economy Deduction"
-                    name="economyDeduction"
-                    validators={["required", "numbersOnly"]}
-                    value={this.state.economyDeduction}
-                    errorMessages={[
-                      "this field is required",
-                      "Only numbers are allowed here",
-                    ]}
-                    onChange={(e) => this.onHandleChange(e)}
-                  />
-                </Tooltip>
+                <TextValidator
+                  margin="normal"
+                  label="Economy Price"
+                  name="economyPrice"
+                  validators={["required", "numbersOnly"]}
+                  value={this.state.economyTicket.price}
+                  errorMessages={[
+                    "this field is required",
+                    "Only numbers are allowed here",
+                  ]}
+                  onChange={(e) => this.onHandleChange(e)}
+                />
               </Col>
-              <Col md="auto">
-                <Tooltip
-                  title="Price * 1.05 - Business Deduction = Business Ticket Price"
-                  interactive
-                >
-                  <TextValidator
-                    margin="normal"
-                    label="Business Deduction"
-                    name="businessDeduction"
-                    validators={["required", "numbersOnly"]}
-                    value={this.state.businessDeduction}
-                    errorMessages={[
-                      "this field is required",
-                      "Only numbers are allowed here",
-                    ]}
-                    onChange={(e) => this.onHandleChange(e)}
-                  />
-                </Tooltip>
-              </Col>
-
               <Col md="auto">
                 <TextValidator
                   margin="normal"
-                  label="Price"
-                  name="price"
-                  validators={["required", "Only numbers are allowed here"]}
-                  value={this.state.price}
+                  label="Business Price"
+                  name="businessPrice"
+                  validators={["required", "numbersOnly"]}
+                  value={this.state.businessTicket.price}
                   errorMessages={[
                     "this field is required",
                     "Only numbers are allowed here",
@@ -252,15 +245,31 @@ class EditModal extends Component {
                 />
               </Col>
               <Col md="auto">
-                <TextValidator
+                <SelectValidator
                   margin="normal"
                   label="Destination"
                   name="destination"
                   validators={["required"]}
-                  value={this.state.destination}
+                  value={this.state.destination.destinationId}
                   errorMessages={["this field is required"]}
                   onChange={(e) => this.onHandleChange(e)}
-                />
+                >
+                  {Array.from(this.props.airline.airlineDestinations).length ===
+                  0 ? (
+                    <div />
+                  ) : (
+                    this.props.airline.airlineDestinations.map(
+                      (airlineDestination) => (
+                        <MenuItem
+                          key={airlineDestination.destinationId}
+                          value={airlineDestination.destination.destinationId}
+                        >
+                          {airlineDestination.destination.title}
+                        </MenuItem>
+                      )
+                    )
+                  )}
+                </SelectValidator>
               </Col>
               <Col md="auto">
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -350,7 +359,7 @@ class EditModal extends Component {
   }
 }
 const mapStateToProps = (state) => ({
-  airlines: state.flightReducer.allAirlines,
+  airlines: state.flightReducer.airlines,
 });
 const mapDispatchToProps = (dispatch) => ({
   onEditAirline: (airline) => dispatch(editAirline(airline)),
@@ -359,4 +368,4 @@ const mapDispatchToProps = (dispatch) => ({
   onAddAirline: (airline) => dispatch(addAirline(airline)),
 });
 
-export default connect(null, mapDispatchToProps)(EditModal);
+export default connect(mapStateToProps, mapDispatchToProps)(EditModal);

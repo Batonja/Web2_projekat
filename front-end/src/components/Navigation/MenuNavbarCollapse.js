@@ -7,6 +7,7 @@
 import React from "react";
 //import { Button } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
+import { connect } from "react-redux";
 import HomeIcon from "@material-ui/icons/Home";
 import IconButton from "@material-ui/core/IconButton";
 import DrowerNavbarCollapsed from "./DrowerNavbarCollapsed";
@@ -61,6 +62,7 @@ const styles = (theme) => ({
 
 const MenuNavbarCollapse = (props) => {
   const { classes } = props;
+
   return (
     <div className={classes.menu}>
       <div className={classes.buttonCollapseMenu}>
@@ -108,7 +110,7 @@ const MenuNavbarCollapse = (props) => {
           <Link
             variant="body2"
             color="inherit"
-            to={"/cars-admin-home"}
+            to={"/carsadminhome"}
             component={RouterLink}
             style={{ margin: "20px", itemAlign: "center" }}
           >

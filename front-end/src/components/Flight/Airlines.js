@@ -11,43 +11,46 @@ import { Collapse } from "react-collapse";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import { withStyles } from "@material-ui/core/styles";
+import getAirlines from "../../actions/Flight/getAirlines";
+import Spinner from "react-bootstrap/Spinner";
 
-const styles = theme => ({
+const styles = (theme) => ({
   componentServicesContainer: {
     width: "100%",
     height: "100%",
     display: "flex",
     flexDirection: "column",
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     textAlign: "center",
   },
 
   tabeleServices: {
     width: "80%",
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     textAlign: "center",
     beckgroungColor: "#3F51B5",
-    color: "#3F51B5"
+    color: "#3F51B5",
   },
   modalHeaders: {
     textAlign: "left",
     fontWeight: "bold",
-    color: "#ff4d07"
+    color: "#ff4d07",
   },
-
-})
-
-
+});
 
 class Airlines extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      openedCollapsed: []
+      openedCollapsed: [],
     };
+  }
+
+  componentDidMount() {
+    this.props.OnGetAirlines();
   }
 
   isOpened(index) {
@@ -59,7 +62,7 @@ class Airlines extends Component {
   openClose(index) {
     if (this.state.openedCollapsed.includes(index)) {
       var filteredArray = this.state.openedCollapsed.filter(
-        item => item !== index
+        (item) => item !== index
       );
       this.setState({ openedCollapsed: filteredArray });
       return;
@@ -67,23 +70,23 @@ class Airlines extends Component {
     this.setState({ openedCollapsed: [...this.state.openedCollapsed, index] });
   }
   render() {
-    const { classes } = this.props
+    const { classes } = this.props;
 
-    return Array.from(this.props.airlines).length !== 0 ? (
+    return this.props.loading ? (
+      <Spinner animation="border" />
+    ) : Array.from(this.props.airlines).length !== 0 ? (
       <div className={classes.componentServicesContainer}>
         <Table className={classes.tabeleServices}>
-
           <TableHead>
             <TableCell>
-              <h3 style={{ fontWeight: "bold", }}>    {Array.from(Object.keys(this.props.airlines[0]))[1]}</h3>
+              <h3 style={{ fontWeight: "bold" }}> Airline Title</h3>
             </TableCell>
-           
 
             <TableCell>
-              <h3 style={{ fontWeight: "bold", }}>    {Array.from(Object.keys(this.props.airlines[0]))[2]}</h3>
+              <h3 style={{ fontWeight: "bold" }}> Address</h3>
             </TableCell>
             <TableCell>
-              <h3 style={{ fontWeight: "bold", }}>  Description </h3>
+              <h3 style={{ fontWeight: "bold" }}> Description </h3>
             </TableCell>
 
             <TableCell></TableCell>
@@ -93,15 +96,23 @@ class Airlines extends Component {
             return (
               <TableBody>
                 <TableRow onClick={() => this.openClose(i)}>
-                  <TableCell><h6 className={classes.modalHeaders}>{airline.Title}</h6></TableCell>
-                  <TableCell><h6 className={classes.modalHeaders}>{airline.Address}</h6></TableCell>
-                  <TableCell><h6 className={classes.modalHeaders}>{airline.Description}</h6></TableCell>
+                  <TableCell>
+                    <h6 className={classes.modalHeaders}>{airline.title}</h6>
+                  </TableCell>
+                  <TableCell>
+                    <h6 className={classes.modalHeaders}>{airline.address}</h6>
+                  </TableCell>
+                  <TableCell>
+                    <h6 className={classes.modalHeaders}>
+                      {airline.description}
+                    </h6>
+                  </TableCell>
                   <TableCell>
                     {this.isOpened(i) ? (
                       <KeyboardArrowUpIcon />
                     ) : (
-                        <KeyboardArrowDownIcon />
-                      )}
+                      <KeyboardArrowDownIcon />
+                    )}
                   </TableCell>
                 </TableRow>
 
@@ -109,15 +120,13 @@ class Airlines extends Component {
                   <TableRow>
                     Destinations:{" "}
                     <List>
-                      {Array.from(this.props.airlines[i].Destinations).map(
-                        (destination, i) => {
-                          return(
-                            <ListItem>
-                            {destination}
-                          </ListItem>
-                          )
-                        }
-                      )}
+                      {this.props.airlines[i].airlineDestinations
+                        ? Array.from(
+                            this.props.airlines[i].airlineDestinations
+                          ).map((destination, i) => {
+                            return <ListItem>{destination.title}</ListItem>;
+                          })
+                        : ""}
                     </List>{" "}
                   </TableRow>
                 </Collapse>
@@ -127,13 +136,21 @@ class Airlines extends Component {
         </Table>
       </div>
     ) : (
-        ""
-      );
+      ""
+    );
   }
 }
 
-const mapStateToProps = state => ({
-  airlines: state.flightReducer.airlines
+const mapStateToProps = (state) => ({
+  airlines: state.flightReducer.airlines,
+  loading: state.loadingReducer.loading,
 });
 
-export default connect(mapStateToProps)(withStyles(styles)(Airlines));
+const mapDispatchToProps = (dispatch) => ({
+  OnGetAirlines: () => dispatch(getAirlines()),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(styles)(Airlines));

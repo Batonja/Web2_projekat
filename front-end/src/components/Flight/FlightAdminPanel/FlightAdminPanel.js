@@ -13,7 +13,7 @@ import AddFligthForm from "./AddFlightForm";
 import getAirlines from "../../../actions/Flight/getAirlines";
 import AddDestinationForm from "./AddDestinationForm";
 import getDestinations from "../../../actions/Flight/getDestinations";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import Spinner from "react-bootstrap/Spinner";
 
 const modalStyle = { "z-index": "1200" };
 
@@ -21,7 +21,6 @@ class FlightAdminPanel extends Component {
   constructor(props) {
     super(props);
     this.props.onGetFlightLuggage();
-    this.props.onGetAirlines();
     this.props.onGetDestinations();
     this.state = {
       openedModal: -1,
@@ -30,6 +29,10 @@ class FlightAdminPanel extends Component {
       openedModalAddFlight: false,
       openedModalAddDestination: false,
     };
+  }
+
+  componentDidMount() {
+    this.props.onGetAirlines();
   }
 
   openCloseAddDestinationModal = () => {
@@ -58,7 +61,9 @@ class FlightAdminPanel extends Component {
   };
   render() {
     return this.props.loading ? (
-      <CircularProgress />
+      <div>
+        <Spinner animation="border" />
+      </div>
     ) : (
       <div className="flightsTable">
         <h2 className="flightsTableTitle">Panel</h2>
@@ -177,7 +182,7 @@ class FlightAdminPanel extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  airlines: state.flightReducer.allAirlines,
+  airlines: state.flightReducer.airlines,
   flightLuggage: state.flightReducer.flightLuggage,
   loading: state.loadingReducer.loading,
   allDestinations: state.flightReducer.allDestinations,

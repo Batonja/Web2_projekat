@@ -16,6 +16,7 @@ export default function googleSignIn(user, history) {
         Address: "Adress",
         FirstName: user.name,
         LastName: "LastName",
+        TokenId: user.tokenId,
       })
       .then((response) => {
         return response.data.errorCode === 200

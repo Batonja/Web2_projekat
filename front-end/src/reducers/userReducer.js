@@ -4,6 +4,7 @@ import { LOG_OFF } from "../actions/User/logOff";
 import { ORDER_FLIGHT } from "../actions/User/orderFlight";
 import { CAR_ORDER_TO_PROFILE } from "../actions/User/carOrderToProfile";
 import { CANCEL_ALL_FLIGHT_ORDERS } from "../actions/User/cancelAllFlightOrders";
+import { GET_USERS } from "../actions/User/getUsers";
 import cloneDeep from "lodash/cloneDeep";
 import { ADD_FRIEND_TO_LIST } from "../actions/User/addFriend";
 
@@ -14,8 +15,14 @@ export const ROLES = {
   USER: "user",
 };
 
+let user = "";
+
+try {
+  user = JSON.parse(localStorage.getItem("LoggedInUser"));
+} catch (exception) {}
+
 const initialState = {
-  LoggedInUser: {},
+  LoggedInUser: user ? user : "",
   AllUsers: [
     {
       Id: 1,
@@ -96,6 +103,9 @@ const initialState = {
 
 export default function userReducer(state = initialState, { type, payload }) {
   switch (type) {
+    case GET_USERS:
+      return { ...state, AllUsers: payload };
+
     case CANCEL_ALL_FLIGHT_ORDERS:
       var allUsersCopy = cloneDeep(state.AllUsers);
       for (
@@ -167,17 +177,13 @@ export default function userReducer(state = initialState, { type, payload }) {
         AllUsers: [...state.AllUsers, payload],
       };
     case SIGN_IN:
-      for (var index = 0; index < state.AllUsers.length; index++) {
-        if (
-          state.AllUsers[index].Email === payload.email &&
-          state.AllUsers[index].Password === payload.password
-        ) {
-          return { ...state, LoggedInUser: state.AllUsers[index] };
-        }
-      }
-      break;
+      var serializedUser = JSON.stringify(payload);
+      localStorage.setItem("LoggedInUser", serializedUser);
+      return { ...state, LoggedInUser: payload };
+
     case LOG_OFF:
-      return { ...state, LoggedInUser: { FirstName: false } };
+      localStorage.removeItem("LoggedInUser");
+      return { ...state, LoggedInUser: "" };
     case CAR_ORDER_TO_PROFILE:
       for (var userIndex = 0; userIndex < state.AllUsers.length; userIndex++) {
         if (state.AllUsers[userIndex].Email === payload.userEmail) {

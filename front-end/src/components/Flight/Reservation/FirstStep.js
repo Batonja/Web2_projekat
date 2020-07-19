@@ -83,7 +83,7 @@ class FirstStep extends Component {
             <Col md="auto" className="flightItem">
               <TextField
                 label="Changeovers"
-                value={this.props.flight.ChangeOvers.toString()}
+                value={this.props.flight.numOfChangeovers.toString()}
               />
             </Col>
           </Row>

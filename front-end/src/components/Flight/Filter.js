@@ -31,11 +31,16 @@ class Filter extends Component {
       indexOfAirline < this.props.airlines.length;
       indexOfAirline++
     ) {
-      const airlineOption = {
-        value: this.props.airlines[indexOfAirline].Id,
-        label: this.props.airlines[indexOfAirline].Title,
-      };
-      airlinesOptions.push(airlineOption);
+      if (
+        this.props.airlines[indexOfAirline].flights &&
+        this.props.airlines[indexOfAirline].flights.length > 0
+      ) {
+        const airlineOption = {
+          value: this.props.airlines[indexOfAirline].airlineId,
+          label: this.props.airlines[indexOfAirline].title,
+        };
+        airlinesOptions.push(airlineOption);
+      }
     }
     this.setState({ airlinesOptions: airlinesOptions });
   }

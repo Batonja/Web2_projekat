@@ -21,13 +21,13 @@ export default function signIn(email, password, history) {
       .then((response) => {
         return response.data.errorCode === 200
           ? (toast.dark("You are signed in successfully"),
-            history.push("/"),
-            dispatch({ type: SIGN_IN, payload: response.data.value }))
+            dispatch({ type: SIGN_IN, payload: response.data.value }),
+            history.push("/"))
           : toast.error("Sign in error: " + response.data.description);
       })
       .catch((error) => toast.error(error.message))
       .then(dispatch(finishedLoading()));
 
-    dispatch({ type: SIGN_IN, payload: { email: email, password: password } });
+    /* dispatch({ type: SIGN_IN, payload: { email: email, password: password } });*/
   };
 }

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Col from "react-bootstrap/Col";
 import TextField from "@material-ui/core/TextField";
 import { parseDateToString } from "../Common/Helpers/dateHelper";
+import { getSeatPrice } from "../Common/Helpers/ticketPriceHelpers";
 class FlightBasicInformation extends Component {
   render() {
     var flightHoursSplit = String(this.props.flight.tripLength).split(".");
@@ -51,18 +52,20 @@ class FlightBasicInformation extends Component {
                 value={parseDateToString(this.props.flight.arrivalDate)}
               ></TextField>
             </Col>
+
             <Col md="auto" className="flightItem">
               <TextField
                 label="Economy"
-                value={this.props.flight.tickets[0].price}
+                value={this.props.flight.tickets[1].price}
               ></TextField>
             </Col>
             <Col md="auto" className="flightItem">
               <TextField
                 label="Business"
-                value={this.props.flight.tickets[1].price}
+                value={this.props.flight.tickets[0].price}
               ></TextField>
             </Col>
+
             <Col md="auto" className="flightItem">
               <TextField
                 label="Trip Length"
