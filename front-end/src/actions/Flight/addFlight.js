@@ -9,16 +9,7 @@ export default function addFlight(flight) {
   return (dispatch) => {
     dispatch(loadingData());
     axios
-      .post(ConnectTo + "airline/addFlight", {
-        ToDestionation: flight.toDestination,
-        FromDestination: flight.fromDestination,
-        DepartureDate: flight.departureDate,
-        ArrivalDate: flight.arrivalDate,
-        TripLength: flight.tripLength,
-        NumOfChangeovers: flight.numOfChangeovers,
-        Airline: flight.airline,
-        Tickets: flight.tickets,
-      })
+      .post(ConnectTo + "airline/addFlight", flight)
       .then((response) => {
         return response.data.errorCode === 200
           ? (dispatch({ type: ADD_FLIGHT, payload: response.data }),

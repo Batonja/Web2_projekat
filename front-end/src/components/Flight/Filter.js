@@ -4,6 +4,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Select from "react-select";
 import { connect } from "react-redux";
+import MenuItem from "@material-ui/core/MenuItem";
 import Button from "@material-ui/core/Button";
 import filter from "../../actions/Flight/filter";
 import loadingData from "../../actions/Loading/loadingData";
@@ -12,19 +13,56 @@ class Filter extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      airlinesOptions: [],
       tripLengthOptions: [
-        { value: 0, label: "< 1 Hour" },
+        { value: -1, label: "< 1 Hour" },
         { value: 1, label: "1-5 Hours" },
-        { value: 2, label: "> 5 Hours" },
+        { value: 5, label: "> 5 Hours" },
       ],
       selectedAirlines: [],
-      selectedTripLenghts: [],
+      selectedTripLength: -1,
     };
   }
 
-  componentDidMount() {
-    var airlinesOptions = [];
+  onHandleSubmit = (selectedAirlines, selectedTripLength) => {
+    var filterObject = { Airlines: [], TripLengthOption: {} };
+
+    for (
+      var selectedAirlineIndex = 0;
+      selectedAirlineIndex < selectedAirlines.length;
+      selectedAirlineIndex++
+    ) {
+      var Airline = {
+        AirlineId: selectedAirlines[selectedAirlineIndex].value,
+        Title: selectedAirlines[selectedAirlineIndex].label,
+      };
+      filterObject.Airlines.push(Airline);
+    }
+
+    filterObject.TripLengthOption = selectedTripLength.value;
+
+    this.props.onApplyFilters(filterObject);
+  };
+
+  onChangeTripLengthOptions = (event) => {
+    if (event === null) {
+      this.setState({ selectedTripLength: "" });
+      event = "";
+      return;
+    }
+    this.setState({ selectedTripLength: event });
+    this.onHandleSubmit(this.state.selectedAirlines, event);
+  };
+
+  onChangeAirlinesOptions = (event) => {
+    if (event === null) {
+      this.setState({ selectedAirlines: [] });
+      event = "";
+    }
+    this.setState({ selectedAirlines: event });
+    this.onHandleSubmit(event, this.state.selectedTripLength);
+  };
+  render() {
+    var airlineOptions = [];
 
     for (
       var indexOfAirline = 0;
@@ -39,34 +77,10 @@ class Filter extends Component {
           value: this.props.airlines[indexOfAirline].airlineId,
           label: this.props.airlines[indexOfAirline].title,
         };
-        airlinesOptions.push(airlineOption);
+        airlineOptions.push(airlineOption);
       }
     }
-    this.setState({ airlinesOptions: airlinesOptions });
-  }
 
-  onHandleSubmit = (selectedAirlines, selectedTripLenghts) => {
-    this.props.onApplyFilters(selectedAirlines, selectedTripLenghts);
-  };
-
-  onChangeTripLengthOptions = (event) => {
-    if (event === null) {
-      this.setState({ selectedTripLenghts: [] });
-      event = "";
-    }
-    this.setState({ selectedTripLenghts: event });
-    this.onHandleSubmit(this.state.selectedAirlines, event);
-  };
-
-  onChangeAirlinesOptions = (event) => {
-    if (event === null) {
-      this.setState({ selectedAirlines: [] });
-      event = "";
-    }
-    this.setState({ selectedAirlines: event });
-    this.onHandleSubmit(event, this.state.selectedTripLenghts);
-  };
-  render() {
     return (
       <Container
         style={{
@@ -88,7 +102,7 @@ class Filter extends Component {
               closeMenuOnSelect={false}
               onChange={(e) => this.onChangeAirlinesOptions(e)}
               isMulti
-              options={this.state.airlinesOptions}
+              options={airlineOptions}
             />
           </Col>
         </Row>
@@ -98,10 +112,10 @@ class Filter extends Component {
             <Select
               placeholder="Trip Length"
               closeMenuOnSelect={false}
+              value={this.state.selectedTripLength}
               onChange={(e) => this.onChangeTripLengthOptions(e)}
-              isMulti
               options={this.state.tripLengthOptions}
-            />
+            ></Select>
           </Col>
         </Row>
         <br />

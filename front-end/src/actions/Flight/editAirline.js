@@ -9,7 +9,7 @@ export const EDIT_AIRLINE = "flight:editAirline";
 export default function editAirline(airline) {
   return (dispatch) => {
     dispatch(loadingData());
-    alert(airline);
+
     axios
       .post(ConnectTo + "airline/EditAirline", airline)
       .then((response) => {

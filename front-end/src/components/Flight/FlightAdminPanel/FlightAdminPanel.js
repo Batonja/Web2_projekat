@@ -133,6 +133,7 @@ class FlightAdminPanel extends Component {
         </Modal>
         <br />
         <br />
+
         {this.props.airlines === undefined
           ? ""
           : Array.from(this.props.airlines).map((airline, index) => {

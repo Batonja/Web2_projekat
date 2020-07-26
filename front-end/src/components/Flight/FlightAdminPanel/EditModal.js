@@ -239,7 +239,7 @@ class EditModal extends Component {
                   label="From"
                   name="from"
                   validators={["required"]}
-                  value={this.state.from}
+                  value={this.state.from.title}
                   errorMessages={["this field is required"]}
                   onChange={(e) => this.onHandleChange(e)}
                 />
@@ -258,7 +258,7 @@ class EditModal extends Component {
                   0 ? (
                     <div />
                   ) : (
-                    this.props.airline.airlineDestinations.map(
+                    Array.from(this.props.airline.airlineDestinations).map(
                       (airlineDestination) => (
                         <MenuItem
                           key={airlineDestination.destinationId}

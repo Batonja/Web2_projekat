@@ -104,16 +104,16 @@ class AddFlightForm extends Component {
     var economyTicket = { Type: 1, Price: this.state.priceEconomy };
     tickets.push(businessTicket, economyTicket);
     var Flight = {
-      toDestination: this.state.selectedToDestination,
+      ToDestination: this.state.selectedToDestination,
 
       fromDestination: this.state.selectedFromDestination,
-      departureDate: this.state.departureDate,
-      arrivalDate: this.state.arrivalDate,
-      tripLength: this.state.tripLength,
-      price: this.state.price,
-      numOfChangeovers: this.state.numOfChangeOvers,
-      airline: this.state.selectedAirline,
-      tickets: tickets,
+      DepartureDate: new Date(this.state.departureDate),
+      ArrivalDate: new Date(this.state.arrivalDate),
+      TripLength: this.state.tripLength,
+      Price: this.state.price,
+      NumOfChangeovers: this.state.numOfChangeOvers,
+      Airline: this.state.selectedAirline,
+      Tickets: tickets,
     };
 
     this.props.onAddFlight(Flight);

@@ -28,7 +28,7 @@ class Search extends Component {
   }
 
   componentDidMount() {
-    this.getDestinations();
+    //this.getDestinations();
 
     this.setState({
       departureDate: new Date(),
@@ -50,6 +50,14 @@ class Search extends Component {
     return dateString;
   };
 
+  doesArrayContainsObject = (array, object) => {
+    for (var arrayIndex = 0; arrayIndex < array.length; arrayIndex++) {
+      if (array[arrayIndex].destinationId === object) return true;
+    }
+
+    return false;
+  };
+  /*
   getDestinations() {
     var sortedDestinations = [];
 
@@ -80,21 +88,21 @@ class Search extends Component {
 
     this.setState({ destinations: sortedDestinations });
   }
-
+*/
   onHandleSubmit = (event) => {
     event.preventDefault();
-    var arrivalDate = this.parseDate(this.state.arrivalDate);
-    var departureDate = this.parseDate(this.state.departureDate);
 
-    this.props.onSearch(
-      [
+    var searchObject = {
+      PriceRange: [
         this.state.sliderValue[0] * this.state.sliderScaleFactor,
         this.state.sliderValue[1] * this.state.sliderScaleFactor,
       ],
-      this.state.destination,
-      arrivalDate,
-      departureDate
-    );
+      Destination: this.state.destination,
+      ArrivalDate: new Date(this.state.arrivalDate),
+      DepartureDate: new Date(this.state.departureDate),
+    };
+
+    this.props.onSearch(searchObject);
   };
   getTodaysDate = () => {
     var date =
@@ -133,17 +141,41 @@ class Search extends Component {
       e.target.id.includes("auto-complete-destinations") ||
       e.target.id === ""
     ) {
-      this.setState({ destination: e.target.textContent });
+      if (newValue) newValue.airlineDestinations = [];
+      this.setState({ destination: newValue });
       return;
     }
 
     this.setState({ [e.target.name]: e.target.value });
   };
   render() {
-    const defaultProps = {
-      options: this.state.destinations,
-      getOptionLabel: (option) => option,
-    };
+    var flightDestinations = [];
+
+    for (
+      let airlineIndex = 0;
+      airlineIndex < this.props.airlines.length;
+      airlineIndex++
+    ) {
+      if (this.props.airlines[airlineIndex].flights) {
+        for (
+          let flightIndex = 0;
+          flightIndex < this.props.airlines[airlineIndex].flights.length;
+          flightIndex++
+        ) {
+          if (
+            !this.doesArrayContainsObject(
+              flightDestinations,
+              this.props.airlines[airlineIndex].flights[flightIndex]
+                .toDestination.destinationId
+            )
+          )
+            flightDestinations.push(
+              this.props.airlines[airlineIndex].flights[flightIndex]
+                .toDestination
+            );
+        }
+      }
+    }
 
     return (
       <div className="searchForm">
@@ -174,12 +206,12 @@ class Search extends Component {
 
             <div className="searchFormCell">
               <Autocomplete
-                {...defaultProps}
+                options={flightDestinations}
                 id="auto-complete-destinations"
                 autoComplete
                 name="destination"
                 onChange={this.onHandleChange}
-                OnClea
+                getOptionLabel={(option) => option.title}
                 includeInputInList
                 renderInput={(params) => (
                   <TextField

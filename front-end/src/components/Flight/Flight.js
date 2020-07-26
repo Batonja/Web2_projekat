@@ -7,7 +7,7 @@ import { withStyles } from "@material-ui/core/styles";
 import Filter from "./Filter";
 import { connect } from "react-redux";
 import { ROLES } from "../../common/constants";
-import Spinner from "react-bootstrap/Spinner";
+
 import getAirlines from "../../actions/Flight/getAirlines";
 const styles = (theme) => ({
   button: {
@@ -28,45 +28,39 @@ class Flight extends Component {
     const classes = this.props;
     return (
       <div>
-        {this.props.loading ? (
-          <Spinner animation="border" />
-        ) : (
-          <div>
-            <div className="flightTop">
-              <div style={{ display: "inline-block" }}>
-                <Search />
-                <br />
-                <Filter />
-                <br />
-                {this.props.loggedInUser.Role === ROLES.FLIGHT_ADMIN ? (
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    style={{ width: "400px" }}
-                    to="/flights/admin"
-                    component={Link}
-                  >
-                    Flight Admin Panel
-                  </Button>
-                ) : (
-                  ""
-                )}
-              </div>
-              <FlightsDisplay />
-            </div>
-
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              to="/flights/airlines"
-              component={Link}
-            >
-              Airlines
-            </Button>
+        <div className="flightTop">
+          <div style={{ display: "inline-block" }}>
+            <Search />
+            <br />
+            <Filter />
+            <br />
+            {this.props.loggedInUser.Role === ROLES.FLIGHT_ADMIN ? (
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                style={{ width: "400px" }}
+                to="/flights/admin"
+                component={Link}
+              >
+                Flight Admin Panel
+              </Button>
+            ) : (
+              ""
+            )}
           </div>
-        )}
+          <FlightsDisplay />
+        </div>
+
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.button}
+          to="/flights/airlines"
+          component={Link}
+        >
+          Airlines
+        </Button>
       </div>
     );
   }
@@ -74,7 +68,6 @@ class Flight extends Component {
 
 const mapStateToProps = (state) => ({
   loggedInUser: state.userReducer.LoggedInUser,
-  loading: state.loadingReducer.loading,
 });
 
 const mapDispatchToProps = (dispatch) => ({
