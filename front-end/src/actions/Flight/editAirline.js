@@ -16,7 +16,13 @@ export default function editAirline(airline) {
         return response.data.errorCode === 200
           ? (dispatch({ type: EDIT_AIRLINE, payload: response.data }),
             dispatch(finishedLoading()))
-          : "";
+          : (dispatch(finishedLoading()),
+            toast.error(
+              "Error: " +
+                response.data.errorCode +
+                " " +
+                response.data.description
+            ));
       })
       .catch((exception) => {
         toast.error("Error while trying to edit airline: " + exception.message);

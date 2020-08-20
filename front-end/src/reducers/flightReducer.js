@@ -198,7 +198,7 @@ export default function flightReducer(state = initialState, { type, payload }) {
 
     case ADD_AIRLINE:
       var airlines = state.allAirlines;
-      airlines.push(payload.airline);
+      airlines.push(payload);
       return { ...state, allAirlines: airlines };
 
     case EDIT_AIRLINE:

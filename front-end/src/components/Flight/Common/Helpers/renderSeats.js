@@ -11,11 +11,11 @@ export function renderSeats(seats) {
       <EventSeatIcon
         value={seatId}
         color={
-          seats[index] === -1
+          seats[index].seatState === -1
             ? "action"
-            : seats[index] === 0
+            : seats[index].seatState === 0
             ? "secondary"
-            : seats[index] === 2
+            : seats[index].seatState === 2
             ? "disabled"
             : "primary"
         }
@@ -51,22 +51,22 @@ export function renderSeatsWithMouseDown(seats, mouseDownFunction) {
       <EventSeatIcon
         value={seatId}
         color={
-          seats[index] === -1
+          seats[index].seatState === -1
             ? "action"
-            : seats[index] === 0
+            : seats[index].seatState === 0
             ? "secondary"
-            : seats[index] === 2
+            : seats[index].seatState === 2
             ? "disabled"
             : "primary"
         }
         onMouseDown={(e) =>
           mouseDownFunction(
             e,
-            seats[seatId] === -1
+            seats[seatId].seatState === -1
               ? "action"
-              : seats[seatId] === 0
+              : seats[seatId].seatState === 0
               ? "secondary"
-              : seats[seatId] === 2
+              : seats[seatId].seatState === 2
               ? "disabled"
               : "primary",
             seatId

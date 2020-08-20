@@ -20,11 +20,13 @@ class FirstStep extends Component {
       numReservedSeats: 0,
       invalidForm: false,
     };
+
+    this.onHandleAddSeat = this.onHandleAddSeat.bind(this);
   }
 
   componentDidMount() {
     this.setState({
-      seats: Array.from(this.props.flight.Seats),
+      seats: Array.from(this.props.flight.seats),
     });
   }
 
@@ -32,11 +34,11 @@ class FirstStep extends Component {
     var seats = this.state.seats;
     var numReserved = this.state.numReservedSeats;
     if (event.button === 0) {
-      if (seats[seatId] === 0) {
-        seats[seatId] = 1;
+      if (seats[seatId].seatState === 0) {
+        seats[seatId].seatState = 1;
         numReserved--;
-      } else if (seats[seatId] === 1) {
-        seats[seatId] = 0;
+      } else if (seats[seatId].seatState === 1) {
+        seats[seatId].seatState = 0;
         numReserved++;
       }
 

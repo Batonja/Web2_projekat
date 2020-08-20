@@ -97,24 +97,36 @@ class EditModal extends Component {
     }
 
     var airline = {
-      Id: this.props.airline.Id,
-      Title: this.state.airlineTitle,
-      Address: this.state.airlineAddress,
-      Description: this.state.airlineDescription,
-
-      Flight: {
-        FlightId: this.props.flight.Id,
-        FromDestination: this.state.from.title,
-        ToDestination: this.state.destination.title,
-        DepartureDate: this.state.departure,
-        ArrivalDate: this.state.arrival,
-        TripLength: this.state.tripLength,
-        Tickets: [this.state.businessTicket, this.state.economyTicket],
-        Seats: seatObjects,
-        Price: this.state.price,
-      },
+      airlineId: this.props.airline.airlineId,
+      title: this.state.airlineTitle,
+      address: this.state.airlineAddress,
+      description: this.state.airlineDescription,
+      flights: this.props.airline.flights,
     };
+    var Flight = {
+      flightId: this.props.flight.flightId,
+      fromDestination: this.state.from,
+      toDestination: this.state.destination,
+      departureDate: this.state.departure,
+      arrivalDate: this.state.arrival,
+      tripLength: this.state.tripLength,
+      tickets: [this.state.businessTicket, this.state.economyTicket],
+      seats: seatObjects,
+    };
+    var flightIndex = -1;
 
+    for (
+      var indexOfFlight = 0;
+      indexOfFlight < this.props.airline.flights.length;
+      indexOfFlight++
+    ) {
+      if (
+        this.props.airline.flights[indexOfFlight].flightId ===
+        this.props.flight.flightId
+      )
+        flightIndex = indexOfFlight;
+    }
+    airline.flights[flightIndex] = Flight;
     if (this.state.mode === "EDIT") this.props.onEditAirline(airline);
     else this.props.onAddAirline(airline);
   }
@@ -176,6 +188,9 @@ class EditModal extends Component {
                   value={this.state.airlineTitle}
                   errorMessages={["this field is required"]}
                   onChange={(e) => this.onHandleChange(e)}
+                  InputProps={{
+                    readOnly: true,
+                  }}
                 />
               </Col>
 
@@ -188,6 +203,9 @@ class EditModal extends Component {
                   value={this.state.airlineAddress}
                   errorMessages={["this field is required"]}
                   onChange={(e) => this.onHandleChange(e)}
+                  InputProps={{
+                    readOnly: true,
+                  }}
                 />
               </Col>
               <Col md="auto">
@@ -201,6 +219,9 @@ class EditModal extends Component {
                     name="airlineDescription"
                     value={this.state.airlineDescription}
                     onChange={(e) => this.onHandleChange(e)}
+                    InputProps={{
+                      readOnly: true,
+                    }}
                   />
                 </div>
               </Col>
@@ -234,43 +255,55 @@ class EditModal extends Component {
               </Col>
 
               <Col md="auto">
-                <TextValidator
+                <SelectValidator
                   margin="normal"
                   label="From"
                   name="from"
                   validators={["required"]}
-                  value={this.state.from.title}
-                  errorMessages={["this field is required"]}
-                  onChange={(e) => this.onHandleChange(e)}
-                />
-              </Col>
-              <Col md="auto">
-                <SelectValidator
-                  margin="normal"
-                  label="Destination"
-                  name="destination"
-                  validators={["required"]}
-                  value={this.state.destination.destinationId}
+                  value={this.state.from}
                   errorMessages={["this field is required"]}
                   onChange={(e) => this.onHandleChange(e)}
                 >
-                  {Array.from(this.props.airline.airlineDestinations).length ===
-                  0 ? (
-                    <div />
-                  ) : (
-                    Array.from(this.props.airline.airlineDestinations).map(
-                      (airlineDestination) => (
-                        <MenuItem
-                          key={airlineDestination.destinationId}
-                          value={airlineDestination.destination.destinationId}
-                        >
-                          {airlineDestination.destination.title}
-                        </MenuItem>
-                      )
+                  {Array.from(this.props.airline.airlineDestinations).map(
+                    (airlineDestination, index) => (
+                      <MenuItem
+                        key={index}
+                        value={airlineDestination.destination}
+                      >
+                        {airlineDestination.destination.title}
+                      </MenuItem>
                     )
                   )}
                 </SelectValidator>
               </Col>
+
+              {Array.from(this.props.airline.airlineDestinations).length ===
+              0 ? (
+                ""
+              ) : (
+                <Col md="auto">
+                  <SelectValidator
+                    margin="normal"
+                    label="Destination"
+                    name="destination"
+                    validators={["required"]}
+                    value={this.state.destination}
+                    errorMessages={["this field is required"]}
+                    onChange={(e) => this.onHandleChange(e)}
+                  >
+                    {Array.from(this.props.airline.airlineDestinations).map(
+                      (airlineDestination, index) => (
+                        <MenuItem
+                          key={index}
+                          value={airlineDestination.destination}
+                        >
+                          {airlineDestination.destination.title}
+                        </MenuItem>
+                      )
+                    )}
+                  </SelectValidator>
+                </Col>
+              )}
               <Col md="auto">
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                   <DatePicker

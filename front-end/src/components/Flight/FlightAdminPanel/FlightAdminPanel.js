@@ -6,6 +6,8 @@ import FlightBasicInformation from "../Preview/FlightBasicInformation";
 import { connect } from "react-redux";
 import Button from "@material-ui/core/Button";
 import Modal from "react-bootstrap/Modal";
+import TextField from "@material-ui/core/TextField";
+import { luggageTypes } from "../../../common/constants";
 import EditModal from "./EditModal";
 import AddAirlineForm from "./AddAirlineForm";
 import getFlightLuggage from "../../../actions/Flight/getFlightLuggage";
@@ -28,6 +30,7 @@ class FlightAdminPanel extends Component {
       openedModalAddAirline: false,
       openedModalAddFlight: false,
       openedModalAddDestination: false,
+      openedModalEditAirline: -1,
     };
   }
 
@@ -59,6 +62,45 @@ class FlightAdminPanel extends Component {
     e.preventDefault();
     this.setState({ openedModal: id });
   };
+
+  openAirlineEdit = (e, id) => {
+    e.preventDefault();
+    this.setState({ openedModalEditAirline: id });
+  };
+
+  closeAirlineEdit = () => {
+    this.setState({ openedModalEditAirline: -1 });
+  };
+
+  availableLuggageArrayToString = (availableFlightLuggage) => {
+    var retVal = "";
+
+    if (availableFlightLuggage === undefined) return "NONE";
+
+    for (var index = 0; index < availableFlightLuggage.length; index++) {
+      retVal +=
+        luggageTypes[
+          availableFlightLuggage[index].flightLuggage.flightLuggageType
+        ] + (index === availableFlightLuggage.length - 1 ? "" : ",");
+    }
+
+    return retVal;
+  };
+
+  airlineDestinationsArrayToString = (airlineDestinations) => {
+    var retVal = "";
+
+    if (airlineDestinations === undefined) return "NONE";
+
+    for (var index = 0; index < airlineDestinations.length; index++) {
+      retVal +=
+        airlineDestinations[index].destination.title +
+        (index === airlineDestinations.length - 1 ? "" : ",");
+    }
+
+    return retVal;
+  };
+
   render() {
     return this.props.loading ? (
       <div>
@@ -137,11 +179,112 @@ class FlightAdminPanel extends Component {
         {this.props.airlines === undefined
           ? ""
           : Array.from(this.props.airlines).map((airline, index) => {
-              {
-                return airline.flights === undefined
-                  ? ""
-                  : Array.from(airline.flights).map((flight, flightIndex) => {
-                      return (
+              return airline === null ? (
+                ""
+              ) : (
+                <Container fluid className="flightWrap">
+                  <Row className="flightPresentRow">
+                    <Col md="auto">
+                      <TextField
+                        label="Company"
+                        value={airline.title}
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                      ></TextField>
+                    </Col>
+                    <Col md="auto">
+                      <TextField
+                        label="Address"
+                        value={airline.address}
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                      ></TextField>
+                    </Col>
+                    <Col md="auto">
+                      <TextField
+                        label="Description"
+                        value={airline.description}
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                      ></TextField>
+                    </Col>
+                    <Col md="auto">
+                      <TextField
+                        label="Available Flight Luggage"
+                        value={this.availableLuggageArrayToString(
+                          airline.availableFlightLuggage
+                        )}
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                      ></TextField>
+                    </Col>
+
+                    <Col md="auto">
+                      <TextField
+                        label="Airline Destinations"
+                        value={this.airlineDestinationsArrayToString(
+                          airline.airlineDestinations
+                        )}
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                      ></TextField>
+                    </Col>
+
+                    <Col md="auto">
+                      <Button
+                        onClick={(e) =>
+                          this.openAirlineEdit(e, airline.airlineId)
+                        }
+                        variant="contained"
+                        color="primary"
+                      >
+                        Edit
+                      </Button>
+                      <Modal
+                        size="lg"
+                        onHide={(e) => this.closeAirlineEdit(e)}
+                        style={modalStyle}
+                        ariaHideApp={false}
+                        show={
+                          airline.airlineId ===
+                          this.state.openedModalEditAirline
+                            ? true
+                            : false
+                        }
+                        onRequestClose={(e) => this.closeAirlineEdit(e)}
+                      >
+                        <AddAirlineForm
+                          mode="EDIT"
+                          airline={airline}
+                          closeForm={this.openCloseAddAirlineModal}
+                          flightLuggage={this.props.flightLuggage}
+                          destinations={this.props.allDestinations}
+                        />
+                      </Modal>
+                    </Col>
+                  </Row>
+                  <br />
+                </Container>
+              );
+            })}
+
+        {this.props.airlines === undefined ? (
+          ""
+        ) : (
+          <div>
+            <h3>Flights</h3>
+
+            {Array.from(this.props.airlines).map((airline, index) => {
+              return airline.flights === undefined || airline.flights === null
+                ? ""
+                : Array.from(airline.flights).map((flight, flightIndex) => {
+                    return (
+                      <div>
                         <Container fluid className="flightWrap">
                           <Row className="flightPresentRow">
                             <FlightBasicInformation
@@ -150,7 +293,9 @@ class FlightAdminPanel extends Component {
                             />
                             <Col md="auto" className="flightItem">
                               <Button
-                                onClick={(e) => this.openModal(e, flight.Id)}
+                                onClick={(e) =>
+                                  this.openModal(e, flight.flightId)
+                                }
                                 variant="contained"
                                 color="primary"
                               >
@@ -162,21 +307,27 @@ class FlightAdminPanel extends Component {
                                 style={modalStyle}
                                 ariaHideApp={false}
                                 show={
-                                  flight.Id === this.state.openedModal
+                                  flight.flightId === this.state.openedModal
                                     ? true
                                     : false
                                 }
                                 onRequestClose={(e) => this.closeModal(e)}
                               >
-                                <EditModal flight={flight} airline={airline} />
+                                <EditModal
+                                  mode="EDIT"
+                                  flight={flight}
+                                  airline={airline}
+                                />
                               </Modal>
                             </Col>
                           </Row>
                         </Container>
-                      );
-                    });
-              }
+                      </div>
+                    );
+                  });
             })}
+          </div>
+        )}
       </div>
     );
   }

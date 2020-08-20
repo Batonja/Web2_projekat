@@ -18,16 +18,31 @@ import {
 import { connect } from "react-redux";
 import { luggageTypes } from "../../../common/constants";
 import addAirline from "../../../actions/Flight/addAirline";
+import editAirline from "../../../actions/Flight/editAirline";
+
 class AddAirlineForm extends Component {
   constructor(props) {
     super(props);
-
+    const checkBoxStateMapLuggage = new Map();
     this.state = {
-      airlineTitle: "",
-      airlineAddress: "",
-      airlineDescription: "",
-      flightLuggageTypes: [],
-      flightDestinations: [],
+      airlineTitle:
+        this.props.airline === undefined ? "" : this.props.airline.title,
+      airlineAddress:
+        this.props.airline === undefined ? "" : this.props.airline.address,
+      airlineDescription:
+        this.props.airline === undefined ? "" : this.props.airline.description,
+      flightLuggageTypes:
+        this.props.airline === undefined
+          ? []
+          : this.separateFlightLuggageFromAvailableFlightLuggage(
+              this.props.airline.availableFlightLuggage
+            ),
+      flightDestinations:
+        this.props.airline === undefined
+          ? []
+          : this.separateAirlineFromAirlineDestinations(
+              this.props.airline.airlineDestinations
+            ),
       luggageFieldEmptyError: false,
       destinationFieldEmptyError: false,
     };
@@ -37,8 +52,48 @@ class AddAirlineForm extends Component {
       return this.state.flightLuggageTypes.length === 0 ? false : true;
     });
   }
+
+  doesArrayHasDuplicate = (array, type) => {
+    var foundIndex = -1;
+    var retArray = [];
+    for (var index = 0; index < array.length - 1; index++) {
+      if (
+        type === "LUGGAGE" &&
+        array[index].flightLuggageId ===
+          array[array.length - 1].flightLuggageId &&
+        array.length >= 2
+      ) {
+        foundIndex = index;
+        break;
+      } else if (
+        type === "DESTINATION" &&
+        array.length >= 2 &&
+        array[index].destinationId === array[array.length - 1].destinationId
+      ) {
+        foundIndex = index;
+        break;
+      }
+    }
+
+    if (foundIndex !== -1 && type === "LUGGAGE")
+      retArray = array.filter(
+        (item) => item.flightLuggageId !== array[foundIndex].flightLuggageId
+      );
+    else if (foundIndex !== -1 && type === "DESTINATION")
+      retArray = array.filter(
+        (item) => item.destinationId !== array[foundIndex].destinationId
+      );
+    else retArray = array;
+
+    return retArray;
+  };
+
   handleChange = (event) => {
-    this.setState({ flightLuggageTypes: event.target.value });
+    var arrayWithoutDuplicate = this.doesArrayHasDuplicate(
+      event.target.value,
+      "LUGGAGE"
+    );
+    this.setState({ flightLuggageTypes: arrayWithoutDuplicate });
 
     if (event.target.value.length !== undefined) {
       if (event.target.value.length === 0)
@@ -47,8 +102,34 @@ class AddAirlineForm extends Component {
     }
   };
 
+  separateAirlineFromAirlineDestinations = (array) => {
+    var retArray = [];
+
+    Array.from(array).map((item) => {
+      var modItem = item.destination;
+      retArray.push(modItem);
+    });
+
+    return retArray;
+  };
+
+  separateFlightLuggageFromAvailableFlightLuggage = (array) => {
+    var retArray = [];
+
+    Array.from(array).map((item) => {
+      var modItem = item.flightLuggage;
+      modItem.availableFlightLuggage = null;
+      retArray.push(modItem);
+    });
+    return retArray;
+  };
+
   handleChangeDestinations = (event) => {
-    this.setState({ flightDestinations: event.target.value });
+    var arrayWithoutDuplicate = this.doesArrayHasDuplicate(
+      event.target.value,
+      "DESTINATION"
+    );
+    this.setState({ flightDestinations: arrayWithoutDuplicate });
 
     if (event.target.value.length !== undefined) {
       if (event.target.value.length === 0)
@@ -57,18 +138,63 @@ class AddAirlineForm extends Component {
     }
   };
 
+  isLuggageChecked = (luggageArray, theLuggage) => {
+    for (var index = 0; index < luggageArray.length; index++) {
+      if (luggageArray[index].flightLuggageId === theLuggage.flightLuggageId)
+        return true;
+    }
+
+    return false;
+  };
+
   handleSubmit = (event) => {
     event.preventDefault();
 
-    this.props.OnAddAirline(
-      this.state.airlineTitle,
-      this.state.airlineAddress,
-      this.state.airlineDescription,
-      this.state.flightLuggageTypes,
-      this.state.flightDestinations
-    );
+    var availableFlightLuggageArray = [];
+    var airlineDestinations = [];
+    Array.from(this.state.flightLuggageTypes).map((luggage) => {
+      availableFlightLuggageArray.push({
+        AirlineId: this.props.airline.airlineId,
+        FlightLuggageId: luggage.flightLuggageId,
+        FlightLuggage: luggage,
+      });
+    });
+
+    Array.from(this.state.flightDestinations).map((destination) => {
+      airlineDestinations.push({
+        AirlineId: this.props.airline.airlineId,
+        DestinationId: destination.destinationId,
+        Destination: destination,
+      });
+    });
+
+    var airline = {
+      AirlineId:
+        this.props.airline.airlineId !== undefined
+          ? this.props.airline.airlineId
+          : 0,
+      Title: this.state.airlineTitle,
+      Address: this.state.airlineAddress,
+      Description: this.state.airlineDescription,
+      AvailableFlightLuggage: availableFlightLuggageArray,
+      AirlineDestinations: airlineDestinations,
+    };
+
+    if (this.props.mode === "EDIT") this.props.OnEditAirline(airline);
+    else this.props.OnAddAirline(airline);
+
     this.props.closeForm();
   };
+
+  isLuggageIncluded(luggageArray, luggage) {
+    for (var index = 0; index < luggageArray.length; index++) {
+      if (luggageArray[index].flightLuggagId === luggage.flightLuggageId) {
+        return true;
+      }
+    }
+
+    return false;
+  }
 
   onHandleChangeText = (event) => {
     this.setState({ [event.target.name]: event.target.value });
@@ -77,7 +203,10 @@ class AddAirlineForm extends Component {
     return (
       <>
         <Modal.Header>
-          <h2 style={{ "margin-left": "35%" }}>Add Airline</h2>
+          <h2 style={{ "margin-left": "35%" }}>
+            {" "}
+            {this.props.mode === "EDIT" ? "Edit Airline" : "Add Airline"}
+          </h2>
         </Modal.Header>
         <ValidatorForm
           onError={(error) => console.log(error)}
@@ -139,7 +268,7 @@ class AddAirlineForm extends Component {
                       <div>
                         {selected.map((value) => (
                           <Chip
-                            key={value}
+                            key={value.flightLuggageType}
                             label={luggageTypes[value.flightLuggageType]}
                           />
                         ))}
@@ -149,15 +278,18 @@ class AddAirlineForm extends Component {
                     {Array.from(this.props.flightLuggage).length === 0 ? (
                       <div />
                     ) : (
-                      this.props.flightLuggage.map((luggage) => (
+                      Array.from(this.props.flightLuggage).map((luggage) => (
                         <MenuItem
                           key={luggage.flightLuggageType}
                           value={luggage}
                         >
                           <Checkbox
                             checked={
-                              this.state.flightLuggageTypes.indexOf(luggage) >
-                              -1
+                              this.state.flightLuggageTypes.findIndex(
+                                (flt) =>
+                                  flt.flightLuggageId ===
+                                  luggage.flightLuggageId
+                              ) > -1
                             }
                           />
                           <ListItemText
@@ -204,8 +336,10 @@ class AddAirlineForm extends Component {
                         >
                           <Checkbox
                             checked={
-                              this.state.flightDestinations.indexOf(
-                                destination
+                              this.state.flightDestinations.findIndex(
+                                (fld) =>
+                                  fld.destinationId ===
+                                  destination.destinationId
                               ) > -1
                             }
                           />
@@ -238,21 +372,8 @@ class AddAirlineForm extends Component {
   }
 }
 const mapDispatchToProps = (dispatch) => ({
-  OnAddAirline: (
-    title,
-    address,
-    description,
-    availableLuggages,
-    availableDestinations
-  ) =>
-    dispatch(
-      addAirline(
-        title,
-        address,
-        description,
-        availableLuggages,
-        availableDestinations
-      )
-    ),
+  OnAddAirline: (airline) => dispatch(addAirline(airline)),
+  OnEditAirline: (airline) => dispatch(editAirline(airline)),
 });
+
 export default connect(null, mapDispatchToProps)(AddAirlineForm);

@@ -5,23 +5,11 @@ import { ConnectTo } from "../../common/constants";
 import { toast } from "react-toastify";
 export const ADD_AIRLINE = "flight:addAirline";
 
-export default function addAirline(
-  title,
-  address,
-  description,
-  availableLuggages,
-  availableDestinations
-) {
+export default function addAirline(airline) {
   return (dispatch) => {
     dispatch(loadingData());
     axios
-      .post(ConnectTo + "airline/addAirline", {
-        Title: title,
-        Address: address,
-        Description: description,
-        AvailableFlightLuggage: availableLuggages,
-        AirlineDestinations: availableDestinations,
-      })
+      .post(ConnectTo + "airline/addAirline", airline)
       .then((response) => {
         return response.data.errorCode === 200
           ? (dispatch({ type: ADD_AIRLINE, payload: response.data.value }),
