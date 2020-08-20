@@ -66,6 +66,8 @@ namespace Backend.Controllers
             return retValu;
         }
 
+    
+
         [HttpPost]
         public Holder<Destination> AddDestination([FromBody] Destination destination)
         {
@@ -96,8 +98,20 @@ namespace Backend.Controllers
             return _airlineBusiness.AddFlightLuggage(flightLuggage);
         }
 
+        [HttpPost]
+        public List<Airline> Search([FromBody] SearchObject searchObject)
+        {
+            return _airlineBusiness.Search(searchObject);
+        }
+
+        [HttpPost]
+        public List<Airline> Filter([FromBody]FilterObject filterObject)
+        {
+            return _airlineBusiness.Filter(filterObject);
+        }
+
         // PUT: api/Airline/5
-        [HttpPost("{id}")]
+        [HttpPost]
         public Holder<Airline> EditAirline([FromBody] Airline airline)
         {
             return _airlineBusiness.EditAirline(airline);

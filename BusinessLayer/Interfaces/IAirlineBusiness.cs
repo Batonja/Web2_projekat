@@ -11,6 +11,9 @@ namespace BusinessLayer.Interfaces
 
         List<Airline> Get();
         Airline Get(int id);
+        List<Airline> Search(SearchObject searchObject);
+        List<Airline> Filter(FilterObject filterObject);
+       
         Holder<Airline> AddAirline(Airline airline);
         Holder<Airline> EditAirline(Airline airline);
         Holder<Airline> DeleteAirline(int airlineId);

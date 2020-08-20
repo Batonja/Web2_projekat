@@ -8,6 +8,10 @@ namespace DatabaseLayer.Interfaces
     public interface IAirlineDatabase
     {
         List<Airline> Get();
+        List<Airline> Search(SearchObject searchObject);
+        List<Airline> SearchWithDestination(SearchObject searchObject);
+        List<Airline> Filter(List<Airline> airlines);
+    
         Airline Get(int id);
         
 
@@ -17,7 +21,7 @@ namespace DatabaseLayer.Interfaces
         bool AddDestination(Destination destination);
         bool AddFlightLuggage(FlightLuggage flightLuggage);
         bool AddFlight(Flight flight);
-
+        bool AddAirlineFlightLuggage(AirlineFlightLuggage airlineFlightLuggage);
 
         List<FlightLuggage> GetFlightLuggage();
         List<Destination> GetDestinations();

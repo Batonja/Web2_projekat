@@ -15,6 +15,6 @@ namespace Common.Models.Airline
         [MaxLength(200)]
         public string Title { get; set; }
 
-        public virtual ICollection<AirlineDestination> AirlineDestinations { get;set; }
+        
     }
 }

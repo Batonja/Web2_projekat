@@ -17,6 +17,8 @@
     <Compile Remove="Migrations\20200718140248_friendlist5.cs" />
     <Compile Remove="Migrations\20200718141924_friendsTable7.cs" />
     <Compile Remove="Migrations\20200718142030_friendsTable7.cs" />
+    <Compile Remove="Migrations\20200728133459_addingFlightsToAirline.cs" />
+    <Compile Remove="Migrations\20200730191754_removingListFromFlightLuggage.cs" />
     <Compile Remove="Migrations\Airline\20200429003941_airlineEntitiesRefactored.cs" />
     <Compile Remove="Migrations\Airline\20200429004510_airlineEntitiesRefactored2.cs" />
     <Compile Remove="Migrations\Airline\20200429004814_airlineEntitiesRefactored.cs" />

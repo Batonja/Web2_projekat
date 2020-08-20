@@ -17,6 +17,42 @@ namespace BusinessLayer.Implementations
             _airlineDatabase = airlineDatabase;
         }
 
+        public List<Airline> Search(SearchObject searchObject)
+        {
+            List<Airline> dbAirlines = new List<Airline>();
+
+            if (searchObject.Destination != null)
+                dbAirlines = _airlineDatabase.SearchWithDestination(searchObject);
+            else
+                dbAirlines = _airlineDatabase.Search(searchObject);
+
+            return dbAirlines;
+
+        }
+
+        public List<Airline> Filter(FilterObject filterObject)
+        {
+            List<Airline> airlinesWithFilteredTitles = new List<Airline>();
+            List<Airline> retVal = new List<Airline>();
+
+            if (filterObject.Airlines.Count > 0)
+            {
+                airlinesWithFilteredTitles = _airlineDatabase.Filter(filterObject.Airlines);
+            }
+            else
+                airlinesWithFilteredTitles = _airlineDatabase.Get();
+            
+
+            if(filterObject.TripLengthOption == 1 || filterObject.TripLengthOption == -1 || filterObject.TripLengthOption == 5)
+                airlinesWithFilteredTitles = FilterFlightsOnTripLength(airlinesWithFilteredTitles, filterObject.TripLengthOption);
+
+            return airlinesWithFilteredTitles;
+
+
+                
+
+        }
+
         public Holder<Airline> AddAirline(Airline airline)
         {
             Airline airlineFromDB = _airlineDatabase.Get(airline.AirlineId);
@@ -51,10 +87,31 @@ namespace BusinessLayer.Implementations
             if (airlineFromDB.AirlineId <= 0)
                 return CheckAirline(airline, 404, "Airline you're trying to edit doesn't exists");
 
-            if (_airlineDatabase.EditAirline(airline))
-                return CheckAirline(airline, 200, "");
+            if (!_airlineDatabase.EditAirline(airline))
+                return CheckAirline(airline, 500, "Unable to edit airline");
 
-            return CheckAirline(airline, 500, "Unable to edit airline");
+            foreach (var airlineAfl in airline.AvailableFlightLuggage)
+            {
+                AirlineFlightLuggage aflToAdd = airlineAfl;
+
+                foreach (var airlineDbAfl in airlineFromDB.AvailableFlightLuggage)
+                {
+                    if(airlineDbAfl.FlightLuggageId == airlineAfl.FlightLuggageId && airlineDbAfl.AirlineId == airlineAfl.AirlineId)
+                    {
+                        aflToAdd = null;
+                        break;
+                    }
+                }
+
+                if(aflToAdd != null)
+                {
+                    if (!_airlineDatabase.AddAirlineFlightLuggage(aflToAdd))
+                        return CheckAirline(airline, 500, "Unable to add AirlineFlightLuggage while editing airline");
+                }
+            }
+
+
+            return CheckAirline(airline, 200, "");
 
         }
 
@@ -69,6 +126,8 @@ namespace BusinessLayer.Implementations
         {
             return _airlineDatabase.Get(id);
         }
+
+       
 
         public List<FlightLuggage> GetFlightLuggage()
         {
@@ -133,6 +192,51 @@ namespace BusinessLayer.Implementations
         }
 
         #region helpers
+
+        List<Airline> FilterFlightsOnTripLength(List<Airline> airlines, decimal tripLength)
+        {
+
+            List<Airline> filteredAirlinesWithFlights = new List<Airline>();
+            List<Flight> flightsTemp ;
+
+
+            if (tripLength == 0)
+                filteredAirlinesWithFlights = airlines;
+            else
+            {
+                foreach (var airline in airlines)
+                {
+                    flightsTemp = new List<Flight>();
+                    foreach (var flight in airline.Flights)
+                    {
+                        switch (tripLength)
+                        {
+                            case -1:
+                                if (flight.TripLength < 1)
+                                    flightsTemp.Add(flight);
+                                break;
+                            case 1:
+                                if (flight.TripLength >= 1 && flight.TripLength <= 5)
+                                    flightsTemp.Add(flight);
+                                break;
+                            case 5:
+                                if (flight.TripLength > 5)
+                                    flightsTemp.Add(flight);
+                                break;
+
+                            default: break;
+                        }
+                    }
+                    if (flightsTemp.Count > 0)
+                    {
+                        Airline airlineToAdd = airline;
+                        airlineToAdd.Flights = flightsTemp;
+                        filteredAirlinesWithFlights.Add(airlineToAdd);
+                    }
+                }
+            }
+            return filteredAirlinesWithFlights;
+        }
 
         Holder<Airline> CheckAirline(Airline airline, int errorCode, string description) =>
             errorCode == 200 ? Holder<Airline>.Success(airline) : Holder<Airline>.Fail(errorCode, description);
