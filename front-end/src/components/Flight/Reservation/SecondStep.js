@@ -101,20 +101,18 @@ class SecondStep extends Component {
 
   submitReservation(passenger) {
     const order = {
-      AirlineId: this.props.airline.Id,
-      AirlineTitle: this.props.airline.Title,
-      Destination: this.props.flight.To,
-      From: this.props.flight.From,
-      Luggage: this.state.luggage,
-      DepartureDate: this.props.flight.DepartureDate,
-      ArrivalDate: this.props.flight.ArivalDate,
-      Price:
-        this.state.ticketType === 0
-          ? this.props.flight.Price - this.props.airline.Tickets.Economy
-          : this.props.flight.Price * 1.05 -
-            this.props.airline.Tickets.Business,
-      TicketType: this.state.ticketType,
-      SeatId: passenger.SeatId,
+      Flight: this.props.flight,
+      FlightTicket: {
+        Type: this.state.ticketType,
+        Price:
+          this.state.ticketType === 0
+            ? this.props.flight.tickets[0].price
+            : this.props.flight.tickets[1].price,
+      },
+
+      FlightLuggage: { FlightLuggageId: this.state.luggage },
+      User: passenger,
+      Seat: { SeatId: passenger.SeatId },
     };
 
     this.props.reserveSeat(passenger, order);
@@ -283,48 +281,58 @@ class SecondStep extends Component {
             </Overlay>
           </Row>
           <br />
-          <Row className="flightPresentRow">
-            <Col md="auto" className="flightItem">
-              <InputLabel id="luggageLabel">Luggage Type / Price</InputLabel>
-              <Select
-                labelId="luggageLabel"
-                onChange={this.onHandleLuggageChange}
-                value={this.state.luggage}
-              >
-                <MenuItem value={0}>
-                  {this.props.airline.Luggage[0].Type.toString() +
-                    " / " +
-                    this.props.airline.Luggage[0].Price.toString()}
-                </MenuItem>
-                <MenuItem value={1}>
-                  {this.props.airline.Luggage[1].Type.toString() +
-                    " / " +
-                    this.props.airline.Luggage[1].Price.toString()}
-                </MenuItem>
-              </Select>
-            </Col>
-            <Col md="auto" className="flightItem">
-              <InputLabel id="chooseTicketLabel">Ticket / Price</InputLabel>
-              <Select
-                labelId="chooseTicketLabel"
-                onChange={this.onHandleTicketTypeChange}
-                value={this.state.ticketType}
-              >
-                <MenuItem value={0}>
-                  {"Economy" +
-                    " / " +
-                    (this.props.flight.Price +
-                      this.props.airline.Tickets.Economy)}{" "}
-                </MenuItem>
-                <MenuItem value={1}>
-                  {"Business" +
-                    " / " +
-                    (this.props.flight.Price * 1.05 +
-                      this.props.airline.Tickets.Business)}
-                </MenuItem>
-              </Select>
-            </Col>
-          </Row>
+
+          {this.props.airline.availableFlightLuggage !== undefined ? (
+            <Row className="flightPresentRow">
+              <Col md="auto" className="flightItem">
+                <InputLabel id="luggageLabel">Luggage Type / Price</InputLabel>
+                <Select
+                  labelId="luggageLabel"
+                  onChange={this.onHandleLuggageChange}
+                  value={this.state.luggage}
+                >
+                  {Array.from(this.props.airline.availableFlightLuggage).map(
+                    (availableFlightLuggage) => {
+                      return (
+                        <MenuItem
+                          value={
+                            availableFlightLuggage.flightLuggage.flightLuggageId
+                          }
+                        >
+                          {availableFlightLuggage.flightLuggage
+                            .flightLuggageType === 0
+                            ? "Hand / " +
+                              availableFlightLuggage.flightLuggage.price
+                            : availableFlightLuggage.flightLuggage
+                                .flightLuggageType === 1
+                            ? "Checked / " +
+                              availableFlightLuggage.flightLuggage.price
+                            : ""}
+                        </MenuItem>
+                      );
+                    }
+                  )}
+                </Select>
+              </Col>
+              <Col md="auto" className="flightItem">
+                <InputLabel id="chooseTicketLabel">Ticket / Price</InputLabel>
+                <Select
+                  labelId="chooseTicketLabel"
+                  onChange={this.onHandleTicketTypeChange}
+                  value={this.state.ticketType}
+                >
+                  <MenuItem value={0}>
+                    {"Economy" + " / " + this.props.flight.tickets[0].price}
+                  </MenuItem>
+                  <MenuItem value={1}>
+                    {"Business" + " / " + this.props.flight.tickets[1].price}
+                  </MenuItem>
+                </Select>
+              </Col>
+            </Row>
+          ) : (
+            ""
+          )}
         </Modal.Body>
         <Modal.Footer>
           {this.props.loggedInUser.FirstName ? (

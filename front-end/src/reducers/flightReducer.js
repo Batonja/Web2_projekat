@@ -288,16 +288,16 @@ export default function flightReducer(state = initialState, { type, payload }) {
         if (state.airlines[indexOfAirline].Id === payload.airlineId) {
           for (
             var indexOfFlight = 0;
-            indexOfFlight < state.airlines[indexOfAirline].Flights.length;
+            indexOfFlight < state.airlines[indexOfAirline].flights.length;
             indexOfFlight++
           ) {
             if (
-              state.airlines[indexOfAirline].Flights[indexOfFlight].Id ===
+              state.airlines[indexOfAirline].flights[indexOfFlight].Id ===
               payload.flightId
             ) {
               var editedAirline = state.airlines[indexOfAirline];
-              editedAirline.Flights[indexOfFlight].Seats = payload.seats;
-              editedAirline.Flights[
+              editedAirline.flights[indexOfFlight].seats = payload.seats;
+              editedAirline.flights[
                 indexOfFlight
               ].Passengers = editedAirline.Flights[
                 indexOfFlight

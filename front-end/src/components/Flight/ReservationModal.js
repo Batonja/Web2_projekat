@@ -7,6 +7,8 @@ import reserveSeats from "../../actions/Flight/reserveSeats";
 import loadingData from "../../actions/Loading/loadingData";
 import finishedLoading from "../../actions/Loading/finishedLoading";
 import orderFlight from "../../actions/User/orderFlight";
+import signUp from "../../actions/User/signUp";
+
 class ReservationModal extends Component {
   constructor(props) {
     super(props);
@@ -46,18 +48,19 @@ class ReservationModal extends Component {
     var completedReservations = this.state.numOfCompletedReservations + 1;
     var passengers = this.state.passengers;
     var orders = this.state.orders;
-    orders.push(order);
-    passengers.push(passenger);
+
+    this.props.OnSignUp(passenger, this.props.history);
+    //passengers.push(passenger);
     if (completedReservations === this.state.numOfReservations) {
       this.props.closeModal();
 
       this.props.OnReserveSeats(
-        this.state.seats,
-        passengers,
+        order,
+        passenger,
         this.props.airline.Id,
         this.props.flight.Id
       );
-      this.props.OnOrderFlight(orders, passengers);
+
       return;
     }
 
@@ -117,12 +120,13 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  OnReserveSeats: (seats, passengers, airlineId, flightId) =>
-    dispatch(reserveSeats(seats, passengers, airlineId, flightId)),
+  OnReserveSeats: (order, passengers, airlineId, flightId) =>
+    dispatch(reserveSeats(order, passengers, airlineId, flightId)),
   OnLoading: () => dispatch(loadingData()),
   OnFinishedLoading: () => dispatch(finishedLoading()),
   OnOrderFlight: (order, passengers) =>
     dispatch(orderFlight(order, passengers)),
+  OnSignUp: (user, history) => dispatch(signUp(user, history)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ReservationModal);
