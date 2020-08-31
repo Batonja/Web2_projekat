@@ -1,4 +1,5 @@
-﻿using Common.Models.Airline;
+﻿using Common.Models;
+using Common.Models.Airline;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,6 +24,12 @@ namespace DatabaseLayer.Interfaces
         bool AddFlight(Flight flight);
         bool AddAirlineFlightLuggage(AirlineFlightLuggage airlineFlightLuggage);
 
+        FlightTicket AddTicket(FlightTicket flightTicket);
+        bool AddFlightOrder(FlightOrder flightOrder);
+        Seat EditSeat(Seat seat);
+
+
+        User GetUserByPassportId(long passportId);
         List<FlightLuggage> GetFlightLuggage();
         List<Destination> GetDestinations();
         FlightLuggage GetFlightLuggage(int id);

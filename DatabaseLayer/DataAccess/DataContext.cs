@@ -69,7 +69,7 @@ namespace DatabaseLayer.DataAccess
         public DbSet<Destination> Destination { get; set; }
         public DbSet<Flight> Flight { get; set; }
         public DbSet<FlightLuggage> FlightLuggage { get; set; }
-       
+        public DbSet<FlightTicket> FlightTicket { get; set; }
         public DbSet<FlightOrder> FlightOrder { get; set; }
         public DbSet<Seat> Seat { get; set; }
 

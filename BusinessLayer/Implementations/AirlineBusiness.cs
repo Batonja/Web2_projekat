@@ -127,7 +127,30 @@ namespace BusinessLayer.Implementations
             return _airlineDatabase.Get(id);
         }
 
-       
+        public Holder<FlightOrder> OrderFlight(FlightOrder flightOrder)
+        {
+
+            flightOrder.FlightLuggage = _airlineDatabase.GetFlightLuggage(flightOrder.FlightLuggage.FlightLuggageId);
+
+            /*_airlineDatabase.AddTicket(flightOrder.FlightTicket);
+
+            if (ticket != null) { }
+                
+            else
+                return CheckFlightOrder(null, 400, "Unable to add ticket to database");
+                */
+
+            flightOrder.Seat = _airlineDatabase.EditSeat(flightOrder.Seat);
+
+            if (!_airlineDatabase.AddFlightOrder(flightOrder))
+                return CheckFlightOrder(null, 400, "Unable to add flight order");
+
+            if(_airlineDatabase.EditSeat(flightOrder.Seat) == null)
+                return CheckFlightOrder(null, 400, "Unable to add edit seat");
+
+            return CheckFlightOrder(flightOrder, 200, "");
+
+        }
 
         public List<FlightLuggage> GetFlightLuggage()
         {
@@ -243,6 +266,9 @@ namespace BusinessLayer.Implementations
 
         Holder<FlightLuggage> CheckFlightLuggage(FlightLuggage flightLuggage, int errorCode, string description) =>
             errorCode == 200 ? Holder<FlightLuggage>.Success(flightLuggage) : Holder<FlightLuggage>.Fail(errorCode, description);
+
+        Holder<FlightOrder> CheckFlightOrder(FlightOrder flightOrder, int errorCode, string description) =>
+            errorCode == 200 ? Holder<FlightOrder>.Success(flightOrder) : Holder<FlightOrder>.Fail(errorCode, description);
 
         Holder<Destination> CheckDestination(Destination destination, int errorCode, string description) =>
             errorCode == 200 ? Holder<Destination>.Success(destination) : Holder<Destination>.Fail(errorCode, description);

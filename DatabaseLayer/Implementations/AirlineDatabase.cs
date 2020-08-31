@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Data;
 using System.Text;
+using Common.Models;
 
 namespace DatabaseLayer.Implementations
 {
@@ -139,6 +140,85 @@ namespace DatabaseLayer.Implementations
             }
 
             return airline;
+        }
+
+        public bool AddFlightOrder(FlightOrder flightOrder)
+        {
+            int rowsEffected = -1;
+
+            using (var context = new DataContext(DataContext.ops.dbOptions))
+            {
+                
+                context.FlightLuggage.Attach(flightOrder.FlightLuggage);
+                context.Flight.Attach(flightOrder.Flight);
+                
+
+                if (flightOrder.User.UserId != 0)
+                    context.User.Attach(flightOrder.User);
+
+
+                context.FlightOrder.Add(flightOrder);
+
+                rowsEffected = context.SaveChanges();
+
+                if (rowsEffected > 0)
+                    return true;
+                
+            }
+
+            return false;
+        }
+
+        public FlightTicket AddTicket(FlightTicket flightTicket)
+        {
+            int rowsEffected = -1;
+
+            using (var context = new DataContext(DataContext.ops.dbOptions))
+            {
+                FlightTicket ticket = context.FlightTicket.Add(flightTicket).Entity;
+
+                rowsEffected = context.SaveChanges();
+
+                if (rowsEffected > 0)
+                    return ticket;
+            }
+
+            return null;
+        }
+
+        public User GetUserByPassportId(long passportId)
+        {
+            User user = new User();
+            using (var context = new DataContext(DataContext.ops.dbOptions))
+            {
+                user = context.User.Where(userDb => userDb.PassportId == passportId).SingleOrDefault();
+            }
+
+            return user;
+        }
+
+        public Seat EditSeat(Seat seat)
+        {
+            int rowsEffected = -1;
+
+            using (var context = new DataContext(DataContext.ops.dbOptions))
+            {
+                Seat seatFromDb = context.Seat.Include(theSeat => theSeat.Flight).Where(theSeat => theSeat.SeatId == seat.SeatId)
+                    .SingleOrDefault();
+
+                if(seatFromDb != null)
+                {
+                    context.Entry(seatFromDb).CurrentValues.SetValues(seat);
+                    context.Update(seatFromDb);
+                }
+
+                rowsEffected = context.SaveChanges();
+
+                if (rowsEffected > 0)
+                    return seatFromDb;
+            }
+            return null;
+            
         }
 
         public bool EditAirline(Airline airline)
