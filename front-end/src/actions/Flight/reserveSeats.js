@@ -17,11 +17,7 @@ export default function reserveSeats(order, passengers, airlineId, flightId) {
         return response.data.errorCode == 200
           ? (dispatch({
               type: RESERVE_SEATS,
-              payload: {
-                passengers: passengers,
-                airlineId: airlineId,
-                flightId: flightId,
-              },
+              payload: response.data.value.flight,
             }),
             dispatch(finishedLoading()))
           : (toast.error("Error while trying to reserve seat"),

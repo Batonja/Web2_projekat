@@ -285,38 +285,31 @@ export default function flightReducer(state = initialState, { type, payload }) {
         indexOfAirline < state.airlines.length;
         indexOfAirline++
       ) {
-        if (state.airlines[indexOfAirline].Id === payload.airlineId) {
-          for (
-            var indexOfFlight = 0;
-            indexOfFlight < state.airlines[indexOfAirline].flights.length;
-            indexOfFlight++
+        for (
+          var indexOfFlight = 0;
+          indexOfFlight < state.airlines[indexOfAirline].flights.length;
+          indexOfFlight++
+        ) {
+          if (
+            state.airlines[indexOfAirline].flights[indexOfFlight].Id ===
+            payload.flightId
           ) {
-            if (
-              state.airlines[indexOfAirline].flights[indexOfFlight].Id ===
-              payload.flightId
-            ) {
-              var editedAirline = state.airlines[indexOfAirline];
-              editedAirline.flights[indexOfFlight].seats = payload.seats;
-              editedAirline.flights[
-                indexOfFlight
-              ].Passengers = editedAirline.Flights[
-                indexOfFlight
-              ].Passengers.concat(payload.passengers);
+            var editedAirline = state.airlines[indexOfAirline];
+            editedAirline.flights[indexOfFlight].seats = payload.seats;
 
-              return {
-                ...state,
-                allAirlines: [
-                  ...state.allAirlines.slice(0, indexOfAirline),
-                  editedAirline,
-                  ...state.allAirlines.slice(indexOfAirline + 1),
-                ],
-                airlines: [
-                  ...state.airlines.slice(0, indexOfAirline),
-                  editedAirline,
-                  ...state.airlines.slice(indexOfAirline + 1),
-                ],
-              };
-            }
+            return {
+              ...state,
+              allAirlines: [
+                ...state.allAirlines.slice(0, indexOfAirline),
+                editedAirline,
+                ...state.allAirlines.slice(indexOfAirline + 1),
+              ],
+              airlines: [
+                ...state.airlines.slice(0, indexOfAirline),
+                editedAirline,
+                ...state.airlines.slice(indexOfAirline + 1),
+              ],
+            };
           }
         }
       }

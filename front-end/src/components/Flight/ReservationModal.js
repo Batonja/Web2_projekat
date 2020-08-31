@@ -104,7 +104,7 @@ class ReservationModal extends Component {
             reserveSeat={(passenger, order) =>
               this.reserveSeat(passenger, order)
             }
-            seats={this.state.seats}
+            seats={this.props.flight.seats}
             seatsIds={this.state.seatsIds}
           />
         ) : (
