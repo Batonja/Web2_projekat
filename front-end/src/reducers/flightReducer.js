@@ -186,7 +186,34 @@ const initialState = {
 export default function flightReducer(state = initialState, { type, payload }) {
   switch (type) {
     case ADD_FLIGHT:
-      return { ...state };
+      var airlineToAddFlightTo = -1;
+      var indexOfAirlineToAddFlightTo = -1;
+      for (
+        var indexOfAirline = 0;
+        indexOfAirline < state.allAirlines.length;
+        indexOfAirline++
+      ) {
+        if (state.allAirlines[indexOfAirline] === payload.airline.airlineId) {
+          indexOfAirlineToAddFlightTo = indexOfAirline;
+          airlineToAddFlightTo = state.allAirlines[indexOfAirline];
+          airlineToAddFlightTo.flights.push(payload);
+          break;
+        }
+      }
+
+      return {
+        ...state,
+        allAirlines: [
+          ...state.allAirlines.slice(0, indexOfAirlineToAddFlightTo),
+          airlineToAddFlightTo,
+          ...state.allAirlines(indexOfAirlineToAddFlightTo + 1),
+        ],
+        airlines: [
+          ...state.airlines.slice(0, indexOfAirlineToAddFlightTo),
+          airlineToAddFlightTo,
+          ...state.airlines(indexOfAirlineToAddFlightTo + 1),
+        ],
+      };
 
     case GET_DESTINATIONS:
       return { ...state, allDestinations: payload };
@@ -209,56 +236,18 @@ export default function flightReducer(state = initialState, { type, payload }) {
         indexOfAirline < state.allAirlines.length;
         indexOfAirline++
       ) {
-        if (state.allAirlines[indexOfAirline].Id === payload.airline.Id) {
+        if (state.allAirlines[indexOfAirline].airlineId === payload.airlineId) {
           indexOfAirlineToChange = indexOfAirline;
           airlineToChange = cloneDeep(state.allAirlines[indexOfAirline]);
-          airlineToChange.Title = payload.airline.Title;
-          airlineToChange.Address = payload.airline.Address;
-          airlineToChange.Description = payload.airline.Description;
-          airlineToChange.Tickets.Economy = payload.airline.Tickets.Economy;
-          airlineToChange.Tickets.Business = payload.airline.Tickets.Business;
-          for (
-            var indexOfFlight = 0;
-            indexOfFlight < airlineToChange.Flights.length;
-            indexOfFlight++
-          ) {
-            if (
-              airlineToChange.Flights[indexOfFlight].Id ===
-              payload.airline.Flight.Id
-            ) {
-              airlineToChange.Flights[indexOfFlight].From =
-                payload.airline.Flight.From;
-              airlineToChange.Flights[indexOfFlight].To =
-                payload.airline.Flight.To;
-              airlineToChange.Flights[indexOfFlight].DepartureDate =
-                payload.airline.Flight.DepartureDate;
-              airlineToChange.Flights[indexOfFlight].ArivalDate =
-                payload.airline.Flight.ArivalDate;
-              airlineToChange.Flights[indexOfFlight].TripLength =
-                payload.airline.Flight.TripLength;
-
-              if (
-                airlineToChange.Flights[indexOfFlight].Seats.length >
-                payload.airline.Flight.Seats.length
-              ) {
-                var lastSeatIndex =
-                  airlineToChange.Flights[indexOfFlight].Seats.length - 1;
-                airlineToChange.Flights[
-                  indexOfFlight
-                ].Passengers = airlineToChange.Flights[
-                  indexOfFlight
-                ].Passengers.filter(
-                  (passenger) => passenger.SeatId !== lastSeatIndex
-                );
-              }
-              airlineToChange.Flights[indexOfFlight].Seats =
-                payload.airline.Flight.Seats;
-              airlineToChange.Flights[indexOfFlight].Price =
-                payload.airline.Flight.Price;
-            }
-          }
+          airlineToChange.title = payload.title;
+          airlineToChange.address = payload.address;
+          airlineToChange.description = payload.description;
+          airlineToChange.airlineDestinations = payload.airlineDestinations;
+          airlineToChange.availableFlightLuggage =
+            payload.availableFlightLuggage;
         }
       }
+
       return {
         ...state,
         allAirlines: [

@@ -14,7 +14,7 @@ export default function editAirline(airline) {
       .post(ConnectTo + "airline/EditAirline", airline)
       .then((response) => {
         return response.data.errorCode === 200
-          ? (dispatch({ type: EDIT_AIRLINE, payload: response.data }),
+          ? (dispatch({ type: EDIT_AIRLINE, payload: response.data.value }),
             dispatch(finishedLoading()))
           : (dispatch(finishedLoading()),
             toast.error(

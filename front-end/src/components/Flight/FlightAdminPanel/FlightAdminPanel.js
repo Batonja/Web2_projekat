@@ -259,9 +259,8 @@ class FlightAdminPanel extends Component {
                         onRequestClose={(e) => this.closeAirlineEdit(e)}
                       >
                         <AddAirlineForm
-                          mode="EDIT"
+                          mode={0}
                           airline={airline}
-                          closeForm={this.openCloseAddAirlineModal}
                           flightLuggage={this.props.flightLuggage}
                           destinations={this.props.allDestinations}
                         />

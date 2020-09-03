@@ -46,6 +46,8 @@ class AddAirlineForm extends Component {
       luggageFieldEmptyError: false,
       destinationFieldEmptyError: false,
     };
+
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
   componentDidMount() {
     ValidatorForm.addValidationRule("selectEmpty", (value) => {
@@ -154,7 +156,8 @@ class AddAirlineForm extends Component {
     var airlineDestinations = [];
     Array.from(this.state.flightLuggageTypes).map((luggage) => {
       availableFlightLuggageArray.push({
-        AirlineId: this.props.airline.airlineId,
+        AirlineId:
+          this.props.airline !== undefined ? this.props.airline.airlineId : 0,
         FlightLuggageId: luggage.flightLuggageId,
         FlightLuggage: luggage,
       });
@@ -162,7 +165,8 @@ class AddAirlineForm extends Component {
 
     Array.from(this.state.flightDestinations).map((destination) => {
       airlineDestinations.push({
-        AirlineId: this.props.airline.airlineId,
+        AirlineId:
+          this.props.airline !== undefined ? this.props.airline.airlineId : 0,
         DestinationId: destination.destinationId,
         Destination: destination,
       });
@@ -170,9 +174,7 @@ class AddAirlineForm extends Component {
 
     var airline = {
       AirlineId:
-        this.props.airline.airlineId !== undefined
-          ? this.props.airline.airlineId
-          : 0,
+        this.props.airline !== undefined ? this.props.airline.airlineId : 0,
       Title: this.state.airlineTitle,
       Address: this.state.airlineAddress,
       Description: this.state.airlineDescription,
@@ -180,10 +182,9 @@ class AddAirlineForm extends Component {
       AirlineDestinations: airlineDestinations,
     };
 
-    if (this.props.mode === "EDIT") this.props.OnEditAirline(airline);
-    else this.props.OnAddAirline(airline);
-
-    this.props.closeForm();
+    this.props.mode === 0
+      ? this.props.OnEditAirline(airline)
+      : this.props.OnAddAirline(airline);
   };
 
   isLuggageIncluded(luggageArray, luggage) {
@@ -205,7 +206,7 @@ class AddAirlineForm extends Component {
         <Modal.Header>
           <h2 style={{ "margin-left": "35%" }}>
             {" "}
-            {this.props.mode === "EDIT" ? "Edit Airline" : "Add Airline"}
+            {this.props.mode === 0 ? "Edit Airline" : "Add Airline"}
           </h2>
         </Modal.Header>
         <ValidatorForm

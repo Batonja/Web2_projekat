@@ -12,7 +12,7 @@ export default function addFlight(flight) {
       .post(ConnectTo + "airline/addFlight", flight)
       .then((response) => {
         return response.data.errorCode === 200
-          ? (dispatch({ type: ADD_FLIGHT, payload: response.data }),
+          ? (dispatch({ type: ADD_FLIGHT, payload: response.data.value }),
             toast.dark("Flight added successfully"),
             dispatch(finishedLoading()))
           : (toast.error("AddFlightError: " + response.data.description),

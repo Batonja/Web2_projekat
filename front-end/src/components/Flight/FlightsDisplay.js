@@ -240,7 +240,7 @@ class FlightsDisplay extends Component {
                                       </Select>
                                       <br />
 
-                                      {this.props.loggedInUser.FirstName ? (
+                                      {this.props.loggedInUser ? (
                                         <Button
                                           ref={this.fastReservationRef.ref(
                                             flight.Id
