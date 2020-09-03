@@ -54,7 +54,7 @@ namespace DatabaseLayer.Implementations
                     && flight.ArrivalDate == searchObject.ArrivalDate.Date
                     && flight.DepartureDate == searchObject.DepartureDate.Date
                     && flight.Tickets.Any(ticket => ticket.Price >= searchObject.PriceRange[0]
-                    || ticket.Price <= searchObject.PriceRange[1]))).ToList();
+                    && ticket.Price <= searchObject.PriceRange[1]))).ToList();
 
 
             }
@@ -113,7 +113,15 @@ namespace DatabaseLayer.Implementations
 
             using (var context = new DataContext(DataContext.ops.dbOptions))
             {
-                
+
+                foreach (var afl in airline.AvailableFlightLuggage)
+                    context.FlightLuggage.Attach(afl.FlightLuggage);
+
+                foreach (var ad in airline.AirlineDestinations)
+                    context.Destination.Attach(ad.Destination);
+
+                context.AirlineDestination.AttachRange(airline.AirlineDestinations);
+
                 context.Airline.Add(airline);
                 int effectedRows = context.SaveChanges();
 
@@ -260,6 +268,7 @@ namespace DatabaseLayer.Implementations
 
             using (var context = new DataContext(DataContext.ops.dbOptions))
             {
+                context.FlightLuggage.Attach(airlineFlightLuggage.FlightLuggage);
                 context.Add(airlineFlightLuggage);
                 rowsEffected = context.SaveChanges();
             }
@@ -372,9 +381,17 @@ namespace DatabaseLayer.Implementations
 
             using (var context = new DataContext(DataContext.ops.dbOptions))
             {
-                context.Update(flight.Airline);
-                context.Update(flight.ToDestination);
-                context.Update(flight.FromDestination);
+                int airlineId = flight.Airline.AirlineId;
+                flight.Airline = new Airline();
+                flight.Airline.AirlineId = airlineId;
+                
+
+               
+                context.Destination.Attach(flight.ToDestination);
+                
+                context.Destination.Attach(flight.FromDestination);
+                
+                context.Airline.Attach(flight.Airline);
                 context.Add(flight);
                 rowsEffected = context.SaveChanges();
             }

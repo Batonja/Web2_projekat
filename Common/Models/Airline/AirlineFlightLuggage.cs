@@ -9,6 +9,16 @@ namespace Common.Models.Airline
     public class AirlineFlightLuggage
     {
 
+        public AirlineFlightLuggage() { }
+
+        public AirlineFlightLuggage(AirlineFlightLuggage afl)
+        {
+            FlightLuggage = afl.FlightLuggage;
+            FlightLuggageId = afl.FlightLuggageId;
+            Airline = afl.Airline;
+            AirlineId = afl.AirlineId;
+        }
+
         public FlightLuggage FlightLuggage { get; set; }
         [Key, Column(Order = 2)]
         public int FlightLuggageId { get; set; }
