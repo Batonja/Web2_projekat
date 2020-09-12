@@ -14,8 +14,9 @@ namespace DatabaseLayer.Interfaces
         List<Airline> Filter(List<Airline> airlines);
     
         Airline Get(int id);
-        
 
+        bool EditFlight(Flight flight);
+        bool AddSeat(Seat seat);
         bool EditAirline(Airline airline);
         bool AddAirline(Airline airline);
         bool DeleteAirline(int airlineId);

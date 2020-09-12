@@ -90,23 +90,43 @@ namespace BusinessLayer.Implementations
             if (!_airlineDatabase.EditAirline(airline))
                 return CheckAirline(airline, 500, "Unable to edit airline");
 
-            foreach (var airlineAfl in airline.AvailableFlightLuggage)
-            {
-                AirlineFlightLuggage aflToAdd = airlineAfl;
 
-                foreach (var airlineDbAfl in airlineFromDB.AvailableFlightLuggage)
+            foreach (var flight in airline.Flights)
+            {
+                foreach (var seat in flight.Seats)
                 {
-                    if(airlineDbAfl.FlightLuggageId == airlineAfl.FlightLuggageId && airlineDbAfl.AirlineId == airlineAfl.AirlineId)
+
+                    if (seat.SeatId == 0)
                     {
-                        aflToAdd = null;
-                        break;
+                        seat.Flight = flight;
+                        if (!_airlineDatabase.AddSeat(seat))
+                            return CheckAirline(airline, 500, "Unable to add seats");
                     }
+
                 }
 
-                if(aflToAdd != null)
+            }
+
+
+            if(airline.AvailableFlightLuggage != null) { 
+                foreach (var airlineAfl in airline.AvailableFlightLuggage)
                 {
-                    if (!_airlineDatabase.AddAirlineFlightLuggage(aflToAdd))
-                        return CheckAirline(airline, 500, "Unable to add AirlineFlightLuggage while editing airline");
+                    AirlineFlightLuggage aflToAdd = airlineAfl;
+
+                    foreach (var airlineDbAfl in airlineFromDB.AvailableFlightLuggage)
+                    {
+                        if(airlineDbAfl.FlightLuggageId == airlineAfl.FlightLuggageId && airlineDbAfl.AirlineId == airlineAfl.AirlineId)
+                        {
+                            aflToAdd = null;
+                            break;
+                        }
+                    }
+
+                    if(aflToAdd != null)
+                    {
+                        if (!_airlineDatabase.AddAirlineFlightLuggage(aflToAdd))
+                            return CheckAirline(airline, 500, "Unable to add AirlineFlightLuggage while editing airline");
+                    }
                 }
             }
 
