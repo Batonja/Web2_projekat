@@ -242,9 +242,14 @@ export default function flightReducer(state = initialState, { type, payload }) {
           airlineToChange.title = payload.title;
           airlineToChange.address = payload.address;
           airlineToChange.description = payload.description;
-          airlineToChange.airlineDestinations = payload.airlineDestinations;
+          airlineToChange.airlineDestinations =
+            payload.airlineDestinations === null
+              ? airlineToChange.airlineDestinations
+              : payload.airlineDestinations;
           airlineToChange.availableFlightLuggage =
-            payload.availableFlightLuggage;
+            payload.availableFlightLuggage === null
+              ? airlineToChange.availableFlightLuggage
+              : payload.availableFlightLuggage;
         }
       }
 
@@ -274,17 +279,29 @@ export default function flightReducer(state = initialState, { type, payload }) {
         indexOfAirline < state.airlines.length;
         indexOfAirline++
       ) {
+        var editedAirline = state.airlines[indexOfAirline];
         for (
           var indexOfFlight = 0;
           indexOfFlight < state.airlines[indexOfAirline].flights.length;
           indexOfFlight++
         ) {
           if (
-            state.airlines[indexOfAirline].flights[indexOfFlight].Id ===
+            state.airlines[indexOfAirline].flights[indexOfFlight].flightId ===
             payload.flightId
           ) {
-            var editedAirline = state.airlines[indexOfAirline];
-            editedAirline.flights[indexOfFlight].seats = payload.seats;
+            for (
+              var indexOfSeat = 0;
+              indexOfSeat < editedAirline.flights[indexOfFlight].length;
+              indexOfSeat++
+            ) {
+              if (
+                editedAirline.flights[indexOfFlight].seats[indexOfSeat]
+                  .seatId === payload.seats[0].seatId
+              ) {
+                editedAirline.flights[indexOfFlight].seats[indexOfSeat] =
+                  payload.seats[0];
+              }
+            }
 
             return {
               ...state,

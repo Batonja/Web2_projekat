@@ -83,7 +83,7 @@ class FlightsDisplay extends Component {
     event.preventDefault();
     var foundSeat = false;
     var alreadyFlying = false;
-    for (
+    /*for (
       var indexOfPassenger = 0;
       indexOfPassenger < passengers.length;
       indexOfPassenger++
@@ -107,44 +107,30 @@ class FlightsDisplay extends Component {
           break;
         }
       }
-
-      if (foundSeat) {
-        const passenger = {
-          FirstName: this.props.loggedInUser.FirstName,
-          LastName: this.props.loggedInUser.LastName,
-          PassportId: this.props.loggedInUser.PassportId,
-
-          TicketType: this.state.ticketType,
-          Email: this.props.loggedInUser.Email,
-          SeatId: numberOfSeat,
+      */
+    var order = "";
+    for (
+      var indexOfSeat = 0;
+      indexOfSeat < flight.seats.length;
+      indexOfSeat++
+    ) {
+      if (flight.seats[indexOfSeat].seatState === -1) {
+        foundSeat = true;
+        order = {
+          Flight: flight,
+          FlightTicket: flight.tickets[0],
+          FlightLuggage: airline.availableFlightLuggage[0],
+          User: this.props.loggedInUser,
+          Seat: flight.seats[indexOfSeat],
         };
-
-        const order = {
-          AirlineId: airline.Id,
-          AirlineTitle: airline.Title,
-          Destination: flight.To,
-          From: flight.From,
-          Luggage: airline.Luggage[0],
-          DepartureDate: flight.DepartureDate,
-          ArrivalDate: flight.ArivalDate,
-          TicketType: this.state.ticketType,
-          Price: flight.Price * 1.05 - airline.Tickets.Business,
-          SeatId: flight.Id,
-        };
-        this.props.OnFastReservation(
-          seats,
-          this.props.loggedInUser,
-          airline.Id,
-          flight.Id
-        );
-
-        this.props.OnOrderFlight([order], [passenger]);
-
+        order.Seat.seatState = 2;
+        this.props.OnReserveSeats(order, null, airline.Id, flight.Id);
         this.setState({ fastReservationSuccess: flight.Id });
-      } else {
-        this.setState({ fastReservationError: flight.Id });
       }
     }
+
+    if (!foundSeat) this.setState({ fastReservationError: flight.Id });
+
     setTimeout(() => {
       this.setState({
         fastReservationSuccess: -1,
@@ -300,7 +286,7 @@ class FlightsDisplay extends Component {
                                         color="primary"
                                         variant="contained"
                                         onClick={(e) =>
-                                          this.openModal(e, flight.Id)
+                                          this.openModal(e, flight.flightId)
                                         }
                                       >
                                         More Info
@@ -313,7 +299,8 @@ class FlightsDisplay extends Component {
                                           style={modalStyle}
                                           ariaHideApp={false}
                                           show={
-                                            flight.Id === this.state.openedModal
+                                            flight.flightId ===
+                                            this.state.openedModal
                                               ? true
                                               : false
                                           }
@@ -361,6 +348,8 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(reserveSeats(seats, passengers, airlineId, flightId)),
   OnOrderFlight: (order, passengers) =>
     dispatch(orderFlight(order, passengers)),
+  OnReserveSeats: (order, passenger, airlineId, flightId) =>
+    dispatch(reserveSeats(order, passenger, airlineId, flightId)),
 });
 
 export default connect(

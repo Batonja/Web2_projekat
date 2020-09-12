@@ -12,6 +12,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import InputLabel from "@material-ui/core/InputLabel";
 import InviteFriend from "./InviteFriend";
 import { connect } from "react-redux";
+import getUsers from "../../../actions/User/getUsers";
 
 //const modalStyle = { "z-index": "1200" };
 
@@ -44,6 +45,7 @@ class SecondStep extends Component {
 
   componentDidMount() {
     this.setState({ seatsIds: this.props.seatsIds });
+    this.props.getUsers();
   }
 
   componentDidUpdate() {
@@ -100,16 +102,13 @@ class SecondStep extends Component {
   };
 
   submitReservation(passenger) {
-    passenger.Seat.SeatState = 2;
+    passenger.Seat.seatState = 2;
     const order = {
       Flight: this.props.flight,
-      FlightTicket: {
-        Type: this.state.ticketType,
-        Price:
-          this.state.ticketType === 0
-            ? this.props.flight.tickets[0].price
-            : this.props.flight.tickets[1].price,
-      },
+      FlightTicket:
+        this.state.ticketType === 0
+          ? this.props.flight.tickets[0]
+          : this.props.flight.tickets[1],
 
       FlightLuggage: { FlightLuggageId: this.state.luggage },
       User: passenger,
@@ -126,19 +125,21 @@ class SecondStep extends Component {
   inviteFriend = () => {
     var theUser = "";
     Array.from(this.props.allUsers).forEach((user) => {
-      if (user.Email === this.state.selectedFriendEmail) {
+      if (user.email === this.state.selectedFriendEmail) {
         theUser = user;
       }
     });
 
     const passenger = {
-      FirstName: theUser.FirstName,
-      LastName: theUser.LastName,
-      PassportId: theUser.PassportId,
+      FirstName: theUser.firstName,
+      LastName: theUser.lastName,
+      PassportId: theUser.passportId,
       Luggage: this.state.luggage,
       TicketType: this.state.ticketType,
-      Email: theUser.Email,
-      Seat: this.state.seatsIds[this.state.currentReservation],
+      Email: theUser.email,
+      Seat: Array.from(this.props.flight.seats).find(
+        (theSeat) => theSeat.seatState === 0
+      ),
     };
 
     this.inviteFriendRef.current.removeInvitedFriend();
@@ -336,13 +337,13 @@ class SecondStep extends Component {
           )}
         </Modal.Body>
         <Modal.Footer>
-          {this.props.loggedInUser.FirstName ? (
+          {this.props.loggedInUser.firstName ? (
             <div className="mb-2 mr-auto">
               <InviteFriend
                 ref={this.inviteFriendRef}
                 sendSelectedFriend={(email) => this.getSelectedEmail(email)}
                 allUsers={this.props.allUsers}
-                friends={this.props.loggedInUser.Friends}
+                friends={this.props.loggedInUser.friendsWith}
                 passengers={this.props.flight.Passengers}
               />
               <br />
@@ -388,4 +389,8 @@ const mapStateToProps = (state) => ({
   allUsers: state.userReducer.AllUsers,
 });
 
-export default connect(mapStateToProps)(SecondStep);
+const mapDispatchToProps = (dispatch) => ({
+  getUsers: () => dispatch(getUsers()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SecondStep);

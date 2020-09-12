@@ -22,7 +22,7 @@ class InviteFriend extends Component {
       });
     });
     this.setState({ friendsNames: friendsFullNames });
-    this.props.sendSelectedFriend(this.state.selectedFriend);
+    this.props.sendSelectedFriend(this.state.selectedFriend.friendOf.email);
   }
 
   onHandleChange = (event) => {
@@ -30,7 +30,7 @@ class InviteFriend extends Component {
     this.props.sendSelectedFriend(event.target.value);
   };
 
-  isFriendAlreadyFlying = (friend) => {
+  /*isFriendAlreadyFlying = (friend) => {
     for (var index = 0; index < this.props.passengers.length; index++) {
       if (this.props.passengers[index].Email === friend) {
         if (this.state.selectedFriend === this.props.passengers[index].Email) {
@@ -50,7 +50,7 @@ class InviteFriend extends Component {
       }
     }
     return false;
-  };
+  };*/
 
   getSelectedFriend = () => {
     return this.state.selectedFriend;
@@ -60,7 +60,10 @@ class InviteFriend extends Component {
     var firstSelectedFriend = this.state.selectedFriend;
     var indexToDelete = -1;
     for (var index = 0; index < this.state.allFriends.length; index++) {
-      if (this.state.allFriends[index] === this.state.selectedFriend) {
+      if (
+        this.state.allFriends[index].friendOf.email ===
+        this.state.selectedFriend.email
+      ) {
         indexToDelete = index;
         this.setState({
           selectedFriend: this.state.allFriends[
@@ -88,10 +91,10 @@ class InviteFriend extends Component {
           onChange={(e) => this.onHandleChange(e)}
         >
           {Array.from(this.state.allFriends).map((friend, i) => {
-            return this.isFriendAlreadyFlying(friend) ? (
-              <div />
-            ) : (
-              <MenuItem value={friend}>{this.state.friendsNames[i]}</MenuItem>
+            return (
+              <MenuItem value={friend}>
+                {friend.friendOf.firstName + "(" + friend.friendOf.email + ")"}
+              </MenuItem>
             );
           })}
         </Select>

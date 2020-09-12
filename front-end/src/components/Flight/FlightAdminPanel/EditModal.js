@@ -87,12 +87,14 @@ class EditModal extends Component {
     var seatObjects = [];
 
     for (var i = 0; i < this.state.seats.length; i++) {
-      var seat = {
-        SeatId: i,
-        SeatNumber: i,
-        SeatState: this.state.seats[i],
-      };
+      var seat = this.state.seats[i];
 
+      if (seat.seatId === undefined) {
+        seat = {
+          SeatNumber: i,
+          SeatState: this.state.seats[i],
+        };
+      }
       seatObjects.push(seat);
     }
 
