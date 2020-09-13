@@ -52,19 +52,27 @@ class FlightBasicInformation extends Component {
                 value={parseDateToString(this.props.flight.arrivalDate)}
               ></TextField>
             </Col>
+            {this.props.flight.tickets[1] !== undefined ? (
+              <Col md="auto" className="flightItem">
+                <TextField
+                  label="Economy"
+                  value={this.props.flight.tickets[1].price}
+                ></TextField>
+              </Col>
+            ) : (
+              ""
+            )}
 
-            <Col md="auto" className="flightItem">
-              <TextField
-                label="Economy"
-                value={this.props.flight.tickets[1].price}
-              ></TextField>
-            </Col>
-            <Col md="auto" className="flightItem">
-              <TextField
-                label="Business"
-                value={this.props.flight.tickets[0].price}
-              ></TextField>
-            </Col>
+            {this.props.flight.tickets[0] !== undefined ? (
+              <Col md="auto" className="flightItem">
+                <TextField
+                  label="Business"
+                  value={this.props.flight.tickets[0].price}
+                ></TextField>
+              </Col>
+            ) : (
+              ""
+            )}
 
             <Col md="auto" className="flightItem">
               <TextField

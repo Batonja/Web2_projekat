@@ -7,6 +7,8 @@ import { GET_FLIGHT_LUGGAGE } from "../actions/Flight/getFlightLuggage";
 import { GET_AIRLINES } from "../actions/Flight/getAirlines";
 import { GET_DESTINATIONS } from "../actions/Flight/getDestinations";
 import { ADD_FLIGHT } from "../actions/Flight/addFlight";
+import { GET_FLIGHT_ORDERS } from "../actions/Flight/getFlightOrders";
+import { DELETE_ORDER } from "../actions/Flight/deleteOrder";
 import cloneDeep from "lodash/cloneDeep";
 
 const initialState = {
@@ -185,6 +187,40 @@ const initialState = {
 
 export default function flightReducer(state = initialState, { type, payload }) {
   switch (type) {
+    case DELETE_ORDER:
+      var flightOrders = state.allFlightOrders;
+      var confirmedFlightOrders = state.confirmedFlightOrders;
+      var unconfirmedFlightOrders = state.unconfirmedFlightOrders;
+      if (
+        confirmedFlightOrders.some((order) => order.flightOrderId === payload)
+      ) {
+        confirmedFlightOrders.filter(
+          (order) => order.flightOrderId !== payload
+        );
+      } else
+        unconfirmedFlightOrders.filter(
+          (order) => order.flightOrderId !== payload
+        );
+
+      return {
+        ...state,
+        confirmedFlightOrders: confirmedFlightOrders,
+        unconfirmedFlightOrders: unconfirmedFlightOrders,
+      };
+
+    case GET_FLIGHT_ORDERS:
+      var confirmedFlightOrders = payload.filter(
+        (order) => order.confirmed === true
+      );
+      var unconfirmedFlightOrders = payload.filter(
+        (order) => order.confirmed === false
+      );
+      return {
+        ...state,
+        confirmedFlightOrders: confirmedFlightOrders,
+        unconfirmedFlightOrders: unconfirmedFlightOrders,
+      };
+
     case ADD_FLIGHT:
       var airlineToAddFlightTo = -1;
       var indexOfAirlineToAddFlightTo = -1;

@@ -23,6 +23,10 @@ import Divider from "@material-ui/core/Divider";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
 import addFriend from "../../actions/User/addFriend";
+import getFlightOrders from "../../actions/Flight/getFlightOrders";
+import FlightBasicInformation from "../Flight/Preview/FlightBasicInformation";
+import Spinner from "react-bootstrap/Spinner";
+import deleteOrder from "../../actions/Flight/deleteOrder";
 
 const styles = (theme) => ({
   AcountFlexContainer: {
@@ -133,8 +137,11 @@ class Account extends Component {
       flightGrade: 0,
       service: 0,
       car: 0,
-    };
+      unconfirmedFlightOrders: undefined,
 
+      myFlightOrders: undefined,
+    };
+    this.deleteFlightOrder = this.deleteFlightOrder.bind(this);
     this.addFriendOverlayRef = React.createRef(null);
     console.log(this.props.loggedInUser);
   }
@@ -152,9 +159,14 @@ class Account extends Component {
     else return false;
   }
 
+  deleteFlightOrder(order) {
+    this.props.deleteFlightOrder(order);
+  }
+
   componentDidMount() {
     const regexLettersOnly = /[^A-Za-z]+/;
     const regexNotANumber = /[^0-9]/;
+    this.props.getFlightOrders();
     const filteredUsers = this.props.allUsers.filter(
       this.filterUsers.bind(this)
     );
@@ -236,7 +248,9 @@ class Account extends Component {
     const { classes } = this.props;
     const { loggedInUser } = this.props;
     const { AllUsers } = this.props;
-    return (
+    return this.props.loading ? (
+      <Spinner animation="border" />
+    ) : (
       <div className={classes.AcountFlexContainer}>
         <div className={classes.AccountFormFlexBoxContainer}>
           <div>
@@ -353,7 +367,7 @@ class Account extends Component {
           </div>
 
           {/* FriendsOf - lista svih prijatelja i u njoj friendsOf.friendWith - konkretan user sa kojim nas ulogovani ima prijateljstvo */}
-          {alert(JSON.stringify(this.props.loggedInUser.friendsOf))}
+
           {this.props.loggedInUser.friendsOf ? (
             <TableContainer component={Paper} style={{ width: "100%" }}>
               <Table className={classes.table} aria-label="customized table">
@@ -361,7 +375,7 @@ class Account extends Component {
                   <TableRow>
                     <StyledTableCell>Email</StyledTableCell>
                     {/* <StyledTableCell align="right">First Name</StyledTableCell>
-                  <StyledTableCell align="right">Last Name</StyledTableCell> */}
+                <StyledTableCell align="right">Last Name</StyledTableCell> */}
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -372,7 +386,7 @@ class Account extends Component {
                           {friendOf.friendWith.email}
                         </StyledTableCell>
                         {/* <StyledTableCell align="right">{tempFriend.FirstName}</StyledTableCell>
-                      <StyledTableCell align="right">{tempFriend.LastName}</StyledTableCell> */}
+                    <StyledTableCell align="right">{tempFriend.LastName}</StyledTableCell> */}
                       </StyledTableRow>
                     );
                   })}
@@ -383,16 +397,16 @@ class Account extends Component {
             ""
           )}
 
-          <Button
-            variant="contained"
-            onClick={this.handleAddFormToggle.bind(this)}
-            color="primary"
-            size="large"
-            style={{ margin: "10px" }}
-            //endIcon={<SendRoundedIcon />}
-          >
-            Add Friend
-          </Button>
+          {/*<Button
+          variant="contained"
+          onClick={this.handleAddFormToggle.bind(this)}
+          color="primary"
+          size="large"
+          style={{ margin: "10px" }}
+          //endIcon={<SendRoundedIcon />}
+        >
+          Add Friend
+       </Button>}  */}
         </div>
 
         <div
@@ -478,12 +492,133 @@ class Account extends Component {
           ) : (
             ""
           )}
+          {this.props.confirmedFlightOrders !== undefined ? (
+            <Container fluid>
+              {Array.from(this.props.confirmedFlightOrders).map((order) => {
+                return (
+                  <Row>
+                    <FlightBasicInformation
+                      airline={order.flight.airline}
+                      flight={order.flight}
+                    />
+                    <Col md="auto" className="flightItem">
+                      <TextField
+                        label="Luggage"
+                        value={
+                          order.flightLuggage.flightLuggageType === 0
+                            ? "Hand"
+                            : "Checked"
+                        }
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                      ></TextField>
+                    </Col>
+                    <Col md="auto" className="flightItem">
+                      <TextField
+                        label="Flight Ticket Type / Price"
+                        value={
+                          (order.flightTicket.type === 0
+                            ? "Business"
+                            : "Economy") +
+                          " / " +
+                          order.flightTicket.price
+                        }
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                      ></TextField>
+                    </Col>
+                    <Col md="auto" className="flightItem">
+                      <TextField
+                        label="Seat Number"
+                        value={order.seat.seatNumber}
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                      ></TextField>
+                    </Col>
+                    <Button
+                      key={order.flightOrderId}
+                      onClick={() => this.deleteFlightOrder(order)}
+                      variant="outlined"
+                      color="secondary"
+                    >
+                      Cancel
+                    </Button>
+                  </Row>
+                );
+              })}
+            </Container>
+          ) : (
+            ""
+          )}
 
-          <div>
-            <h5 className={classes.accountHeaders}>
-              You can grade your flight and airline after arrival
-            </h5>
-          </div>
+          {this.props.unconfirmedFlightOrders === undefined ? (
+            ""
+          ) : (
+            <>
+              <h4 className={classes.accountHeaders}>Unconfirmed Flights</h4>
+              <Container fluid>
+                {Array.from(this.props.unconfirmedFlightOrders).map((order) => {
+                  return (
+                    <Row>
+                      <FlightBasicInformation
+                        airline={order.flight.airline}
+                        flight={order.flight}
+                      />
+                      <Col md="auto" className="flightItem">
+                        <TextField
+                          label="Luggage"
+                          value={
+                            order.flightLuggage.flightLuggageType === 0
+                              ? "Hand"
+                              : "Checked"
+                          }
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                        ></TextField>
+                      </Col>
+                      <Col md="auto" className="flightItem">
+                        <TextField
+                          label="Flight Ticket Type / Price"
+                          value={
+                            (order.flightTicket.type === 0
+                              ? "Business"
+                              : "Economy") +
+                            " / " +
+                            order.flightTicket.price
+                          }
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                        ></TextField>
+                      </Col>
+                      <Col md="auto" className="flightItem">
+                        <TextField
+                          label="Seat Number"
+                          value={order.seat.seatNumber}
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                        ></TextField>
+                      </Col>
+                      <Button
+                        key={order.flightOrderId}
+                        onClick={() => this.deleteFlightOrder(order)}
+                        variant="outlined"
+                        color="secondary"
+                      >
+                        Cancel
+                      </Button>
+                    </Row>
+                  );
+                })}
+              </Container>
+            </>
+          )}
+
           <hr
             style={{
               border: "2px solid black",
@@ -646,12 +781,17 @@ class Account extends Component {
 const mapDispatchToProps = (dispatch) => ({
   addFriend: (FriendsEmail, userEmail) =>
     dispatch(addFriend(FriendsEmail, userEmail)),
+  getFlightOrders: () => dispatch(getFlightOrders()),
+  deleteFlightOrder: (flightOrderId) => dispatch(deleteOrder(flightOrderId)),
 });
 
 const mapStateToProps = (state) => ({
   allUsers: state.userReducer.AllUsers,
   loggedInUser: state.userReducer.LoggedInUser,
   ROLES: state.userReducer.ROLES,
+  confirmedFlightOrders: state.flightReducer.confirmedFlightOrders,
+  unconfirmedFlightOrders: state.flightReducer.unconfirmedFlightOrders,
+  loading: state.loadingReducer.loading,
 });
 
 export default connect(

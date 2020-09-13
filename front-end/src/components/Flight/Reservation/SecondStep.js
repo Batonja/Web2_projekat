@@ -101,7 +101,7 @@ class SecondStep extends Component {
     this.setState({ ticketType: event.target.value });
   };
 
-  submitReservation(passenger) {
+  submitReservation(passenger, isRequest) {
     passenger.Seat.seatState = 2;
     const order = {
       Flight: this.props.flight,
@@ -113,6 +113,7 @@ class SecondStep extends Component {
       FlightLuggage: { FlightLuggageId: this.state.luggage },
       User: passenger,
       Seat: passenger.Seat,
+      Confirmed: isRequest === true ? false : true,
     };
 
     this.props.reserveSeat(passenger, order);
@@ -143,7 +144,7 @@ class SecondStep extends Component {
     };
 
     this.inviteFriendRef.current.removeInvitedFriend();
-    this.submitReservation(passenger);
+    this.submitReservation(passenger, true);
   };
 
   onHandleSubmit = (event) => {
