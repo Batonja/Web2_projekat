@@ -24,6 +24,22 @@ namespace Backend.Controllers
             _airlineBusiness = airlineBusiess;
             DbContext = dbContext;
         }
+        
+
+        [HttpPost]
+        public Holder<FlightOrder> DeleteFlightOrder([FromBody]FlightOrder flightOrder)
+        {
+            Holder<FlightOrder> retVal = _airlineBusiness.DeleteFlightOrder(flightOrder);
+            return retVal;
+        }
+
+        [HttpGet]
+        public List<FlightOrder> GetFlightOrders()
+        {
+            List<FlightOrder> orders = _airlineBusiness.GetFlightOrders();
+
+            return orders;
+        }
 
         // GET: api/Airline
         [HttpGet]

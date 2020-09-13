@@ -147,6 +147,18 @@ namespace BusinessLayer.Implementations
             return _airlineDatabase.Get(id);
         }
 
+        public List<FlightOrder> GetFlightOrders()
+        {
+            return _airlineDatabase.GetFlightOrders();
+        }
+        public Holder<FlightOrder> DeleteFlightOrder(FlightOrder flightOrder)
+        {
+            if (!_airlineDatabase.FreeSeat(flightOrder.Seat))
+                return CheckFlightOrder(flightOrder, 400, "Server error while trying to free the seat");
+
+            return _airlineDatabase.DeleteFlightOrder(flightOrder) ? CheckFlightOrder(flightOrder, 200, "") :
+                CheckFlightOrder(flightOrder, 400, "Server error while trying to delete flightOrder");
+        }
         public Holder<FlightOrder> OrderFlight(FlightOrder flightOrder)
         {
 

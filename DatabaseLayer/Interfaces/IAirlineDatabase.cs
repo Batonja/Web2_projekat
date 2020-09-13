@@ -12,9 +12,11 @@ namespace DatabaseLayer.Interfaces
         List<Airline> Search(SearchObject searchObject);
         List<Airline> SearchWithDestination(SearchObject searchObject);
         List<Airline> Filter(List<Airline> airlines);
-    
-        Airline Get(int id);
+        List<FlightOrder> GetFlightOrders();
 
+        Airline Get(int id);
+        bool FreeSeat(Seat seat);
+        bool DeleteFlightOrder(FlightOrder flightOrder);
         bool EditFlight(Flight flight);
         bool AddSeat(Seat seat);
         bool EditAirline(Airline airline);

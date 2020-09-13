@@ -150,6 +150,58 @@ namespace DatabaseLayer.Implementations
             return airline;
         }
 
+        public bool FreeSeat(Seat seat)
+        {
+            int rowsEffected = -1;
+
+            using (var context = new DataContext(DataContext.ops.dbOptions))
+            {
+                seat = context.Seat.Where(theSeat => theSeat.SeatId == seat.SeatId).FirstOrDefault();
+
+                seat.SeatState = Common.Enums.SeatState.FREE;
+
+                context.Seat.Update(seat);
+
+                rowsEffected = context.SaveChanges();
+            }
+
+            return rowsEffected > 0 ? true : false;
+        }
+
+        public bool DeleteFlightOrder(FlightOrder flightOrder)
+        {
+            int rowsEffected = -1;
+
+            using (var context = new DataContext(DataContext.ops.dbOptions))
+            {
+                flightOrder = context.FlightOrder.Where(theFlightOrder => 
+                    theFlightOrder.FlightOrderId == flightOrder.FlightOrderId).FirstOrDefault();
+                context.FlightOrder.Remove(flightOrder);
+                rowsEffected = context.SaveChanges();
+            }
+
+            return rowsEffected > 0 ? true : false;
+        }
+        public List<FlightOrder> GetFlightOrders()
+        {
+            List<FlightOrder> flightOrders = new List<FlightOrder>();
+
+            using (var context = new DataContext(DataContext.ops.dbOptions))
+            {
+                flightOrders = context.FlightOrder
+                    .Include(theFlightOrder => theFlightOrder.Flight).ThenInclude(theFlight => theFlight.ToDestination)
+                    .Include(theFlightOrder => theFlightOrder.Flight).ThenInclude(theFlight => theFlight.FromDestination)
+                    .Include(theFlightOrder => theFlightOrder.Flight).ThenInclude(theFlight => theFlight.Airline)
+                    .Include(theFlightOrder => theFlightOrder.FlightLuggage)
+                    .Include(theFlightOrder => theFlightOrder.FlightTicket)
+                    .Include(theFlightOrder => theFlightOrder.Seat)
+                    .Include(theFlightOrder => theFlightOrder.User).ToList();
+            }
+
+            return flightOrders;
+
+        }
+
         public bool AddFlightOrder(FlightOrder flightOrder)
         {
             int rowsEffected = -1;
