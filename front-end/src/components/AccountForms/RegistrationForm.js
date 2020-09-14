@@ -86,6 +86,7 @@ class RegistrationForm extends Component {
     Address: "",
     Phone: "",
     PassportId: "",
+    Role: 3,
     Salt: "salt",
   };
 

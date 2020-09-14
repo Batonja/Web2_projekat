@@ -4,23 +4,22 @@ import finishedLoading from "../Loading/finishedLoading";
 import { ConnectTo } from "../../common/constants";
 import { toast } from "react-toastify";
 
-export const ADD_FRIEND = "user:addFriend";
-// u FriendOf onaj kome saljem zahtev a u FriendWith onaj sa kojeg saljes zahtev (sa ovim si ulogovan)
-export default function addFriend(friend) {
+export const CONFIRM_ORDER = "airline:confirmOrder";
+
+export default function confirmOrder(flightOrder) {
   return (dispatch) => {
     dispatch(loadingData());
     axios
-      .post(ConnectTo + "user/addFriend", friend)
+      .post(ConnectTo + "airline/confirmFlight", flightOrder)
       .then((response) => {
         return response.data.errorCode === 200
           ? (dispatch({
-              type: ADD_FRIEND,
-              payload: response.data.value,
+              type: CONFIRM_ORDER,
+              payload: response.data.value.flightOrderId,
             }),
-            dispatch(finishedLoading()),
-            toast.dark("Friend request sent"))
+            dispatch(finishedLoading()))
           : (dispatch(finishedLoading()),
-            toast.error("Error while trying to add friend"));
+            toast.error("Error while trying to confirm flight order"));
       })
       .catch((exception) => {
         toast.error("Error: " + exception.message);

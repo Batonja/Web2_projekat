@@ -126,6 +126,7 @@ class FlightsDisplay extends Component {
         order.Seat.seatState = 2;
         this.props.OnReserveSeats(order, null, airline.Id, flight.Id);
         this.setState({ fastReservationSuccess: flight.Id });
+        break;
       }
     }
 

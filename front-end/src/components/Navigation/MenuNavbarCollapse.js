@@ -117,6 +117,22 @@ const MenuNavbarCollapse = (props) => {
             <div className={classes.linkButtonDiv}>Admin</div>
           </Link>
         </div>
+
+        {props.loggedInUser.role === 0 ? (
+          <div>
+            <Link
+              variant="body2"
+              color="inherit"
+              to={"/flights/admin"}
+              component={RouterLink}
+              style={{ margin: "20px", itemAlign: "center" }}
+            >
+              <div className={classes.linkButtonDiv}>Flight Admin</div>
+            </Link>
+          </div>
+        ) : (
+          ""
+        )}
       </div>
       <ToastContainer
         position="top-center"
@@ -132,4 +148,8 @@ const MenuNavbarCollapse = (props) => {
   );
 };
 
-export default withStyles(styles)(MenuNavbarCollapse);
+const mapStateToProps = (state) => ({
+  loggedInUser: state.userReducer.LoggedInUser,
+});
+
+export default connect(mapStateToProps)(withStyles(styles)(MenuNavbarCollapse));

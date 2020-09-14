@@ -6,8 +6,9 @@ import { CAR_ORDER_TO_PROFILE } from "../actions/User/carOrderToProfile";
 import { CANCEL_ALL_FLIGHT_ORDERS } from "../actions/User/cancelAllFlightOrders";
 import { GET_USERS } from "../actions/User/getUsers";
 import cloneDeep from "lodash/cloneDeep";
-import { ADD_FRIEND_TO_LIST } from "../actions/User/addFriend";
-
+import { GET_FRIENDS } from "../actions/User/getFriends";
+import { ADD_FRIEND } from "../actions/User/addFriend";
+import { CONFIRM_FRIENDSHIP } from "../actions/User/confirmFriendship";
 export const ROLES = {
   FLIGHT_ADMIN: "flightAdmin",
   CAR_ADMIN: "carAdmin",
@@ -103,6 +104,16 @@ const initialState = {
 
 export default function userReducer(state = initialState, { type, payload }) {
   switch (type) {
+    case CONFIRM_FRIENDSHIP:
+      var allFriends = state.AllFriends;
+      allFriends = allFriends.some(
+        (friend) => friend.friendshipId !== payload.friendshipId
+      );
+      allFriends = Array.from(allFriends).concat(payload);
+      return { ...state, AllFriends: allFriends };
+
+    case GET_FRIENDS:
+      return { ...state, AllFriends: payload };
     case GET_USERS:
       return { ...state, AllUsers: payload };
 
@@ -200,25 +211,13 @@ export default function userReducer(state = initialState, { type, payload }) {
           };
         }
       }
-    case ADD_FRIEND_TO_LIST:
-      console.log(payload);
-      for (var userIndex = 0; userIndex < state.AllUsers.length; userIndex++) {
-        if (state.AllUsers[userIndex].Email === payload.userEmail) {
-          var editedUser = state.AllUsers[userIndex];
+    case ADD_FRIEND:
+      var loggedInUser = state.LoggedInUser;
 
-          editedUser.Friends.push(payload.FriendsEmail);
-          console.log(editedUser.Friends);
-          return {
-            ...state,
-            AllUsers: [
-              ...state.AllUsers.slice(0, userIndex),
-              editedUser,
-              state.AllUsers.slice(userIndex),
-            ],
-            LoggedInUser: editedUser,
-          };
-        }
-      }
+      loggedInUser.friendsOf.concat(payload.friendOf);
+
+      return { ...state, LoggedInUser: loggedInUser };
+
     default:
       return state;
   }

@@ -7,7 +7,8 @@ import { connect } from "react-redux";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import AddIcon from "@material-ui/icons/Add";
 import Fab from "@material-ui/core/Fab";
-
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
 import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Table from "@material-ui/core/Table";
@@ -22,11 +23,15 @@ import Box from "@material-ui/core/Box";
 import Divider from "@material-ui/core/Divider";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import TextField from "@material-ui/core/TextField";
-import addFriend from "../../actions/User/addFriend";
 import getFlightOrders from "../../actions/Flight/getFlightOrders";
 import FlightBasicInformation from "../Flight/Preview/FlightBasicInformation";
 import Spinner from "react-bootstrap/Spinner";
 import deleteOrder from "../../actions/Flight/deleteOrder";
+import confirmOrder from "../../actions/Flight/confirmOrder";
+import getUsers from "../../actions/User/getUsers";
+import addFriend from "../../actions/User/addFriend";
+import getFriends from "../../actions/User/getFriends";
+import confirmFriendship from "../../actions/User/confirmFriendship";
 
 const styles = (theme) => ({
   AcountFlexContainer: {
@@ -138,11 +143,13 @@ class Account extends Component {
       service: 0,
       car: 0,
       unconfirmedFlightOrders: undefined,
+      friend: "",
 
       myFlightOrders: undefined,
     };
     this.deleteFlightOrder = this.deleteFlightOrder.bind(this);
     this.addFriendOverlayRef = React.createRef(null);
+
     console.log(this.props.loggedInUser);
   }
 
@@ -159,8 +166,18 @@ class Account extends Component {
     else return false;
   }
 
+  handleConfirmFriendship(friend) {
+    friend.confirmed = true;
+
+    this.props.confirmFriendship(friend);
+  }
+
   deleteFlightOrder(order) {
     this.props.deleteFlightOrder(order);
+  }
+
+  confirmFlightOrder(order) {
+    this.props.confirmFlightOrder(order);
   }
 
   componentDidMount() {
@@ -170,7 +187,8 @@ class Account extends Component {
     const filteredUsers = this.props.allUsers.filter(
       this.filterUsers.bind(this)
     );
-
+    this.props.getUsers();
+    this.props.getFriends();
     //const allEmails = [];
 
     const usersEmails = this.props.allUsers.map((user) => user.Email);
@@ -227,11 +245,19 @@ class Account extends Component {
     const node = this.addFriendOverlayRef.current;
     node.style.display = "flex";
   }
+
   handleClickAddFriend = (e) => {
     e.preventDefault();
     const node = this.addFriendOverlayRef.current;
     node.style.display = "none";
 
+    var friend = {
+      FriendOf: this.state.friend,
+      FriendWith: this.props.loggedInUser,
+      Confirmed: false,
+    };
+    this.props.addFriend(friend);
+    /*
     console.log("ADDING EMAIL: ", this.state.FriendsEmail);
 
     const { FriendsEmail } = this.state;
@@ -241,6 +267,7 @@ class Account extends Component {
       ...this.state,
       FriendsEmail: "",
     });
+    */
   };
 
   render() {
@@ -365,9 +392,7 @@ class Account extends Component {
           <div>
             <h3 className={classes.accountHeaders}>My Friends</h3>
           </div>
-
           {/* FriendsOf - lista svih prijatelja i u njoj friendsOf.friendWith - konkretan user sa kojim nas ulogovani ima prijateljstvo */}
-
           {this.props.loggedInUser.friendsOf ? (
             <TableContainer component={Paper} style={{ width: "100%" }}>
               <Table className={classes.table} aria-label="customized table">
@@ -379,34 +404,100 @@ class Account extends Component {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {this.props.loggedInUser.friendsOf.map((friendOf) => {
-                    return (
-                      <StyledTableRow key={friendOf.friendWith.userId}>
-                        <StyledTableCell component="th" scope="row">
-                          {friendOf.friendWith.email}
-                        </StyledTableCell>
-                        {/* <StyledTableCell align="right">{tempFriend.FirstName}</StyledTableCell>
-                    <StyledTableCell align="right">{tempFriend.LastName}</StyledTableCell> */}
-                      </StyledTableRow>
-                    );
-                  })}
+                  {this.props.allFriends === undefined
+                    ? ""
+                    : this.props.allFriends.map((friend) => {
+                        return (friend.friendOf.userId ===
+                          this.props.loggedInUser.userId ||
+                          friend.friendWith.userId ===
+                            this.props.loggedInUser.userId) &&
+                          friend.confirmed === true ? (
+                          <StyledTableRow key={friend.friendshipId}>
+                            <StyledTableCell component="th" scope="row">
+                              {friend.friendWith.userId ===
+                              this.props.loggedInUser
+                                ? friend.friendWith.email
+                                : friend.friendOf.email}
+                            </StyledTableCell>
+                            {/* <StyledTableCell align="right">{tempFriend.FirstName}</StyledTableCell>
+                  <StyledTableCell align="right">{tempFriend.LastName}</StyledTableCell> */}
+                          </StyledTableRow>
+                        ) : (
+                          ""
+                        );
+                      })}
                 </TableBody>
               </Table>
             </TableContainer>
           ) : (
             ""
           )}
+          {
+            <Button
+              variant="contained"
+              onClick={this.handleAddFormToggle.bind(this)}
+              color="primary"
+              size="large"
+              style={{ margin: "10px" }}
+              //endIcon={<SendRoundedIcon />}
+            >
+              Add Friend
+            </Button>
+          }{" "}
+        </div>
 
-          {/*<Button
-          variant="contained"
-          onClick={this.handleAddFormToggle.bind(this)}
-          color="primary"
-          size="large"
-          style={{ margin: "10px" }}
-          //endIcon={<SendRoundedIcon />}
-        >
-          Add Friend
-       </Button>}  */}
+        <div className={classes.tabelesFlexBoxContainer}>
+          <div>
+            <h3 className={classes.accountHeaders}>Friend Requests</h3>
+          </div>
+          {this.props.loggedInUser.friendsOf ? (
+            <TableContainer component={Paper} style={{ width: "100%" }}>
+              <Table className={classes.table} aria-label="customized table">
+                <TableHead>
+                  <TableRow>
+                    <StyledTableCell>Email</StyledTableCell>
+                    {/* <StyledTableCell align="right">First Name</StyledTableCell>
+                <StyledTableCell align="right">Last Name</StyledTableCell> */}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {/* Ovde se setam kroz friendsOf jer su u friendsOf oni koji su mom korisniku poslali zahtev */}
+                  {this.props.allFriends === undefined
+                    ? ""
+                    : this.props.allFriends.map((friend) => {
+                        return friend.friendOf.userId ===
+                          this.props.loggedInUser.userId &&
+                          friend.confirmed !== true ? (
+                          <StyledTableRow>
+                            <StyledTableCell component="th" scope="row">
+                              {friend.friendWith.email}
+                              <Button
+                                key={friend.friendshipId}
+                                variant="contained"
+                                onClick={() =>
+                                  this.handleConfirmFriendship(friend)
+                                }
+                                size="small"
+                                style={{ margin: "10px" }}
+                                //endIcon={<SendRoundedIcon />}
+                              >
+                                Confirm
+                              </Button>
+                            </StyledTableCell>
+
+                            {/* <StyledTableCell align="right">{tempFriend.FirstName}</StyledTableCell>
+                  <StyledTableCell align="right">{tempFriend.LastName}</StyledTableCell> */}
+                          </StyledTableRow>
+                        ) : (
+                          ""
+                        );
+                      })}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          ) : (
+            ""
+          )}
         </div>
 
         <div
@@ -495,7 +586,7 @@ class Account extends Component {
           {this.props.confirmedFlightOrders !== undefined ? (
             <Container fluid>
               {Array.from(this.props.confirmedFlightOrders).map((order) => {
-                return (
+                return order.user.userId === this.props.loggedInUser.userId ? (
                   <Row>
                     <FlightBasicInformation
                       airline={order.flight.airline}
@@ -547,6 +638,8 @@ class Account extends Component {
                       Cancel
                     </Button>
                   </Row>
+                ) : (
+                  ""
                 );
               })}
             </Container>
@@ -561,7 +654,8 @@ class Account extends Component {
               <h4 className={classes.accountHeaders}>Unconfirmed Flights</h4>
               <Container fluid>
                 {Array.from(this.props.unconfirmedFlightOrders).map((order) => {
-                  return (
+                  return order.user.userId ===
+                    this.props.loggedInUser.userId ? (
                     <Row>
                       <FlightBasicInformation
                         airline={order.flight.airline}
@@ -604,15 +698,27 @@ class Account extends Component {
                           }}
                         ></TextField>
                       </Col>
-                      <Button
-                        key={order.flightOrderId}
-                        onClick={() => this.deleteFlightOrder(order)}
-                        variant="outlined"
-                        color="secondary"
-                      >
-                        Cancel
-                      </Button>
+                      <Col md="auto" className="flightItem">
+                        <Button
+                          key={order.flightOrderId}
+                          onClick={() => this.deleteFlightOrder(order)}
+                          variant="outlined"
+                          color="secondary"
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          key={order.flightOrderId}
+                          onClick={() => this.confirmFlightOrder(order)}
+                          variant="outlined"
+                          color="secondary"
+                        >
+                          Confirm
+                        </Button>
+                      </Col>
                     </Row>
+                  ) : (
+                    ""
                   );
                 })}
               </Container>
@@ -735,7 +841,9 @@ class Account extends Component {
         >
           {/* // onClick={this.off}> */}
           <div>
-            <h3 className={classes.accountHeaders}>Enter friends email</h3>
+            <h3 className={classes.accountHeaders}>
+              Pick a person you want to add as a friend
+            </h3>
             <ValidatorForm onError={(errors) => console.log(errors)}>
               <div
                 style={{
@@ -745,20 +853,28 @@ class Account extends Component {
                   backgroundColor: "#3F51B5",
                 }}
               >
-                <TextValidator
+                <Select
                   margin="normal"
-                  label="Friends Email"
+                  label="Friend"
                   id="firstName-form"
-                  name="FriendsEmail"
+                  name="friend"
                   className={classes.textFieldAddFriend}
                   onChange={this.handleChange}
-                  validators={["required", "isExistingUser"]}
-                  value={this.state.FriendsEmail}
-                  errorMessages={[
-                    "This field is required",
-                    "Entered user doesn't exis",
-                  ]}
-                />
+                  value={this.state.friend}
+                >
+                  {Array.from(this.props.allUsers).map((user) => {
+                    return user.userId !== loggedInUser.userId &&
+                      user.friendsOf !== undefined &&
+                      (user.friendsOf.some(
+                        (friend) => friend.userId !== user.userId
+                      ) ||
+                        user.friendsOf.length === 0) ? (
+                      <MenuItem value={user}>{user.email}</MenuItem>
+                    ) : (
+                      ""
+                    );
+                  })}
+                </Select>
               </div>
             </ValidatorForm>
 
@@ -769,7 +885,7 @@ class Account extends Component {
               style={{ margin: "20px" }}
               onClick={this.handleClickAddFriend}
             >
-              Register
+              Add
             </Button>
           </div>
         </div>
@@ -782,7 +898,12 @@ const mapDispatchToProps = (dispatch) => ({
   addFriend: (FriendsEmail, userEmail) =>
     dispatch(addFriend(FriendsEmail, userEmail)),
   getFlightOrders: () => dispatch(getFlightOrders()),
-  deleteFlightOrder: (flightOrderId) => dispatch(deleteOrder(flightOrderId)),
+  deleteFlightOrder: (flightOrder) => dispatch(deleteOrder(flightOrder)),
+  confirmFlightOrder: (flightOrder) => dispatch(confirmOrder(flightOrder)),
+  getUsers: () => dispatch(getUsers()),
+  addFriend: (friend) => dispatch(addFriend(friend)),
+  getFriends: () => dispatch(getFriends()),
+  confirmFriendship: (friend) => dispatch(confirmFriendship(friend)),
 });
 
 const mapStateToProps = (state) => ({
@@ -792,6 +913,7 @@ const mapStateToProps = (state) => ({
   confirmedFlightOrders: state.flightReducer.confirmedFlightOrders,
   unconfirmedFlightOrders: state.flightReducer.unconfirmedFlightOrders,
   loading: state.loadingReducer.loading,
+  allFriends: state.userReducer.AllFriends,
 });
 
 export default connect(

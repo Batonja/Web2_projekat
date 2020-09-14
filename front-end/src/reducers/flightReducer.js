@@ -9,6 +9,8 @@ import { GET_DESTINATIONS } from "../actions/Flight/getDestinations";
 import { ADD_FLIGHT } from "../actions/Flight/addFlight";
 import { GET_FLIGHT_ORDERS } from "../actions/Flight/getFlightOrders";
 import { DELETE_ORDER } from "../actions/Flight/deleteOrder";
+import { CONFIRM_ORDER } from "../actions/Flight/confirmOrder";
+
 import cloneDeep from "lodash/cloneDeep";
 
 const initialState = {
@@ -187,6 +189,22 @@ const initialState = {
 
 export default function flightReducer(state = initialState, { type, payload }) {
   switch (type) {
+    case CONFIRM_ORDER:
+      var confirmedFlightOrders = state.confirmedFlightOrders.concat(
+        state.unconfirmedFlightOrders.filter(
+          (order) => order.flightOrderId === payload
+        )
+      );
+      var unconfirmedFlightOrders = state.unconfirmedFlightOrders.filter(
+        (order) => order.flightOrderId !== payload
+      );
+
+      return {
+        ...state,
+        confirmedFlightOrders: confirmedFlightOrders,
+        unconfirmedFlightOrders: unconfirmedFlightOrders,
+      };
+
     case DELETE_ORDER:
       var flightOrders = state.allFlightOrders;
       var confirmedFlightOrders = state.confirmedFlightOrders;
