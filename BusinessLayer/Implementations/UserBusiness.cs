@@ -57,6 +57,25 @@ namespace BusinessLayer.Implementations
 
         }
 
+        public Holder<Friend> AddFriend(Friend friend)
+        {
+            return _userDatabase.AddFriend(friend) ? CheckFriend(friend, 200, "") : 
+                CheckFriend(friend, 400, "Error while trying to add friend");
+        }
+
+        public List<Friend> GetFriends()
+        {
+            return _userDatabase.GetFriends();
+        }
+
+        public Holder<Friend> ConfirmFriendship(Friend friend)
+        {
+            Friend retval = _userDatabase.ConfirmFriendship(friend);
+
+            return retval.FriendshipId == 0 ? CheckFriend(friend, 400, "Error while trying to confirm friendship") 
+                : CheckFriend(retval, 200, "");
+        }
+
         public Holder<User> SignIn(User user)
         {
             List<User> usersFromDb = new List<User>();
@@ -104,8 +123,10 @@ namespace BusinessLayer.Implementations
 
         public Holder<User> CheckUser(User user, int errorCode, string description) =>
             errorCode == 200 ? Holder<User>.Success(user) : Holder<User>.Fail(errorCode, description);
+        public Holder<Friend> CheckFriend(Friend friend, int errorCode, string description) =>
+            errorCode == 200 ? Holder<Friend>.Success(friend) : Holder<Friend>.Fail(errorCode, description);
 
-        
+
 
 
 

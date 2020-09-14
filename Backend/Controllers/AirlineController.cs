@@ -99,6 +99,15 @@ namespace Backend.Controllers
             return _airlineBusiness.GetDestinations();
         }
 
+
+        [HttpPost]
+        public Holder<FlightOrder> ConfirmFlight([FromBody]FlightOrder flightOrder)
+        {
+            Holder<FlightOrder> retVal = _airlineBusiness.ConfirmFlight(flightOrder);
+
+            return retVal;
+        }
+
         [HttpPost]
         public Holder<FlightOrder> OrderFlight([FromBody]FlightOrder flightOrder)
         {

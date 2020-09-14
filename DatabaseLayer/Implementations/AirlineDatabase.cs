@@ -182,6 +182,23 @@ namespace DatabaseLayer.Implementations
 
             return rowsEffected > 0 ? true : false;
         }
+
+        public bool ConfirmFlight(FlightOrder flightOrder)
+        {
+            int rowsEffected = -1;
+
+            using (var context = new DataContext(DataContext.ops.dbOptions))
+            {
+                flightOrder = context.FlightOrder.Where(theFlightOrder => theFlightOrder.FlightOrderId == flightOrder.FlightOrderId).SingleOrDefault();
+                flightOrder.Confirmed = true;
+
+                context.Update(flightOrder);
+                rowsEffected = context.SaveChanges();
+            }
+
+            return rowsEffected > 0 ? true : false;
+        }
+
         public List<FlightOrder> GetFlightOrders()
         {
             List<FlightOrder> flightOrders = new List<FlightOrder>();

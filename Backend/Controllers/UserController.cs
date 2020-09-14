@@ -27,9 +27,12 @@ namespace Backend.Controllers
         }
 
 
+        [HttpPost]
+        public Holder<Friend> ConfirmFriendship([FromBody]Friend friend)
+        {
+            return _userBusiness.ConfirmFriendship(friend);
+        }
 
-       
-       
 
         // POST: api/User
         [HttpPost]
@@ -50,6 +53,20 @@ namespace Backend.Controllers
         public List<User> GetUsers()
         {
             return _userBusiness.GetUsers();
+        }
+
+        [HttpGet]
+        public List<Friend> GetFriends()
+        {
+            return _userBusiness.GetFriends();
+        }
+
+        [HttpPost]
+        public Holder<Friend> AddFriend([FromBody]Friend friend)
+        {
+            Holder<Friend> retVal = _userBusiness.AddFriend(friend);
+
+            return retVal;
         }
 
         [HttpPost]

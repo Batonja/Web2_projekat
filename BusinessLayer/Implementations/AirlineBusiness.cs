@@ -184,6 +184,12 @@ namespace BusinessLayer.Implementations
 
         }
 
+        public Holder<FlightOrder> ConfirmFlight(FlightOrder flightOrder)
+        {
+            return _airlineDatabase.ConfirmFlight(flightOrder) ? CheckFlightOrder(flightOrder, 200, "") : 
+                CheckFlightOrder(flightOrder, 400, "Error while trying to confirm flight");
+        }
+
         public List<FlightLuggage> GetFlightLuggage()
         {
             return _airlineDatabase.GetFlightLuggage();

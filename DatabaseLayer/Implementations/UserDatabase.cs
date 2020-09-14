@@ -40,9 +40,56 @@ namespace DatabaseLayer.Implementations
             return user;
         }
 
+        public Friend ConfirmFriendship(Friend friend)
+        {
+            Friend retval = new Friend();
+            int rowsEffected = -1;
+            using (var context = new DataContext(DataContext.ops.dbOptions))
+            {
+                retval = context.Friend.Where(theFriend => theFriend.FriendshipId == friend.FriendshipId)
+                    .Include(theFriend => theFriend.FriendOf )
+                    .Include(theFriend => theFriend.FriendWith)
+                    .SingleOrDefault();
+                retval.Confirmed = friend.Confirmed;
 
-        
+                context.Update(retval);
+                rowsEffected = context.SaveChanges();
+            }
 
+            return rowsEffected > 0 ? retval : new Friend();
+
+        }
+
+        public List<Friend> GetFriends()
+        {
+            List<Friend> retVal = new List<Friend>();
+
+            using (var context = new DataContext(DataContext.ops.dbOptions))
+            {
+                retVal = context.Friend.Include(friend => friend.FriendOf)
+                    .Include(friend => friend.FriendWith).ToList();
+            }
+
+            return retVal;
+        }
+
+        public bool AddFriend(Friend friend)
+        {
+            int rowsEffected = -1;
+
+            using (var context = new DataContext(DataContext.ops.dbOptions))
+            {
+                friend.FriendOf = context.User.Where(theUser => theUser.UserId == friend.FriendOf.UserId).SingleOrDefault();
+                friend.FriendWith = context.User.Where(theUser => theUser.UserId == friend.FriendWith.UserId).SingleOrDefault();
+
+                context.Friend.Add(friend);
+
+                rowsEffected = context.SaveChanges();
+
+            }
+
+            return rowsEffected > 0 ? true : false;
+        }
         public List<User> GetUsers()
         {
             List<User> users = new List<User>();

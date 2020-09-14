@@ -11,8 +11,10 @@ namespace DatabaseLayer.Interfaces
         bool SignUp(User user);
 
         List<User> GetUsers();
+        List<Friend> GetFriends();
+        Friend ConfirmFriendship(Friend friend);
         User GetUserByPassportId(long passportId);
         User FindUserOrAdd(User user);
-        
+        bool AddFriend(Friend friend);
     }
 }

@@ -10,11 +10,11 @@ namespace BusinessLayer.Interfaces
     public interface IUserBusiness
     {
         Holder<User> SignIn(User user);
-
+        Holder<Friend> AddFriend(Friend friend);
         Holder<User> SignUp(User user);
-
+        Holder<Friend> ConfirmFriendship(Friend friend);
         string Encrypt(string secret);
-
+        List<Friend> GetFriends();
         User FindUserOrAdd(User user);
         List<User> GetUsers();
 

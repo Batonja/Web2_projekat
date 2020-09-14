@@ -15,6 +15,7 @@ namespace DatabaseLayer.Interfaces
         List<FlightOrder> GetFlightOrders();
 
         Airline Get(int id);
+        bool ConfirmFlight(FlightOrder flightOrder);
         bool FreeSeat(Seat seat);
         bool DeleteFlightOrder(FlightOrder flightOrder);
         bool EditFlight(Flight flight);
