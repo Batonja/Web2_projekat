@@ -7,6 +7,8 @@ import GoogleLogin from "react-google-login";
 import { withStyles } from "@material-ui/core/styles";
 import config from "../../config.json";
 
+import userAvatar from '../../logo.png'
+
 const styles = (theme) => ({
   signIn: {
     with: "100%",
@@ -63,10 +65,12 @@ const styles = (theme) => ({
     textAlign: "center",
   },
   logoImgDiv: {
+    marginTop: "100px",
     width: "100%",
     height: "30vh",
   },
   logoImg: {
+
     maxWidth: "100%",
     maxHeight: "100%",
   },
@@ -120,7 +124,7 @@ class LoginForm extends Component {
       <div className={classes.signIn}>
         <div className={classes.signInForm}>
           <div className={classes.logoImgDiv}>
-            <img alt='User Avatar Image' className={classes.logoImg} src={require("../../logo.png")} />
+            <img alt='User Avatar Image' className={classes.logoImg} src={userAvatar} />
           </div>
           <ValidatorForm onError={(errors) => console.log(errors)}>
             <TextValidator

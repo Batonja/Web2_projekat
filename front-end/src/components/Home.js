@@ -48,28 +48,7 @@ const Home = (props) => {
     return (
       <div className ={classes.componentCarsSectionContainer}>
 
-        <Table className ={classes.tabeleHomeMain}>
-          <TableHead>
-            <TableCell><h1 style={{ fontWeight: "bold", }}>Flights</h1></TableCell>
-            <TableCell><h1 style={{ fontWeight: "bold", }}>Rent A Car</h1></TableCell>
-          </TableHead>
-          <TableBody>
-            <TableCell>
-              <IconButton to="/flights" component={Link}>
-                <AirplanemodeActiveIcon fontSize="large" />
-              </IconButton>
-            </TableCell>
-            <TableCell>
-              <IconButton to="/cars" component={Link}>
-                <DriveEtaIcon fontSize="large" />
-              </IconButton>
-            </TableCell>
-          </TableBody>
-        </Table>
-        <h1 style={{ fontWeight: "bold", }}>FLIGHT COMPANIES</h1>
-        <Airlines/>
-        <h1 style={{ fontWeight: "bold", }}>RENT A CAR SERVICES</h1>
-        <RentACarServices/>
+       
       </div>
     );
   

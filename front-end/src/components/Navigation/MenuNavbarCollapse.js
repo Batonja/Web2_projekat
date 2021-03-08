@@ -83,15 +83,7 @@ const MenuNavbarCollapse = (props) => {
           </IconButton>
         </div>
         <div>
-          <Link
-            variant="body2"
-            color="inherit"
-            to={"/flights"}
-            component={RouterLink}
-            style={{ margin: "20px", itemAlign: "center" }}
-          >
-            <div className={classes.linkButtonDiv}>Airlines</div>
-          </Link>
+      
         </div>
         <div>
           <Link

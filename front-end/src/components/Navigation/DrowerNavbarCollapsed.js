@@ -51,20 +51,6 @@ export default function DrowerNavbarCollapsed() {
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <List>
-        <ListItem
-          button
-          key={"Airlines"}
-          to={"/flights"}
-          component={RouterLink}
-        >
-          <ListItemIcon>
-            <FlightIcon />
-          </ListItemIcon>
-          <ListItemText primary={"Airlines"} />
-        </ListItem>
-      </List>
-      <Divider />
-      <List>
         <ListItem button key={"RentACar"} to={"/cars"} component={RouterLink}>
           <ListItemIcon>
             <EmojiTransportationIcon />
