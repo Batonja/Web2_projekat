@@ -20,7 +20,8 @@
                 "pattern": "\\\\bNow listening on:\\\\s+(https?://\\\\S+)"
             },
             "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development"
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ENCRYPT_KEY" : "3c2d477c-ed26-4cef-8074-e38daf798c67"
             },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"

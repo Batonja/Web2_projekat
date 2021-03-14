@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Application.Vehicles;
 using Domain;
-
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -13,9 +13,7 @@ namespace API.Controllers
 {
     public class VehicleController : BaseApiController
     {
-
-
-
+    
         [HttpGet]
         public async Task<ActionResult> GetVehicles()
         {
