@@ -9,13 +9,37 @@ namespace Persistence
 {
     public class Seed
     {
-         public static async Task SeedData(DataContext context,
-            UserManager<AppUser> userManager)
+        public static async Task SeedData(DataContext context,
+           UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             if (!userManager.Users.Any())
             {
+                var roles = new List<string>{
+                    (RoleConstants.Administrator),
+                    (RoleConstants.CarManager),
+                    (RoleConstants.RegularUser)
+                };
+
+                roles.ForEach(x => EnsureRolesAsync(roleManager, x).GetAwaiter());
+
+                var adminUser = new AppUser
+                {
+                    DisplayName = "Admin",
+                    FirstName = "Damir",
+                    LastName = "Jazvin",
+                    PhoneNumber = "+381659120795",
+                    UserName = "TheRoadsign",
+                    Email = "damir.jazvin@hotmail.com",
+                };
+
+                await userManager.CreateAsync(adminUser, "Pa$$w0rd");
+                var addedAdminUser = await userManager.FindByEmailAsync(adminUser.Email);
+                await userManager.AddToRoleAsync(addedAdminUser, roles[0]);
+
                 var users = new List<AppUser>
                 {
+
+
                     new AppUser
                     {
                         DisplayName = "Bob",
@@ -24,6 +48,7 @@ namespace Persistence
                         PhoneNumber = "0641234563",
                         UserName = "bob",
                         Email = "bob@test.com",
+
                     },
                     new AppUser
                     {
@@ -49,6 +74,8 @@ namespace Persistence
                 foreach (var user in users)
                 {
                     await userManager.CreateAsync(user, "Pa$$w0rd");
+                    var addedUser = await userManager.FindByEmailAsync(user.Email);
+                    await userManager.AddToRoleAsync(user, roles[roles.Count - 1]);
                 }
             }
             if (!context.Vehicles.Any())
@@ -96,12 +123,14 @@ namespace Persistence
                         TotalProfit = 12000,
                     }
                 };
+
+
                 await context.AddRangeAsync(vehicles);
                 await context.SaveChangesAsync();
             }
 
 
-
+            #region Vehicles
             // if (context.Vehicles.Any()) return;
 
             // var users = new List<Vehicle>
@@ -138,7 +167,21 @@ namespace Persistence
             //         },
             //     };
 
+            #endregion
 
+
+        }
+
+        private static async Task EnsureRolesAsync(
+    RoleManager<IdentityRole> roleManager, string role)
+        {
+            var alreadyExists = await roleManager
+                .RoleExistsAsync(role);
+
+            if (alreadyExists) return;
+
+            await roleManager.CreateAsync(
+                new IdentityRole(role));
         }
     }
 }

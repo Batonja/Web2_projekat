@@ -11,27 +11,31 @@ using Persistence;
 
 namespace API.Controllers
 {
+    [Authorize]
     public class VehicleController : BaseApiController
     {
-    
+        [Authorize (Roles = "Administrator,RegularUser")]
         [HttpGet]
         public async Task<ActionResult> GetVehicles()
         {
             return HandleResult(await Mediator.Send(new List.Query()));
         }
 
+        [Authorize (Roles = "Administrator,RegularUser")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetVehicle(Guid id)
         {
             return HandleResult(await Mediator.Send(new Details.Query { Id = id }));
         }
-
+        
+        [Authorize (Roles = RoleConstants.Administrator)]
         [HttpPost]
-        public async Task<IActionResult> RegisterVehicle(Vehicle vehicle)
+        public async Task<IActionResult> CreateVehicle(Vehicle vehicle)
         {
-            return Ok(await Mediator.Send(new Register.Command { Vehicle = vehicle }));
+            return Ok(await Mediator.Send(new Create.Command { Vehicle = vehicle }));
         }
 
+        [Authorize (Roles = RoleConstants.Administrator)]
         [HttpPut("{id}")]
         public async Task<IActionResult> EditVehicle(Guid id, Vehicle vehicle)
         {
@@ -39,6 +43,7 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new Edit.Command { Vehicle = vehicle }));
         }
 
+        [Authorize (Roles = RoleConstants.Administrator)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteVehicle(Guid id)
         {

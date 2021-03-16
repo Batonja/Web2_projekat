@@ -9,7 +9,7 @@ using Persistence;
 
 namespace Application.Vehicles
 {
-    public class Register
+    public class Create
     {
         public class Command : IRequest<Result<Unit>>
         {

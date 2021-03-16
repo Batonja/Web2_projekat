@@ -1,6 +1,7 @@
 using Application.Core;
 using Application.Vehicles;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,6 +23,7 @@ namespace API.Extensions
             {
                 opt.UseSqlite(config.GetConnectionString("DefaultConnection"));
             });
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>(); 
             //CORS
             services.AddCors(opt =>
             {

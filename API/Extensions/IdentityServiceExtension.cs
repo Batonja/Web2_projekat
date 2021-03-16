@@ -17,19 +17,23 @@ namespace API.Extensions
             services.AddIdentityCore<AppUser>(opt =>
             {
                 opt.Password.RequireNonAlphanumeric = false;
-            }).AddEntityFrameworkStores<DataContext>()
-            .AddSignInManager<SignInManager<AppUser>>();
- 
+            });
+
+            new IdentityBuilder(typeof(AppUser), typeof(IdentityRole), services)
+            .AddRoleManager<RoleManager<IdentityRole>>()
+            .AddSignInManager<SignInManager<AppUser>>()
+            .AddEntityFrameworkStores<DataContext>();
+
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(opt =>
             {
                 opt.TokenValidationParameters = new TokenValidationParameters
                 {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = key,
-                        ValidateIssuer = false,
-                        ValidateAudience = false
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = key,
+                    ValidateIssuer = false,
+                    ValidateAudience = false
                 };
             });
             services.AddScoped<TokenService>();

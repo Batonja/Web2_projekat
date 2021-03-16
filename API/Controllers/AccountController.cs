@@ -19,9 +19,11 @@ namespace API.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly TokenService _tokenService;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, TokenService tokenService)
+        public AccountController(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, SignInManager<AppUser> signInManager, TokenService tokenService)
         {
+            _roleManager = roleManager;
 
             _tokenService = tokenService;
             _signInManager = signInManager;
@@ -74,7 +76,11 @@ namespace API.Controllers
             var result = await _userManager.CreateAsync(user, registerDTO.Password);
 
             if (result.Succeeded)
+            {
+                var createdUser = await _userManager.FindByEmailAsync(user.Email);
+                await _userManager.AddToRoleAsync(createdUser, RoleConstants.RegularUser);
                 return CreateUserDtoObject(user);
+            }
 
             return BadRequest("Problem registring user");
 

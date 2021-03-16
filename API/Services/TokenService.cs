@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using Domain;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-
+using Persistence;
 
 namespace API.Services
 {
@@ -15,15 +17,23 @@ namespace API.Services
         private readonly IConfiguration _config;
         public TokenService(IConfiguration config)
         {
+           
+
             _config = config;
 
         }
         public string CreateToken(AppUser user)
         {
+            using var context = new DataContext();
+
+            var roleId = context.UserRoles.SingleOrDefault(x => x.UserId == user.Id).RoleId;
+            string role = context.Roles.Find(roleId).Name;
             var claims = new List<Claim>{
                 new Claim(ClaimTypes.Name,user.UserName),
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
                 new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role,role),
+
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["TokenKey"]));
