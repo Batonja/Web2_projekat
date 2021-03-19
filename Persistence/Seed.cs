@@ -24,12 +24,13 @@ namespace Persistence
 
                 var adminUser = new AppUser
                 {
-                    DisplayName = "Admin",
+                     
                     FirstName = "Damir",
                     LastName = "Jazvin",
                     PhoneNumber = "+381659120795",
-                    UserName = "TheRoadsign",
+                    UserName = "Admin",
                     Email = "damir.jazvin@hotmail.com",
+                    EmailConfirmed = true
                 };
 
                 await userManager.CreateAsync(adminUser, "Pa$$w0rd");
@@ -42,32 +43,34 @@ namespace Persistence
 
                     new AppUser
                     {
-                        DisplayName = "Bob",
+                         
                         FirstName ="Bob",
                         LastName = "Martin",
                         PhoneNumber = "0641234563",
                         UserName = "bob",
                         Email = "bob@test.com",
-
+                        EmailConfirmed = true
                     },
                     new AppUser
                     {
 
-                        DisplayName = "Jane",
+                       
                         FirstName ="Jane",
                         LastName = "Peters",
                         PhoneNumber = "0641654239",
                         UserName = "jane",
                         Email = "jane@test.com",
+                        EmailConfirmed = true
                     },
                     new AppUser
                     {
-                        DisplayName = "Tom",
+                         
                         FirstName ="Tom",
                         LastName = "Waits",
                         PhoneNumber = "0641417653",
                         UserName = "tom",
                         Email = "rollingstone.damir@gmail.com",
+                        EmailConfirmed = true
                     },
                 };
 

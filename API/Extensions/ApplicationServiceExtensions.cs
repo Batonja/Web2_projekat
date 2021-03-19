@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Persistence;
+using Infrastructure.Email;
 
 namespace API.Extensions
 {
@@ -36,7 +37,8 @@ namespace API.Extensions
             services.AddMediatR(typeof(List).Assembly);
             //AUTO-MAPPER
             services.AddAutoMapper(typeof(MappingProfiles).Assembly);
-
+            //SENDGRID
+            services.AddScoped<EmailSender>();
             return services;
         }
     }
