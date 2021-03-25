@@ -14,13 +14,15 @@ namespace API.DTOs
         public string Password { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string Image { get; set; }
+        public string Image { get; set; } 
+
     }
 
     public class RegisterDtoValidator : AbstractValidator<RegisterDTO>
     {
         public RegisterDtoValidator()
         {
+            
             RuleFor(x => x.UserName).NotEmpty();
             RuleFor(x => x.FirstName).NotEmpty();
             RuleFor(x => x.LastName).NotEmpty();

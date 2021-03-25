@@ -17,12 +17,14 @@ namespace API.Extensions
             services.AddIdentityCore<AppUser>(opt =>
             {
                 opt.Password.RequireNonAlphanumeric = false;
+                opt.SignIn.RequireConfirmedEmail = true;
             });
 
             new IdentityBuilder(typeof(AppUser), typeof(IdentityRole), services)
             .AddRoleManager<RoleManager<IdentityRole>>()
             .AddSignInManager<SignInManager<AppUser>>()
-            .AddEntityFrameworkStores<DataContext>();
+            .AddEntityFrameworkStores<DataContext>()
+            .AddDefaultTokenProviders();
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
