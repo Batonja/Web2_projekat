@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Domain
 {
@@ -18,5 +19,6 @@ namespace Domain
         public bool IsDeleted { get; set; }
         public decimal AverageCarGrade { get; set; }
         public decimal TotalProfit { get; set; }
+        public  ICollection<UserVehicleRenting> UserVehicleRentings { get; set; }
     }
 }

@@ -10,8 +10,9 @@ namespace Persistence
     public class Seed
     {
         public static async Task SeedData(DataContext context,
-           UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager)
+        UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager)
         {
+            AppUser tempUser = new AppUser();
             if (!userManager.Users.Any())
             {
                 var roles = new List<string>{
@@ -24,7 +25,7 @@ namespace Persistence
 
                 var adminUser = new AppUser
                 {
-                     
+
                     FirstName = "Damir",
                     LastName = "Jazvin",
                     PhoneNumber = "+381659120795",
@@ -34,16 +35,13 @@ namespace Persistence
                 };
 
                 await userManager.CreateAsync(adminUser, "Pa$$w0rd");
-                var addedAdminUser = await userManager.FindByEmailAsync(adminUser.Email);
-                await userManager.AddToRoleAsync(addedAdminUser, roles[0]);
+                tempUser = await userManager.FindByEmailAsync(adminUser.Email);
+                await userManager.AddToRoleAsync(tempUser, roles[0]);
 
                 var users = new List<AppUser>
                 {
-
-
                     new AppUser
                     {
-                         
                         FirstName ="Bob",
                         LastName = "Martin",
                         PhoneNumber = "0641234563",
@@ -53,8 +51,6 @@ namespace Persistence
                     },
                     new AppUser
                     {
-
-                       
                         FirstName ="Jane",
                         LastName = "Peters",
                         PhoneNumber = "0641654239",
@@ -64,7 +60,6 @@ namespace Persistence
                     },
                     new AppUser
                     {
-                         
                         FirstName ="Tom",
                         LastName = "Waits",
                         PhoneNumber = "0641417653",
@@ -77,12 +72,14 @@ namespace Persistence
                 foreach (var user in users)
                 {
                     await userManager.CreateAsync(user, "Pa$$w0rd");
-                    var addedUser = await userManager.FindByEmailAsync(user.Email);
+                    tempUser = await userManager.FindByEmailAsync(user.Email);
                     await userManager.AddToRoleAsync(user, roles[roles.Count - 1]);
                 }
             }
+            #region Vehicles
             if (!context.Vehicles.Any())
             {
+                tempUser = await userManager.FindByEmailAsync("rollingstone.damir@gmail.com");
                 var vehicles = new List<Vehicle>{
                     new Vehicle{
                         CarModel="Toyota C-HR",
@@ -97,6 +94,17 @@ namespace Persistence
                         IsDeleted = false,
                         AverageCarGrade = 4.7M,
                         TotalProfit = 12000,
+                        UserVehicleRentings = new List<UserVehicleRenting>{
+                            new UserVehicleRenting{
+                                AppUserId = tempUser.Id,
+                                PickUpDate =DateTime.Now.AddDays(2),
+                                ReturnDate =DateTime.Now.AddDays(5),
+                                CarGrade = Grade.NO_GRADE,
+                                RentACarServiceGrade = Grade.NO_GRADE,
+                                IsReviewed = false
+                            }
+
+                        },
                     }, new Vehicle
                     {
                         CarModel = "Toyota Corola",
@@ -111,6 +119,16 @@ namespace Persistence
                         IsDeleted = false,
                         AverageCarGrade = 4.7M,
                         TotalProfit = 12000,
+                        UserVehicleRentings = new List<UserVehicleRenting>{
+                            new UserVehicleRenting{
+                                AppUserId = tempUser.Id,
+                                PickUpDate =DateTime.Now.AddDays(6),
+                                ReturnDate =DateTime.Now.AddDays(10),
+                                CarGrade = Grade.NO_GRADE,
+                                RentACarServiceGrade = Grade.NO_GRADE,
+                                IsReviewed = false
+                            }
+                        },
                     }, new Vehicle{
                         CarModel="Toyota Yaris",
                         PriceADay = 120,
@@ -124,6 +142,17 @@ namespace Persistence
                         IsDeleted = false,
                         AverageCarGrade = 4.7M,
                         TotalProfit = 12000,
+                        UserVehicleRentings = new List<UserVehicleRenting>{
+                            new UserVehicleRenting{
+                                AppUserId = tempUser.Id,
+                                PickUpDate =DateTime.Now.AddDays(11),
+                                ReturnDate =DateTime.Now.AddDays(14),
+                                CarGrade = Grade.NO_GRADE,
+                                RentACarServiceGrade = Grade.NO_GRADE,
+                                IsReviewed = false
+                            }
+
+                        },
                     }
                 };
 
@@ -131,48 +160,7 @@ namespace Persistence
                 await context.AddRangeAsync(vehicles);
                 await context.SaveChangesAsync();
             }
-
-
-            #region Vehicles
-            // if (context.Vehicles.Any()) return;
-
-            // var users = new List<Vehicle>
-            //     {
-            //         new Vehicle
-            //         {
-            //             Id = new Guid(),
-            //             FirstName ="Bob",
-            //             LastName = "Martin",
-            //             Username = "bob",
-            //             Password= "Pa$$w0rd",
-            //             Email = "bob@test.com",
-            //             Role = RoleConstants.AdministratorRole
-            //         },
-            //         new Vehicle
-            //         {
-            //             Id = new Guid(),
-            //             FirstName ="Jane",
-            //             LastName = "Peters",
-            //             Password= "Pa$$w0rd",
-            //             Username = "jane",
-            //             Email = "jane@test.com",
-            //             Role = RoleConstants.RegularUserRole
-            //         },
-            //         new Vehicle
-            //         {
-            //             Id = new Guid(),
-            //             FirstName ="Tom",
-            //             LastName = "Waits",
-            //             Username = "tom",
-            //             Password= "Pa$$w0rd",
-            //             Email = "tom@test.com",
-            //             Role = RoleConstants.RegularUserRole
-            //         },
-            //     };
-
             #endregion
-
-
         }
 
         private static async Task EnsureRolesAsync(
