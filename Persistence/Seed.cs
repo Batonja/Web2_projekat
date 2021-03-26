@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Domain;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Persistence
 {
@@ -13,7 +14,7 @@ namespace Persistence
         UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             AppUser tempUser = new AppUser();
-            if (!userManager.Users.Any())
+            if (!userManager.Users.Any() )
             {
                 var roles = new List<string>{
                     (RoleConstants.Administrator),
@@ -22,8 +23,8 @@ namespace Persistence
                 };
 
                 roles.ForEach(x => EnsureRolesAsync(roleManager, x).GetAwaiter());
-
-                var adminUser = new AppUser
+                //Create Admin
+                tempUser = new AppUser
                 {
 
                     FirstName = "Damir",
@@ -34,10 +35,25 @@ namespace Persistence
                     EmailConfirmed = true
                 };
 
-                await userManager.CreateAsync(adminUser, "Pa$$w0rd");
-                tempUser = await userManager.FindByEmailAsync(adminUser.Email);
+                await userManager.CreateAsync(tempUser, "Pa$$w0rd");
+                tempUser = await userManager.FindByEmailAsync(tempUser.Email);
                 await userManager.AddToRoleAsync(tempUser, roles[0]);
+                //Create Car Manager
+                tempUser = new AppUser
+                {
 
+                    FirstName = "Nenad",
+                    LastName = "Cukilo",
+                    PhoneNumber = "+381655435438",
+                    UserName = "nenad",
+                    Email = "nenad.cukilo@gmail.com",
+                    EmailConfirmed = true
+                };
+
+                await userManager.CreateAsync(tempUser, "Pa$$w0rd");
+                tempUser = await userManager.FindByEmailAsync(tempUser.Email);
+                await userManager.AddToRoleAsync(tempUser, roles[1]);
+                
                 var users = new List<AppUser>
                 {
                     new AppUser
@@ -75,10 +91,24 @@ namespace Persistence
                     tempUser = await userManager.FindByEmailAsync(user.Email);
                     await userManager.AddToRoleAsync(user, roles[roles.Count - 1]);
                 }
+
             }
             #region Vehicles
-            if (!context.Vehicles.Any())
+            if (!context.Vehicles.Any() && !context.RentACarServices.Any())
             {
+                tempUser = await userManager.FindByEmailAsync("nenad.cukilo@gmail.com");
+                 //Create RentACarServiceGrade
+                RentACarService service = new RentACarService(){
+                    Name = "EuroCar",
+                    Address = "Danila Kisa 34",
+                    State = "Serbia",
+                    City = "Novi Sad",
+                    Manager = tempUser
+                };
+                await context.RentACarServices.AddAsync(service);
+                await context.SaveChangesAsync();
+                //___________________________________________________
+                service =  context.RentACarServices.ToList()[0];
                 tempUser = await userManager.FindByEmailAsync("rollingstone.damir@gmail.com");
                 var vehicles = new List<Vehicle>{
                     new Vehicle{
@@ -94,6 +124,7 @@ namespace Persistence
                         IsDeleted = false,
                         AverageCarGrade = 4.7M,
                         TotalProfit = 12000,
+                        RentACarServiceOwner = service,
                         UserVehicleRentings = new List<UserVehicleRenting>{
                             new UserVehicleRenting{
                                 AppUserId = tempUser.Id,
@@ -119,6 +150,7 @@ namespace Persistence
                         IsDeleted = false,
                         AverageCarGrade = 4.7M,
                         TotalProfit = 12000,
+                        RentACarServiceOwner = service,
                         UserVehicleRentings = new List<UserVehicleRenting>{
                             new UserVehicleRenting{
                                 AppUserId = tempUser.Id,
@@ -142,6 +174,7 @@ namespace Persistence
                         IsDeleted = false,
                         AverageCarGrade = 4.7M,
                         TotalProfit = 12000,
+                        RentACarServiceOwner = service,
                         UserVehicleRentings = new List<UserVehicleRenting>{
                             new UserVehicleRenting{
                                 AppUserId = tempUser.Id,

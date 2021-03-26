@@ -8,26 +8,26 @@ namespace Persistence
     {
         public DataContext()
         {
-            
+
         }
         public DataContext(DbContextOptions options) : base(options)
         {
         }
 
         public DbSet<Vehicle> Vehicles { get; set; }
-        public DbSet<RentACarService> RentACarServices{get;set;}
-        public DbSet<UserVehicleRenting> Rentings {get;set;}
+        public DbSet<RentACarService> RentACarServices { get; set; }
+        public DbSet<UserVehicleRenting> Rentings { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite("Data Source=doomtravel.db");
         }
-          protected override void OnModelCreating(ModelBuilder builder)
+        protected override void OnModelCreating(ModelBuilder builder)
         {
 
             base.OnModelCreating(builder);
- 
+
             //UserVehicleRenting Meny to many relationship configuration
             builder.Entity<UserVehicleRenting>(x => x.HasKey(uv =>
             new { uv.AppUserId, uv.VehicleId }));
@@ -45,8 +45,13 @@ namespace Persistence
             //One to one RentACarService AppUser(Manager)
             builder.Entity<AppUser>()
                 .HasOne<RentACarService>(u => u.RentACarService)
-                .WithOne(rs => rs.Manager)     
+                .WithOne(rs => rs.Manager)
                 .HasForeignKey<RentACarService>(rs => rs.AppUserManagerId);
-           }
+            //One to many RentACarService(Owner) Vehicle
+            builder.Entity<Vehicle>()
+            .HasOne<RentACarService>(v => v.RentACarServiceOwner)
+            .WithMany(rs => rs.Vehicles)
+            .HasForeignKey(v => v.RentACarServiceOwnerId);
+        }
     }
 }

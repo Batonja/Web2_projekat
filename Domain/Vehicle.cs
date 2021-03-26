@@ -20,5 +20,8 @@ namespace Domain
         public decimal AverageCarGrade { get; set; }
         public decimal TotalProfit { get; set; }
         public  ICollection<UserVehicleRenting> UserVehicleRentings { get; set; }
+
+        public Guid RentACarServiceOwnerId { get; set; }
+        public RentACarService RentACarServiceOwner { get; set; }
     }
 }

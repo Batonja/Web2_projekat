@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Domain
 {
@@ -13,5 +14,7 @@ namespace Domain
         public string City { get; set; }
         public string AppUserManagerId { get; set; }
         public AppUser Manager { get; set; }
+
+         public ICollection<Vehicle> Vehicles { get; set; }
     }
 }
