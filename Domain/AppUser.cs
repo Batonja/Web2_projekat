@@ -10,6 +10,7 @@ namespace Domain
         public string PassportID { get; set; }
 
           public  ICollection<UserVehicleRenting> UserVehicleRentings { get; set; }
+          public RentACarService RentACarService { get; set; }
     }
 
   

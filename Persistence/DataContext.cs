@@ -15,6 +15,9 @@ namespace Persistence
         }
 
         public DbSet<Vehicle> Vehicles { get; set; }
+        public DbSet<RentACarService> RentACarServices{get;set;}
+        public DbSet<UserVehicleRenting> Rentings {get;set;}
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -39,6 +42,11 @@ namespace Persistence
             .HasOne(a => a.Vehicle)
             .WithMany(u => u.UserVehicleRentings)
             .HasForeignKey(a => a.VehicleId);
-        }
+            //One to one RentACarService AppUser(Manager)
+            builder.Entity<AppUser>()
+                .HasOne<RentACarService>(u => u.RentACarService)
+                .WithOne(rs => rs.Manager)     
+                .HasForeignKey<RentACarService>(rs => rs.AppUserManagerId);
+           }
     }
 }
