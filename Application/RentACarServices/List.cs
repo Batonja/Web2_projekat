@@ -7,13 +7,13 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
-namespace Application.Vehicles
+namespace Application.RentACarServices
 {
     public class List
     {
-        public class Query : IRequest<Result<List<Vehicle>>> { }
+        public class Query : IRequest<Result<List<RentACarService>>> { }
 
-        public class Handler : IRequestHandler<Query, Result<List<Vehicle>>>
+        public class Handler : IRequestHandler<Query, Result<List<RentACarService>>>
         {
 
             private readonly DataContext _context;
@@ -23,9 +23,9 @@ namespace Application.Vehicles
                 _context = context;
 
             }
-            public async Task<Result<List<Vehicle>>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Result<List<RentACarService>>> Handle(Query request, CancellationToken cancellationToken)
             {
-                return Result<List<Vehicle>>.Success(await _context.Vehicles.ToListAsync());
+                return  Result<List<RentACarService>>.Success(await _context.RentACarServices.ToListAsync());
             }
         }
     }

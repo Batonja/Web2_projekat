@@ -7,24 +7,23 @@ using FluentValidation;
 using MediatR;
 using Persistence;
 
-namespace Application.Vehicles
+namespace Application.RentACarServices
 {
     public class Edit
     {
         public class Command : IRequest<Result<Unit>>
         {
-
-            public Vehicle Vehicle { get; set; }
+            public RentACarService RentACarService { get; set; }
         }
 
         public class CommandValidator : AbstractValidator<Command>
         {
             public CommandValidator()
             {
-                RuleFor(x => x.Vehicle).SetValidator(new VehicleValidator());
+                RuleFor(x => x.RentACarService).SetValidator(new RentACarServiceValidator());
             }
         }
-        public class Handler : IRequestHandler<Command,Result<Unit>>
+        public class Handler : IRequestHandler<Command, Result<Unit>>
         {
             private readonly DataContext _context;
             private readonly IMapper _mapper;
@@ -36,16 +35,15 @@ namespace Application.Vehicles
             }
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
-                var vehicle = await _context.Vehicles.FindAsync(request.Vehicle.Id);
-                if(vehicle == null) return null;
-                _mapper.Map(request.Vehicle, vehicle);
+                var rentACarService = await _context.RentACarServices.FindAsync(request.RentACarService.RentACarServiceId);
+                if (rentACarService == null) return null;
+                _mapper.Map(request.RentACarService, rentACarService);
 
                 var result = await _context.SaveChangesAsync() > 0;
-                if(!result) return  Result<Unit>.Failure("Failed to update user");
+                
+                if (!result) return Result<Unit>.Failure("Failed to update Rent A Car Service");
                 return Result<Unit>.Success(Unit.Value);
-
             }
-
         }
     }
 }

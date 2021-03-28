@@ -8,6 +8,7 @@ namespace Application.Core
         public MappingProfiles()
         {
             CreateMap<Vehicle, Vehicle>();
+            CreateMap<RentACarService,RentACarService>();
         }
     }
 }
