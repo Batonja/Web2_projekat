@@ -13,7 +13,7 @@ using System.Text;
 
 namespace API.Controllers
 {
-   [AllowAnonymous]
+    [AllowAnonymous]
     [ApiController]
     [Route("api/[controller]")]
     public class AccountController : ControllerBase
@@ -84,6 +84,45 @@ namespace API.Controllers
             var result = await _userManager.CreateAsync(user, registerDTO.Password);
             var addedUser = await _userManager.FindByEmailAsync(user.Email);
             await _userManager.AddToRoleAsync(user, RoleConstants.RegularUser);
+            
+            if (!result.Succeeded) return BadRequest("Problem registring user");
+
+            var origin = Request.Headers["origin"];
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+            token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+
+            var verifyUrl = $"{origin}/account/verifyEmail?token={token}&email={user.Email}";
+            var message = $"<p>Please click the below link to verify your email address:</p><p><a href='{verifyUrl}'>Click to verify email</a></p>";
+            
+            await _emailSender.SendEmailAsync(user.Email, "Please verify email", message);
+
+            return Ok("Registration success - please verify email");
+        }
+
+        [HttpPost("registerCarManager")]
+        public async Task<ActionResult<UserDto>> RegisterCarManager(RegisterDTO registerDTO)
+        {
+            if (await _userManager.Users.AnyAsync(x => x.Email == registerDTO.Email))
+                return BadRequest("Email taken");
+            if (await _userManager.Users.AnyAsync(x => x.UserName == registerDTO.UserName))
+                return BadRequest("Username taken");
+
+            var user = new AppUser
+            {
+                UserName = registerDTO.UserName,
+                Email = registerDTO.Email,
+                PassportID = registerDTO.PassportID,
+                PhoneNumber = registerDTO.PhoneNumber,
+                FirstName = registerDTO.FirstName,
+                LastName = registerDTO.LastName,
+
+            };
+
+            
+            var result = await _userManager.CreateAsync(user, registerDTO.Password);
+            var addedUser = await _userManager.FindByEmailAsync(user.Email);
+            await _userManager.AddToRoleAsync(user, RoleConstants.CarManager);
             
             if (!result.Succeeded) return BadRequest("Problem registring user");
 

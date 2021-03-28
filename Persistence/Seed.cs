@@ -103,7 +103,20 @@ namespace Persistence
                     Address = "Danila Kisa 34",
                     State = "Serbia",
                     City = "Novi Sad",
-                    Manager = tempUser
+                    Manager = tempUser,
+                    BranchOffices = new List<BranchOffice>{
+                        new BranchOffice{
+                            Place = "Nikola Tesla Airport",
+                            City = "Belgrade"
+                        },
+                        new BranchOffice{
+                            Place = "Zeleznicka stanica",
+                            City = "Novi Sad"
+                        },new BranchOffice{
+                            Place = "Borderline Horgos",
+                            City = "Horgos"
+                        }
+                    }
                 };
                 await context.RentACarServices.AddAsync(service);
                 await context.SaveChangesAsync();

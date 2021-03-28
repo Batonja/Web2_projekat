@@ -14,7 +14,7 @@ namespace API.Controllers
     [Authorize]
     public class VehicleController : BaseApiController
     {
-        [Authorize (Roles = "Administrator,RegularUser")]
+         
         [HttpGet]
         public async Task<ActionResult> GetVehicles()
         {
@@ -28,7 +28,7 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new Details.Query { Id = id }));
         }
         
-        [Authorize (Roles = RoleConstants.Administrator)]
+        [Authorize (Roles = RoleConstants.CarManager)]
         [HttpPost]
         public async Task<IActionResult> CreateVehicle(Vehicle vehicle)
         {
@@ -43,7 +43,7 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new Edit.Command { Vehicle = vehicle }));
         }
 
-        [Authorize (Roles = RoleConstants.Administrator)]
+        [Authorize (Roles = "Administrator, CarManager")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteVehicle(Guid id)
         {

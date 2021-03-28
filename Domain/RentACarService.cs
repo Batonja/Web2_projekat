@@ -15,6 +15,7 @@ namespace Domain
         public string AppUserManagerId { get; set; }
         public AppUser Manager { get; set; }
 
-         public ICollection<Vehicle> Vehicles { get; set; }
+        public ICollection<Vehicle> Vehicles { get; set; }
+        public ICollection<BranchOffice> BranchOffices { get; set; }
     }
 }
