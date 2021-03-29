@@ -100,10 +100,13 @@ namespace Persistence
                  //Create RentACarServiceGrade
                 RentACarService service = new RentACarService(){
                     Name = "EuroCar",
+                    Description = "Cheap and safe new car for your travel", 
                     Address = "Danila Kisa 34",
                     State = "Serbia",
                     City = "Novi Sad",
-                    Manager = tempUser,
+                    Managers =  new List<AppUser>{
+                        tempUser,
+                    },
                     BranchOffices = new List<BranchOffice>{
                         new BranchOffice{
                             Place = "Nikola Tesla Airport",

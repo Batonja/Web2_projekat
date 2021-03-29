@@ -8,5 +8,6 @@ namespace API.DTOs
         public string Token { get; set; }
         public string Username { get; internal set; }
         public string Image { get; set; }
+        
     }
 }

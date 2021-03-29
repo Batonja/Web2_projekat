@@ -25,7 +25,10 @@ namespace Application.RentACarServices
             }
             public async Task<Result<List<RentACarService>>> Handle(Query request, CancellationToken cancellationToken)
             {
-                return  Result<List<RentACarService>>.Success(await _context.RentACarServices.ToListAsync());
+                var rentACarServices = await _context.RentACarServices.ToListAsync();
+
+
+                return  Result<List<RentACarService>>.Success(rentACarServices);
             }
         }
     }

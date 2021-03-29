@@ -13,7 +13,7 @@ namespace Domain
         public string State { get; set; }
         public string City { get; set; }
         public string AppUserManagerId { get; set; }
-        public AppUser Manager { get; set; }
+        public ICollection<AppUser> Managers { get; set; }
 
         public ICollection<Vehicle> Vehicles { get; set; }
         public ICollection<BranchOffice> BranchOffices { get; set; }

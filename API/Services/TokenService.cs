@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using Domain;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -17,7 +18,6 @@ namespace API.Services
         private readonly IConfiguration _config;
         public TokenService(IConfiguration config)
         {
-           
 
             _config = config;
 
@@ -28,14 +28,18 @@ namespace API.Services
 
             var roleId = context.UserRoles.SingleOrDefault(x => x.UserId == user.Id).RoleId;
             string role = context.Roles.Find(roleId).Name;
-            var claims = new List<Claim>{
+
+            List<Claim> claims = new List<Claim>{
                 new Claim(ClaimTypes.Name,user.UserName),
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Role,role),
-
             };
 
+            if(role.Equals(RoleConstants.CarManager)){
+                user = context.Users.Include(x => x.RentACarService).Where(u => u.Id == user.Id).FirstOrDefault<AppUser>();
+                claims.Add(new Claim("RACS", user.RentACarService.RentACarServiceId.ToString()));
+            }
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["TokenKey"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 

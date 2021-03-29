@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 
@@ -9,10 +10,9 @@ namespace Domain
         public string LastName { get; set; }
         public string PassportID { get; set; }
 
-          public  ICollection<UserVehicleRenting> UserVehicleRentings { get; set; }
-          public RentACarService RentACarService { get; set; }
+        public  ICollection<UserVehicleRenting> UserVehicleRentings { get; set; }
+        public Guid? RentACarServiceId { get; set; }
+        public RentACarService RentACarService { get; set; }
     }
-
-  
 }
 

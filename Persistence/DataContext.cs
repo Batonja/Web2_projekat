@@ -39,11 +39,11 @@ namespace Persistence
                 .HasOne(a => a.Vehicle)
                 .WithMany(u => u.UserVehicleRentings)
                 .HasForeignKey(a => a.VehicleId);
-            //One to one RentACarService AppUser(Manager)
-            builder.Entity<AppUser>()
+            //One to Many RentACarService AppUser(Manager)
+             builder.Entity<AppUser>()
                 .HasOne<RentACarService>(u => u.RentACarService)
-                .WithOne(rs => rs.Manager)
-                .HasForeignKey<RentACarService>(rs => rs.AppUserManagerId);
+                .WithMany(rs => rs.Managers)
+                .HasForeignKey(v => v.RentACarServiceId);
             //One to many RentACarService(Owner) Vehicle
             builder.Entity<Vehicle>()
                 .HasOne<RentACarService>(v => v.RentACarServiceOwner)

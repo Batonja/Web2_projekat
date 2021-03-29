@@ -10,8 +10,7 @@ namespace Application.RentACarServices
 {
     public class Delete
     {
-        public class Create
-        {
+       
             public class Command : IRequest<Result<Unit>>
             {
                 public Guid Id { get; set; }
@@ -43,6 +42,6 @@ namespace Application.RentACarServices
                     return Result<Unit>.Success(Unit.Value);
                 }
             }
-        }
+        
     }
 }
