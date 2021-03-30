@@ -10,6 +10,7 @@ namespace Domain
         public virtual Vehicle Vehicle { get; set; }
         public DateTime PickUpDate { get; set; }
         public DateTime ReturnDate { get; set; }
+        public float FullRentingPrice { get; set; }        
         public Grade CarGrade { get; set; }
         public Grade RentACarServiceGrade { get; set; }
         public string Comment { get; set; }
