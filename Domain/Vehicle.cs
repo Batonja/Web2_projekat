@@ -18,6 +18,7 @@ namespace Domain
         public bool IsAvailableNow { get; set; }
         public bool IsDeleted { get; set; }
         public decimal AverageCarGrade { get; set; }
+        public int NumberOfRentings { get; set; }
         public decimal TotalProfit { get; set; }
         public  ICollection<UserVehicleRenting> UserVehicleRentings { get; set; }
 

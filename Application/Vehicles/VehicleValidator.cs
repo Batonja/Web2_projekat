@@ -21,6 +21,7 @@ namespace Application.Vehicles
             RuleFor(x => x.AverageCarGrade).NotEmpty().GreaterThanOrEqualTo(0);
             RuleFor(x => x.TotalProfit).NotEmpty();
             RuleFor(x => x.RentACarServiceOwnerId).NotEmpty();
+            RuleFor(x => x.NumberOfRentings).GreaterThanOrEqualTo(0);
         }
     }
 }
