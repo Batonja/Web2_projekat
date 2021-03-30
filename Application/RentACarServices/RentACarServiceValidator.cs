@@ -16,7 +16,6 @@ namespace Application.RentACarServices
             RuleFor(x => x.Address).NotEmpty();
             RuleFor(x => x.State).NotEmpty();
             RuleFor(x => x.City).NotEmpty();
-            RuleFor(x => x.AppUserManagerId).NotEmpty();
         }
     }
 }

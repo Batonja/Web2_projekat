@@ -12,7 +12,6 @@ namespace Domain
         public string Address { get; set; }
         public string State { get; set; }
         public string City { get; set; }
-        public string AppUserManagerId { get; set; }
         public ICollection<AppUser> Managers { get; set; }
 
         public ICollection<Vehicle> Vehicles { get; set; }
