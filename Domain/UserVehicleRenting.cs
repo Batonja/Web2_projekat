@@ -15,6 +15,7 @@ namespace Domain
         public Grade RentACarServiceGrade { get; set; }
         public string Comment { get; set; }
         public bool IsReviewed { get; set; }
+        public bool IsCanceled { get; set; }
 
     }
 
