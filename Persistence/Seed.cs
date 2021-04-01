@@ -126,7 +126,7 @@ namespace Persistence
                 //___________________________________________________
                 service =  context.RentACarServices.ToList()[0];
                 tempUser = await userManager.FindByEmailAsync("rollingstone.damir@gmail.com");
-                var vehicles = new List<Vehicle>{
+                List<Vehicle> vehicles = new List<Vehicle>{
                     new Vehicle{
                         CarModel="Toyota C-HR",
                         PriceADay = 150,
@@ -144,8 +144,8 @@ namespace Persistence
                         UserVehicleRentings = new List<UserVehicleRenting>{
                             new UserVehicleRenting{
                                 AppUserId = tempUser.Id,
-                                PickUpDate =DateTime.Now.AddDays(2),
-                                ReturnDate =DateTime.Now.AddDays(5),
+                                PickUpDate =DateTime.Now.AddDays(-2),
+                                ReturnDate =DateTime.Now.AddDays(-5),
                                 CarGrade = Grade.NO_GRADE,
                                 RentACarServiceGrade = Grade.NO_GRADE,
                                 IsReviewed = false
@@ -170,8 +170,8 @@ namespace Persistence
                         UserVehicleRentings = new List<UserVehicleRenting>{
                             new UserVehicleRenting{
                                 AppUserId = tempUser.Id,
-                                PickUpDate =DateTime.Now.AddDays(6),
-                                ReturnDate =DateTime.Now.AddDays(10),
+                                PickUpDate =DateTime.Now.AddDays(-6),
+                                ReturnDate =DateTime.Now.AddDays(-10),
                                 CarGrade = Grade.NO_GRADE,
                                 RentACarServiceGrade = Grade.NO_GRADE,
                                 IsReviewed = false
@@ -198,13 +198,20 @@ namespace Persistence
                                 ReturnDate =DateTime.Now.AddDays(14),
                                 CarGrade = Grade.NO_GRADE,
                                 RentACarServiceGrade = Grade.NO_GRADE,
-                                IsReviewed = false
+
                             }
 
                         },
                     }
                 };
 
+                foreach (var vehicle in vehicles)
+                {
+                    var rentingTotalProfit = (decimal)(vehicle.UserVehicleRentings.ToList()[0].ReturnDate  - vehicle.UserVehicleRentings.ToList()[0].PickUpDate).TotalDays* (decimal)vehicle.PriceADay;
+                    if(rentingTotalProfit < 0) rentingTotalProfit = - rentingTotalProfit;
+                    vehicle.UserVehicleRentings.ToList()[0].FullRentingPrice = rentingTotalProfit;
+                    service.TotalProfit += (decimal)rentingTotalProfit;
+                }
 
                 await context.AddRangeAsync(vehicles);
                 await context.SaveChangesAsync();

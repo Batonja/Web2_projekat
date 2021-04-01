@@ -28,22 +28,22 @@ namespace Persistence
 
             base.OnModelCreating(builder);
 
-            //UserVehicleRenting Meny to many relationship configuration
-            builder.Entity<UserVehicleRenting>(x => x.HasKey(uv =>
-            new { uv.AppUserId, uv.VehicleId }));
+            //AppUser UserVehicleRenting 1:N
             builder.Entity<UserVehicleRenting>()
-                .HasOne(u => u.AppUser)
-                .WithMany(a => a.UserVehicleRentings)
-                .HasForeignKey(u => u.AppUserId);
-            builder.Entity<UserVehicleRenting>()
-                .HasOne(a => a.Vehicle)
+                .HasOne<AppUser>(r => r.AppUser)
                 .WithMany(u => u.UserVehicleRentings)
-                .HasForeignKey(a => a.VehicleId);
+                .HasForeignKey(r => r.AppUserId);
+            //Vehicle UserVehicleRenting 1:N
+            builder.Entity<UserVehicleRenting>()
+                .HasOne<Vehicle>(r => r.Vehicle)
+                .WithMany(v => v.UserVehicleRentings)
+                .HasForeignKey(r => r.VehicleId);
+
             //One to Many RentACarService AppUser(Manager)
-             builder.Entity<AppUser>()
+            builder.Entity<AppUser>()
                 .HasOne<RentACarService>(u => u.RentACarService)
                 .WithMany(rs => rs.Managers)
-                .HasForeignKey(v => v.RentACarServiceId);
+                .HasForeignKey(u => u.RentACarServiceId);
             //One to many RentACarService(Owner) Vehicle
             builder.Entity<Vehicle>()
                 .HasOne<RentACarService>(v => v.RentACarServiceOwner)

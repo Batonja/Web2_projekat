@@ -4,13 +4,14 @@ namespace Domain
 {
     public class UserVehicleRenting
     {
+        public Guid UserVehicleRentingId { get; set; }
         public string AppUserId { get; set; }
         public virtual AppUser AppUser { get; set; }
         public Guid VehicleId { get; set; }
         public virtual Vehicle Vehicle { get; set; }
         public DateTime PickUpDate { get; set; }
         public DateTime ReturnDate { get; set; }
-        public float FullRentingPrice { get; set; }        
+        public decimal FullRentingPrice { get; set; }        
         public Grade CarGrade { get; set; }
         public Grade RentACarServiceGrade { get; set; }
         public string Comment { get; set; }
