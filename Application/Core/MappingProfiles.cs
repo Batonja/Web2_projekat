@@ -1,3 +1,4 @@
+using Application.Renting.DTOs;
 using AutoMapper;
 using Domain;
 
@@ -9,6 +10,9 @@ namespace Application.Core
         {
             CreateMap<Vehicle, Vehicle>();
             CreateMap<RentACarService,RentACarService>();
+            CreateMap<RentingDTO,UserVehicleRenting>();
+            CreateMap<ReviewDTO,UserVehicleRenting>();
+
         }
     }
 }
