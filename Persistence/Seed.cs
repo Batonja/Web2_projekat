@@ -124,6 +124,7 @@ namespace Persistence
                 await context.RentACarServices.AddAsync(service);
                 await context.SaveChangesAsync();
                 //___________________________________________________
+                var branchOffices = await context.BranchOffices.ToListAsync();
                 service =  context.RentACarServices.ToList()[0];
                 tempUser = await userManager.FindByEmailAsync("rollingstone.damir@gmail.com");
                 List<Vehicle> vehicles = new List<Vehicle>{
@@ -148,7 +149,9 @@ namespace Persistence
                                 ReturnDate =DateTime.Now.AddDays(-5),
                                 CarGrade = Grade.NO_GRADE,
                                 RentACarServiceGrade = Grade.NO_GRADE,
-                                IsReviewed = false
+                                IsReviewed = false,
+                                PickupPlaceId = branchOffices[0].BranchOfficeId,
+                                ReturnPlaceId = branchOffices[1].BranchOfficeId
                             }
 
                         },
@@ -174,7 +177,9 @@ namespace Persistence
                                 ReturnDate =DateTime.Now.AddDays(-10),
                                 CarGrade = Grade.NO_GRADE,
                                 RentACarServiceGrade = Grade.NO_GRADE,
-                                IsReviewed = false
+                                IsReviewed = false,
+                                PickupPlaceId = branchOffices[0].BranchOfficeId,
+                                ReturnPlaceId = branchOffices[1].BranchOfficeId
                             }
                         },
                     }, new Vehicle{
@@ -198,9 +203,9 @@ namespace Persistence
                                 ReturnDate =DateTime.Now.AddDays(14),
                                 CarGrade = Grade.NO_GRADE,
                                 RentACarServiceGrade = Grade.NO_GRADE,
-
+                                PickupPlaceId = branchOffices[0].BranchOfficeId,
+                                ReturnPlaceId = branchOffices[1].BranchOfficeId
                             }
-
                         },
                     }
                 };

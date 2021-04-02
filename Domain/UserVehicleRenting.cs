@@ -5,10 +5,6 @@ namespace Domain
     public class UserVehicleRenting
     {
         public Guid UserVehicleRentingId { get; set; }
-        public string AppUserId { get; set; }
-        public virtual AppUser AppUser { get; set; }
-        public Guid VehicleId { get; set; }
-        public virtual Vehicle Vehicle { get; set; }
         public DateTime PickUpDate { get; set; }
         public DateTime ReturnDate { get; set; }
         public decimal FullRentingPrice { get; set; }        
@@ -17,7 +13,15 @@ namespace Domain
         public string Comment { get; set; }
         public bool IsReviewed { get; set; }
         public bool IsCanceled { get; set; }
-
+        //RELATIONSHIP PROPS
+        public string AppUserId { get; set; }
+        public virtual AppUser AppUser { get; set; }
+        public Guid VehicleId { get; set; }
+        public virtual Vehicle Vehicle { get; set; }
+        public BranchOffice PickupPlace { get; set; }
+        public Guid PickupPlaceId { get; set; }
+        public BranchOffice ReturnPlace { get; set; }
+        public Guid ReturnPlaceId { get; set; }
     }
 
     public enum Grade {

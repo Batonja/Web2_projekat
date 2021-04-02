@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Domain
 {
@@ -9,5 +11,8 @@ namespace Domain
         public string City { get; set; }
         public Guid RentACarServiceOwnerId { get; set; }
         public RentACarService RentACarServiceOwner { get; set; }
+
+        public ICollection<UserVehicleRenting> PickUpRentings { get; set; }
+        public ICollection<UserVehicleRenting> ReturningRentings { get; set; }
     }
 }

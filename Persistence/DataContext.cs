@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using Domain;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -54,6 +55,18 @@ namespace Persistence
                 .HasOne<RentACarService>(v => v.RentACarServiceOwner)
                 .WithMany(rs => rs.BranchOffices)
                 .HasForeignKey(v => v.RentACarServiceOwnerId);
+
+            //BranchOffice  -> AppUserRenting 1:N - PICKUP
+            builder.Entity<UserVehicleRenting>()
+                .HasOne<BranchOffice>(b => b.PickupPlace)
+                .WithMany(r => r.PickUpRentings)
+                .HasForeignKey(b => b.PickupPlaceId);
+
+            //BranchOffice  -> AppUserRenting 1:N - RETURN
+            builder.Entity<UserVehicleRenting>()
+                .HasOne<BranchOffice>(b => b.ReturnPlace)
+                .WithMany(r => r.ReturningRentings)
+                .HasForeignKey(b => b.ReturnPlaceId);
         }
     }
 }
