@@ -7,6 +7,7 @@
 import React from "react";
 //import { Button } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
+import { connect } from "react-redux";
 import HomeIcon from "@material-ui/icons/Home";
 import IconButton from "@material-ui/core/IconButton";
 import DrowerNavbarCollapsed from "./DrowerNavbarCollapsed";
@@ -14,7 +15,8 @@ import { Link as RouterLink } from "react-router-dom";
 import Link from "@material-ui/core/Link";
 import { ToastContainer, Zoom } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import compose from "recompose/compose";
+import {ROLES} from '../../common/constants'
 const styles = (theme) => ({
   menu: {
     displey: "flex",
@@ -43,7 +45,9 @@ const styles = (theme) => ({
     margin: "0",
     boxShadow: "none",
   },
-  toggleDrawer: {},
+  toggleDrawer: {
+    background: "#ff4d07"
+  },
 
   linkButtonDiv: {
     displey: "flex",
@@ -58,6 +62,8 @@ const styles = (theme) => ({
     textAlign: "center",
   },
 });
+
+
 
 const MenuNavbarCollapse = (props) => {
   const { classes } = props;
@@ -96,6 +102,7 @@ const MenuNavbarCollapse = (props) => {
             <div className={classes.linkButtonDiv}>Rent A Car</div>
           </Link>
         </div>
+        {(props.loggedInUser.role == ROLES.ADMIN)?
         <div>
           <Link
             variant="body2"
@@ -107,6 +114,8 @@ const MenuNavbarCollapse = (props) => {
             <div className={classes.linkButtonDiv}>Admin</div>
           </Link>
         </div>
+        :<></>
+        }
       </div>
       <ToastContainer
         position="top-center"
@@ -122,4 +131,9 @@ const MenuNavbarCollapse = (props) => {
   );
 };
 
-export default withStyles(styles)(MenuNavbarCollapse);
+
+const mapStateToProps = (state) => ({
+  loggedInUser: state.userReducer.LoggedInUser,
+});
+
+export default compose(withStyles(styles), connect(mapStateToProps, null))(MenuNavbarCollapse);

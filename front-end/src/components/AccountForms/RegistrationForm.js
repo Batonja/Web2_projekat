@@ -6,11 +6,12 @@ import { withStyles } from '@material-ui/core/styles'
 import signUp from "../../actions/User/signUp";
 import { connect } from "react-redux";
 import CircularProgress from "@material-ui/core/CircularProgress";
-
+import userAvatar from './add-account.png' 
 
 
 const styles = (theme) => ({
   register: {
+    marginTop: "50px",
     with: '100%',
     display: 'flex',
     flexDirection: 'column',
@@ -24,7 +25,7 @@ const styles = (theme) => ({
     justifyContent: 'center',
     textAlign: 'center',
     alignItems: 'center',
-    margin: '5px 5px 5px 5px',
+    //margin: '5px 5px 5px 5px',
   },
   registerHeader: {
     //textAlign: 'center'
@@ -125,13 +126,10 @@ class RegistrationForm extends Component {
   componentDidMount() {
     const regexLettersOnly = /[^A-Za-z]+/;
     const regexNotANumber = /[^0-9]/;
-    const usersEmails = this.props.AllUsers.map((user) => user.Email);
+ 
     //const regexAddress = /^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/;
     //Email
-    ValidatorForm.addValidationRule("isExistingUser", (value) => {
-      let emailSearch = usersEmails.find((email) => email === value);
-      return emailSearch !== undefined && emailSearch === value ? false : true;
-    });
+ 
 
     //Password
     ValidatorForm.addValidationRule("isPasswordMatch", (value) => {
@@ -164,7 +162,7 @@ class RegistrationForm extends Component {
           
           <div className={classes.registerForm}>
           <div className={classes.logoImgDiv}>
-            <img className={classes.logoImg} src={require('./add-account.png')} />
+            <img className={classes.logoImg} src={userAvatar} />
           </div>
             <ValidatorForm
               onSubmit={this.handleSubmit}
@@ -179,7 +177,7 @@ class RegistrationForm extends Component {
                 id="email-form"
                 name="Email"
                 value={this.state.Email}
-                validators={["required", "isEmail", "isExistingUser"]}
+                validators={["required", "isEmail"]}
                 errorMessages={[
                   "this field is required",
                   "email is not valid",
@@ -292,7 +290,7 @@ class RegistrationForm extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  AllUsers: state.userReducer.AllUsers,
+ 
   loading: state.loadingReducer.loading,
 });
 

@@ -1,4 +1,4 @@
-export const LOG_OFF = "user:logOff";
+   export const LOG_OFF = "user:logOff";
 
 export default function logOff() {
   return (dispatch) => {

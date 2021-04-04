@@ -1,14 +1,12 @@
 export const ROLES = {
-  FLIGHT_ADMIN: "flightAdmin",
-  CAR_ADMIN: "carAdmin",
-  ADMIN: "admin",
-  USER: "user",
+  FLIGHT_ADMIN: "FlightManager",
+  CAR_ADMIN: "CarManager",
+  ADMIN: "Administrator",
+  USER: "RegularUser",
 };
 
 export default {
   ROLES,
 };
 
-export const luggageTypes = ["HAND", "CHECKED"];
-
-export const ConnectTo = "https://localhost:44328/api/";
+ 

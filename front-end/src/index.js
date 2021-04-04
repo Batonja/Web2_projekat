@@ -7,6 +7,10 @@ import { compose, createStore, applyMiddleware } from "redux";
 import rootReducer from "./reducers/rootReducer";
 import thunk from "redux-thunk";
 import { Provider } from "react-redux";
+import {createBrowserHistory} from 'history'
+
+
+export const history = createBrowserHistory()
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 

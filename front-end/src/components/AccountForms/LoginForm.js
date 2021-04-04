@@ -1,12 +1,13 @@
-import React, { Component } from "react";
+import React, { Component, useState,useEffect } from "react";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import Button from "@material-ui/core/Button";
 import { connect } from "react-redux";
-import googleSignIn from "../../actions/User/googleSignIn";
+import signIn from "../../actions/User/signIn";
 import GoogleLogin from "react-google-login";
 import { withStyles } from "@material-ui/core/styles";
 import config from "../../config.json";
-
+import agent from "../../app/api/agent"
+import {UserLogin} from '../../app/models/user'
 import userAvatar from '../../logo.png'
 
 const styles = (theme) => ({
@@ -23,7 +24,6 @@ const styles = (theme) => ({
     justifyContent: "center",
     textAlign: "center",
     alignItems: "center",
-    margin: "5px 5px 5px 5px",
   },
   signInHeader: {
     //textAlign: 'center'
@@ -65,7 +65,7 @@ const styles = (theme) => ({
     textAlign: "center",
   },
   logoImgDiv: {
-    marginTop: "100px",
+    marginTop: "50px",
     width: "100%",
     height: "30vh",
   },
@@ -76,51 +76,39 @@ const styles = (theme) => ({
   },
 });
 
-class LoginForm extends Component {
-  constructor(props) {
-    super(props);
+ 
 
-    this.state = {
-      password: "",
-      email: "",
-    };
+const LoginForm = (props) => {
+   
+const { classes } = props
 
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
+const [state, setState] = useState({} );
 
-  responseGoogle = (response) => {
-    alert(response.profileObj.name);
+useEffect(() => {
+ setState(new UserLogin("", ""))
+}, [])
 
-    var user = {
-      name: response.profileObj.name,
-      password: response.profileObj.password,
-      email: response.profileObj.email,
-    };
-
-    this.props.OnLogIn();
-  };
-
-  handleChange = (e) => {
-    this.setState({
-      ...this.state,
+ const handleChange = (e) => {
+    setState({
+      ...state,
       [e.target.name]: e.target.value,
     });
   };
+  const handleSubmit = () => {
+    // const userLogin = new UserLogin(this.state.email,this.state.password)
+    // console.log(userLogin)
+    // const user =  agent.User.login(userLogin)
+    // .catch(e => console.log(e))
+    // .then(response => console.log(response))
+  
 
-  handleSubmit() {
-    this.props.OnLogIn(
-      this.state.email,
-      this.state.password,
-      this.props.history
+    props.OnLogIn(
+      state.email,
+      state.password,
+      props.history
     );
   }
-  handleGoogle() {
-    console.log("GOOGLE CLICKED");
-  }
-
-  render() {
-    const { classes } = this.props;
-    return (
+return (
       <div className={classes.signIn}>
         <div className={classes.signInForm}>
           <div className={classes.logoImgDiv}>
@@ -134,7 +122,7 @@ class LoginForm extends Component {
               name="email"
               validators={["required", "isEmail"]}
               errorMessages={["this field is required", "email is not valid"]}
-              onChange={this.handleChange}
+              onChange={handleChange}
             />
             <br />
             <TextValidator
@@ -145,16 +133,17 @@ class LoginForm extends Component {
               name="password"
               validators={["required"]}
               errorMessages={["Password field is required"]}
-              onChange={this.handleChange}
+              onChange={handleChange}
             />
             <br />
 
             <div className="signInBtn">
               <Button
                 className={classes.loginButton}
+                disabled = {(state.email === "" || state.password == "")}
                 variant="contained"
                 id="searchButton"
-                onClick={this.handleSubmit}
+                onClick={handleSubmit}
                 color="primary"
               >
                 Log In
@@ -163,24 +152,17 @@ class LoginForm extends Component {
           </ValidatorForm>
         </div>
         <div className={classes.socialsLogin}>
-          <div className={classes.socialsLoginModal}>
-            <GoogleLogin
-              clientId={config.GOOGLE_CLIENT_ID}
-              buttonText="via Google"
-              className={classes.socialButton}
-              onSuccess={this.responseGoogle}
-              onFailure={this.responseGoogle}
-              cookiePolicy={"single_host_origin"}
-            />
-          </div>
+         
         </div>
       </div>
     );
-  }
-  y;
 }
+ 
+
+  
 const mapDispatchToProps = (dispatch) => ({
-  OnLogIn: (user, history) => dispatch(googleSignIn(user, history)),
+  OnLogIn: (email, password, history) => dispatch(signIn(email, password, history)),
+
 });
 
 export default connect(null, mapDispatchToProps)(withStyles(styles)(LoginForm));

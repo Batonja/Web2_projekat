@@ -12,7 +12,8 @@
         "flight/general/flightsList.scss",
         "flight/search/search.scss",
         "flight/modal/modal.scss",
-        "cars/cars-form.scss"
+        "cars/cars-form.scss",
+        "navigation.css"
     ],
     "names": [],
     "file": "styles.css"

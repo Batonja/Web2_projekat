@@ -4,7 +4,7 @@
  *
  * https://medium.com/@habibmahbub/create-appbar-material-ui-responsive-like-bootstrap-1a65e8286d6f
  */
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { MenuItem } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
@@ -15,6 +15,9 @@ import Link from "@material-ui/core/Link";
 import { connect } from "react-redux";
 import compose from "recompose/compose";
 import logOff from "../../actions/User/logOff";
+
+ 
+
 
 const styles = (theme) => ({
   account: {
@@ -42,7 +45,11 @@ const styles = (theme) => ({
     margin: "0",
     boxShadow: "none",
   },
-  toggleDrawer: {},
+  accountIcon: {
+    background: "#ff4d07",
+    height: "50px",
+    //backgroundColor : "transparent"
+  },
   linkButtonDiv: {
     margin: "10px",
   },
@@ -50,6 +57,8 @@ const styles = (theme) => ({
 
 const AccountNavbarCollapse = (props) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [user, setUser] = useState();
+
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -65,7 +74,10 @@ const AccountNavbarCollapse = (props) => {
   };
 
   const { classes } = props;
-
+  useEffect(() => {
+      setUser(props.loggedInUser)
+      console.log(user);
+  }, [props])
   return (
     <div className={classes.account}>
       <div className={classes.buttonCollapseAccount}>
@@ -73,13 +85,13 @@ const AccountNavbarCollapse = (props) => {
           onClick={handleClick}
           color="inherit"
           aria-label="Menu"
-          className={classes.toggleDrawer}
+          className={classes.accountIcon}
         >
           <AccountCircleIcon />
-          {props.loggedInUser.FirstName ? props.loggedInUser.FirstName : ""}
+          {(props.loggedInUser == null) ?props.loggedInUser.displayName: ""  }
         </IconButton>
 
-        {!props.loggedInUser.FirstName ? (
+        {props.loggedInUser == null ? (
           <Menu
             id="menu-collapsed"
             anchorEl={anchorEl}
@@ -148,15 +160,20 @@ const AccountNavbarCollapse = (props) => {
           <IconButton
             color="inherit"
             aria-label="Menu"
-            className={classes.toggleDrawer}
-            to={!props.loggedInUser.FirstName ? false : "/account"}
+            
+            className={classes.accountIcon}
+            to={!props.loggedInUser.displayName ? false : "/account"}
             component={RouterLink}
           >
             <AccountCircleIcon />
-            {props.loggedInUser.FirstName ? props.loggedInUser.FirstName : ""}
+            {(props.loggedInUser.displayName != null)
+              ?<div style ={{marginRight: "5px", marginBottom: "3px"}}>{props.loggedInUser.displayName}</div>
+              :<></>
+            }
+            
           </IconButton>
         </div>
-        {!props.loggedInUser.FirstName ? (
+        {props.loggedInUser.displayName === null ? (
           <>
             <div className={classes.linkButtonDiv}>
               <Link
