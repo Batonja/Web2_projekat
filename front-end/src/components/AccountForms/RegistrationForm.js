@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useEffect, useState } from "react";
 import Button from "@material-ui/core/Button";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import { withStyles } from '@material-ui/core/styles'
@@ -6,8 +6,8 @@ import { withStyles } from '@material-ui/core/styles'
 import signUp from "../../actions/User/signUp";
 import { connect } from "react-redux";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import userAvatar from './add-account.png' 
-
+import userAvatar from './add-account.png'
+import { UserRegistration } from "app/models/user";
 
 const styles = (theme) => ({
   register: {
@@ -82,58 +82,44 @@ const styles = (theme) => ({
 
 
 
-class RegistrationForm extends Component {
-  constructor(props) {
-    super(props);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-  state = {
-    FirstName: "",
-    LastName: "",
-    Email: "",
-    Key: "",
-    KeyConfirm: "",
-    Address: "",
-    Phone: "",
-    PassportId: "",
-    Salt: "salt",
-  };
+const RegistrationForm = (props) => {
+  const { classes } = props
+  const [state, setState] = useState({user:
+     {
+    userName: "",
+    email: "",
+    passportID: "",
+    phoneNumber: "",
+    password: "",
+    repeatPassword: "",
+    firstName: "",
+    lastName: "",
+    image: ""
+  }});
+ 
+  
+  
+  useEffect(() => {
 
-  handleSubmit = (e) => {
-    e.preventDefault();
-
-    this.props.OnSignUp(this.state, this.props.history);
-
-    /* this.setState({
-      FirstName: "",
-      LastName: "",
-      Email: "",
-      Key: "",
-      KeyConfirm: "",
-      Address: "",
-      Phone: "",
-      Salt: "",
-    });*/
-  };
-
-  handleChange = (e) => {
-    this.setState({
-      ...this.state,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  componentDidMount() {
     const regexLettersOnly = /[^A-Za-z]+/;
     const regexNotANumber = /[^0-9]/;
- 
-    //const regexAddress = /^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/;
-    //Email
- 
+    const regexBigLetters = /[A-Z]/
+    const regexSmallLetters = /[a-z]/
+    const regexNumbers = /[0-9]/
+    const regexNonAlphanumeric = /[^a-zA-Z0-9]/
 
+ 
     //Password
     ValidatorForm.addValidationRule("isPasswordMatch", (value) => {
-      return value !== this.state.Key ? false : true;
+      console.log(value,state.user.password)
+      if (value !== state.user.password) {
+        return false;
+    }
+    return true;
+    });
+    
+    ValidatorForm.addValidationRule("containsBigLettersSmallLettersAndNonAlphanumeric", (value) => {
+      return regexNumbers.test(value) && regexBigLetters.test(value) && regexSmallLetters.test(value) && regexNonAlphanumeric.test(value) ? true : false;
     });
 
     //First nad Last name
@@ -142,160 +128,181 @@ class RegistrationForm extends Component {
     });
     //Phone number
     ValidatorForm.addValidationRule("areNumbersOnly", (value) => {
-      return regexNotANumber.test(value) ? false : true;
+      return regexNotANumber.test(value)  ? false : true;
     });
-  }
 
-  componentWillUnmount() {
-    ValidatorForm.removeValidationRule("isPasswordMatch");
-    ValidatorForm.removeValidationRule("areLettersOnly");
-    ValidatorForm.removeValidationRule("areNumbersOnly");
-  }
+    //PassportID
+    ValidatorForm.addValidationRule("passportLengthCheck", (value) => {
+      return (value.length >= 6 && value.length  <= 9)  ? true : false;
+    });
 
-  render() {
-    const { classes } = this.props
+  }, [])
 
-    return this.props.loading ? (
-      <CircularProgress />
-    ) : (
-        <div className={classes.register}>
-          
-          <div className={classes.registerForm}>
-          <div className={classes.logoImgDiv}>
-            <img className={classes.logoImg} src={userAvatar} />
-          </div>
-            <ValidatorForm
-              onSubmit={this.handleSubmit}
-              onError={(errors) => console.log(errors)}
-            >
-              <br />
-              <TextValidator
-                className={classes.registerFormField}
-                margin="normal"
-                label="Email"
-                onChange={this.handleChange}
-                id="email-form"
-                name="Email"
-                value={this.state.Email}
-                validators={["required", "isEmail"]}
-                errorMessages={[
-                  "this field is required",
-                  "email is not valid",
-                  "user with this email already exists",
-                ]}
-              />
-              <br />
-              <TextValidator
-                className={classes.registerFormField}
-                margin="normal"
-                label="Password"
-                type="password"
-                onChange={this.handleChange}
-                id="password-form"
-                name="Key"
-                value={this.state.Key}
-                validators={["required"]}
-                errorMessages={["this field is required"]}
-              />
-              <br />
-              <TextValidator
-                className={classes.registerFormField}
-                margin="normal"
-                label="Repeat Password"
-                type="password"
-                name="KeyConfirm"
-                onChange={this.handleChange}
-                id="password-form-confirm"
-                value={this.state.KeyConfirm}
-                validators={["isPasswordMatch", "required"]}
-                errorMessages={["password mismatch", "this field is required"]}
-              />
-              <br />
-              <TextValidator
-                className={classes.registerFormField}
-                margin="normal"
-                label="First Name"
-                onChange={this.handleChange}
-                id="firstname-form"
-                name="FirstName"
-                value={this.state.FirstName}
-                validators={["required", "areLettersOnly"]}
-                errorMessages={[
-                  "This field is required",
-                  "First name must consist of letters only",
-                ]}
-              />
-              <br />
-              <TextValidator
-                className={classes.registerFormField}
-                margin="normal"
-                label="Last Name"
-                onChange={this.handleChange}
-                id="lastname-form"
-                name="LastName"
-                value={this.state.LastName}
-                validators={["required", "areLettersOnly"]}
-                errorMessages={[
-                  "This field is required",
-                  "Last name must consist of letters only",
-                ]}
-              />
-              <br />
-              <TextValidator
-                className={classes.registerFormField}
-                margin="normal"
-                label="Phone Number"
-                onChange={this.handleChange}
-                id="phonenumber-form"
-                name="Phone"
-                value={this.state.Phone}
-                validators={["required", "areNumbersOnly"]}
-                errorMessages={["this field is required"]}
-              />
-              <br />
-              <TextValidator
-                className={classes.registerFormField}
-                margin="normal"
-                label="Address"
-                onChange={this.handleChange}
-                id="address-form"
-                name="Address"
-                value={this.state.Address}
-                validators={["required"]}
-                errorMessages={["this field is required"]}
-              />
-              <br />
-              <TextValidator
-                className={classes.registerFormField}
-                margin="normal"
-                label="Passport Id"
-                onChange={this.handleChange}
-                id="passportId-form"
-                name="PassportId"
-                value={this.state.PassportId}
-                validators={["required", "areNumbersOnly"]}
-                errorMessages={["this field is required"]}
-              />
-              <br />
-              <Button className={classes.registerButton} type="submit" variant="contained" color="primary">
-                Register
+
+
+  const handleSubmit = () => {
+
+    props.OnSignUp(new UserRegistration(state.user.userName,state.user.email,state.user.passportID,state.user.phoneNumber,state.user.password,state.user.firstName,state.user.lastName,null), props.history);
+
+  };
+
+  const handleChange = (e) => {
+    console.log(e.target.value)
+    const { user } = state;
+    user[e.target.name] = e.target.value;
+    setState({ user });
+  };
+  useEffect(() => {
+
+    return () => {
+     ValidatorForm.removeValidationRule("isPasswordMatch");
+     ValidatorForm.removeValidationRule("areLettersOnly");
+     ValidatorForm.removeValidationRule("areNumbersOnly");
+     ValidatorForm.removeValidationRule("containsBigLettersSmallLettersAndNonAlphanumeric");
+     ValidatorForm.removeValidationRule("passportLengthCheck");
+ 
+    }
+  },[props])
+
+
+
+  return props.loading ? (
+    <CircularProgress />
+  ) : (
+    <div className={classes.register}>
+
+      <div className={classes.registerForm}>
+        <div className={classes.logoImgDiv}>
+          <img className={classes.logoImg} src={userAvatar} />
+        </div>
+        <ValidatorForm
+          onSubmit={handleSubmit}
+          onError={(errors) => console.log(errors)}
+        >
+          <br />
+          <TextValidator
+            className={classes.registerFormField}
+            margin="normal"
+            label="Email"
+            onChange={handleChange}
+            id="email-form"
+            name="email"
+            value={state.user.email}
+            validators={["required", "isEmail"]}
+            errorMessages={[
+              "this field is required",
+              "email is not valid",
+              
+            ]}
+          />
+          <br />
+          <TextValidator
+            className={classes.registerFormField}
+            margin="normal"
+            label="Password"
+            type="password"
+            onChange={handleChange}
+            id="password-form"
+            name="password"
+            value={state.user.password}
+            validators={["required", "containsBigLettersSmallLettersAndNonAlphanumeric"]}
+            errorMessages={
+              ["This field is required.",
+               "Password need to contains big and small letters, number and non alphanumeric.",
+               ]}
+          />
+          <br />
+          <TextValidator
+            className={classes.registerFormField}
+            margin="normal"
+            label="Repeat Password"
+            type="password"
+            name="repeatPassword"
+            onChange={handleChange}
+            id="password-form-confirm"
+            value={state.user.repeatPassword}
+            validators={["isPasswordMatch", "required"]}
+            errorMessages={[
+              "Password mismatch.", 
+              "This field is required."
+              ]}
+          />
+          <br />
+          <TextValidator
+            className={classes.registerFormField}
+            margin="normal"
+            label="First Name"
+            onChange={handleChange}
+            id="firstname-form"
+            name="firstName"
+            value={state.user.firstName}
+            validators={["required", "areLettersOnly"]}
+            errorMessages={[
+              "This field is required",
+              "First name must consist of letters only.",
+            ]}
+          />
+          <br />
+          <TextValidator
+            className={classes.registerFormField}
+            margin="normal"
+            label="Last Name"
+            onChange={handleChange}
+            id="lastname-form"
+            name="lastName"
+            value={state.user.lastName}
+            validators={["required", "areLettersOnly"]}
+            errorMessages={[
+              "This field is required.",
+              "Last name must consist of letters only.",
+            ]}
+          />
+          <br />
+          <TextValidator
+            className={classes.registerFormField}
+            margin="normal"
+            label="Phone Number"
+            onChange={handleChange}
+            id="phonenumber-form"
+            name="phoneNumber"
+            value={state.user.phoneNumber}
+            validators={["required", "areNumbersOnly"]}
+            errorMessages={["This field is required.", "Phone number must contains of numbers only."]}
+          />
+
+          <br />
+          <TextValidator
+            className={classes.registerFormField}
+            margin="normal"
+            label="Passport Id"
+            onChange={handleChange}
+            id="passportId-form"
+            name="passportID"
+            value={state.user.passportID}
+            validators={["required", "areNumbersOnly","passportLengthCheck"]}
+            errorMessages={["This field is required", "PassportID is must contains numbers only [6-9]","PassportID is must have 6-9 characters."]}
+          />
+          <br />
+          <Button className={classes.registerButton} onSubmit={handleSubmit} type="submit" variant="contained" color="primary">
+            Register
                 </Button>
 
 
-            </ValidatorForm>
-          </div>
-        </div>
-      );
-  }
+        </ValidatorForm>
+      </div>
+    </div>
+  );
 }
 
+
 const mapStateToProps = (state) => ({
- 
+
   loading: state.loadingReducer.loading,
 });
 
 const mpaDispatchToProps = (dispatch) => ({
-  OnSignUp: (user,history) => dispatch(signUp(user,history)),
+  OnSignUp: (user, history) => dispatch(signUp(user, history)),
 });
 
+// @ts-ignore
 export default connect(mapStateToProps, mpaDispatchToProps)(withStyles(styles)(RegistrationForm));

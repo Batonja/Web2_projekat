@@ -8,6 +8,8 @@ import LoginForm from "../components/AccountForms/LoginForm";
 import CarServices from '../components/Car/Utilities/RentACarServices'
 import CarAdminHome from '../components/Car/Admin/CarAdminHome'
 import "../App.css";
+import VerificationEmailSent from "components/AccountForms/VerificationEmailSent";
+import VerifyEmail from "components/AccountForms/VerifyEmail";
 
 export function Routes() {
   return (
@@ -17,10 +19,13 @@ export function Routes() {
       <Route path="/carservices" component={CarServices} />
       <Route path="/cars-admin-home"  component={CarAdminHome}/>
       
-      <Route path="/account" component={Account} />
+      {/* <Route path="/account" component={Account} /> */}
       <Route path="/signIn" component={LoginForm} />
-      <Route path="/signUp" component={RegistrationForm} className="forms" />
+      <Route path="/signUp" component={RegistrationForm}/>
+      <Route path="/verifyAccountInfo" component={VerificationEmailSent} />
+      <Route exact path="/account/:id" component={VerifyEmail} />
       <Route path="/"  component={Home} />
+
 
     </Switch>
   );

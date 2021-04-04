@@ -95,12 +95,7 @@ useEffect(() => {
     });
   };
   const handleSubmit = () => {
-    // const userLogin = new UserLogin(this.state.email,this.state.password)
-    // console.log(userLogin)
-    // const user =  agent.User.login(userLogin)
-    // .catch(e => console.log(e))
-    // .then(response => console.log(response))
-  
+
 
     props.OnLogIn(
       state.email,

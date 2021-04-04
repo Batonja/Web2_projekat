@@ -30,7 +30,7 @@ export default function userReducer(state = initialState, { type, payload }) {
   switch (type) {
 
     case SIGN_UP:
-        return { ...state, LoggedInUser: payload };
+      return {...state};
     case SIGN_IN:
       console.log(type, payload)
 

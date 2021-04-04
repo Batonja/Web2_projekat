@@ -1,3 +1,5 @@
+
+
 export   class UserLogin {
     constructor(email, password) {
         this.email = email;
@@ -18,7 +20,8 @@ export   class UserLogin {
 
  export  class UserRegistration {
     constructor(userName, email, passportID, phoneNumber, password, firstName, lastName, image) {
-        this.userName = userName
+        var username   = email.substring(0, email.lastIndexOf("@"));
+        this.userName = username
         this.email = email
         this.passportID = passportID
         this.phoneNumber = phoneNumber
@@ -28,4 +31,3 @@ export   class UserLogin {
         this.image = image
     }
 }
- 

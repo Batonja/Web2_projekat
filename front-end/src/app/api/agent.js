@@ -55,6 +55,7 @@ const Vehicles = {
 const User = {
     login: (user) => requests.post('./account/login',user),
     register: (user) => requests.post('./account/register',user),
+    verifyEmail: (verificationPath) => requests.post('./account/' + verificationPath)
 }
 
 export default {
