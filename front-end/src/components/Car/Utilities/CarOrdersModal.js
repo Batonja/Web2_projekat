@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import carOrderToProfile from '../../../actions/User/carOrderToProfile.js'
 import { Redirect } from 'react-router-dom'
@@ -32,6 +32,8 @@ import { mdiAirConditioner } from '@mdi/js';
 import { useSpring, animated } from 'react-spring'
 
 import isEmpty from 'lodash/isEmpty'
+
+import carImage from '../template-images/add-car-form.png'
 
 
 const styles = (theme) => ({
@@ -194,7 +196,7 @@ const StyledTableRow = withStyles((theme) => ({
 
 
 const CarOrdersModal = (props) => {
-    const [totalPrice, setTotalPrice] = React.useState(0)
+    const [totalPrice, setTotalPrice] = useState(0)
     const purchaseOverlayModalRef = React.useRef(null)
     const spring = useSpring({
 
@@ -207,9 +209,9 @@ const CarOrdersModal = (props) => {
 
     React.useEffect(() => {
         const { orderDetails } = props
-        const diffTime = Math.abs(orderDetails.datesForLease.endDate - orderDetails.datesForLease.startDate);
+        const diffTime = Math.abs(orderDetails.pickUpDate - orderDetails.returnDate);
         const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-        setTotalPrice(vehicle.PriceADay * diffDays)
+        setTotalPrice(vehicle.priceADay * diffDays)
     }, [])
 
     const onPurchaseOverlayModal = () => {
@@ -232,9 +234,10 @@ const CarOrdersModal = (props) => {
 
         } else {
             console.log("Logged in: ", LoggedInUser)
-            carOrderToProfile(order, LoggedInUser.Email)
+            carOrderToProfile(order, LoggedInUser.id)
         }
     }
+
     const off = () => {
         const node = purchaseOverlayModalRef.current
         node.style.display = "none";
@@ -244,6 +247,7 @@ const CarOrdersModal = (props) => {
     }
     const { classes } = props
     const { orderDetails } = props
+    const { selectedServiceName} = props
     const { vehicle } = props
     const { LoggedInUser } = props
     
@@ -251,14 +255,14 @@ const CarOrdersModal = (props) => {
         <>
             <div className={classes.carOrderModalContainer}>
                 <div className={classes.carNameHeaderModal}>
-                    <h4 className={classes.modalHeaders}>{vehicle.CarModel}</h4>
+                    <h4 className={classes.modalHeaders}>{vehicle.carModel}</h4>
                 </div>
                 <div className={classes.contentContainer}>
                     <div className={classes.infoAndImageFlex}>
                         <div className={classes.carImageOrderModal}>
-                            <img src={require('../template-images/add-car-form.png')} alt="car aimage" style={{ height: "90%" }} />
+                            <img src={carImage} alt="car aimage" style={{ height: "90%" }} />
                             <div>
-                                <h6 className={classes.modalHeaders}>{vehicle.CarModel}</h6>
+                                <h6 className={classes.modalHeaders}>{vehicle.carModel}</h6>
 
                             </div>
                         </div>
@@ -271,35 +275,35 @@ const CarOrdersModal = (props) => {
                                             title="Number of passengers"
                                             size={1}
                                             color="black"
-                                        />: {vehicle.NumberOfSeats}
+                                        />: {vehicle.numberOfSeats}
                                     </li>
                                     <li>
                                         <Icon path={mdiCarDoor}
                                             title="Number of doors"
                                             size={1}
                                             color="black"
-                                        />: {vehicle.NumberOfDoors}
+                                        />: {vehicle.numberOfDoors}
                                     </li>
                                     <li>
                                         <Icon path={mdiBriefcase}
                                             title="Number of suitcases"
                                             size={1}
                                             color="black"
-                                        />: {vehicle.NumberOfSuitcases}
+                                        />: {vehicle.numberOfSuitcases}
                                     </li>
                                     <li>
                                         <Icon path={mdiCarShiftPattern}
                                             title="Gearbox type"
                                             size={1}
                                             color="black"
-                                        />: {vehicle.GearboxType}
+                                        />: {vehicle.gearboxType}
                                     </li>
                                     <li>
                                         <Icon path={mdiAirConditioner}
                                             title="Air cooling"
                                             size={1}
                                             color="black"
-                                        />: {vehicle.CoolingType}
+                                        />: {vehicle.isAirCondition ? "Air condition" : "Air cooling"}
                                     </li>
                                     <li>
 
@@ -309,14 +313,14 @@ const CarOrdersModal = (props) => {
                                 </ul>
                                 <h6 className={classes.modalHeaders}>Customer Ratings:</h6>
                                 <Box component="fieldset" mb={3} borderColor="transparent" textAlign={"center"}>
-                                    <Rating value={vehicle.AverageCarGrade} readOnly />
+                                    <Rating value={vehicle.averageCarGrade} readOnly />
                                 </Box>
                             </div>
                         </div>
                     </div>
                     <div className={classes.priceButtonSectionModal}>
                         <h4 className={classes.modalHeaders}>Choose vehicle</h4>
-                        <h4 >{vehicle.PriceADay}$</h4>
+                        <h4 >{vehicle.priceADay}$</h4>
                         <Button
                             variant="contained"
                             onClick={onPurchaseOverlayModal}
@@ -345,16 +349,16 @@ const CarOrdersModal = (props) => {
                             </TableHead>
                             <TableBody>
 
-                                <StyledTableRow key={vehicle.Model}>
+                                <StyledTableRow key={vehicle.carModel}>
                                     <StyledTableCell component="th" scope="row">
-                                        {orderDetails.service}
+                                        {selectedServiceName}
                                     </StyledTableCell>
-                                    <StyledTableCell align="right">{vehicle.CarModel}</StyledTableCell>
+                                    <StyledTableCell align="right">{vehicle.carModel}</StyledTableCell>
                                     <StyledTableCell align="right">
-                                        {dateConversion(orderDetails.datesForLease.startDate)}
+                                        {dateConversion(orderDetails.pickUpDate)}
                                     </StyledTableCell>
                                     <StyledTableCell align="right">
-                                        {dateConversion(orderDetails.datesForLease.endDate)}
+                                        {dateConversion(orderDetails.returnDate)}
                                     </StyledTableCell>
                                     <StyledTableCell align="right">{totalPrice}</StyledTableCell>
 
@@ -364,13 +368,13 @@ const CarOrdersModal = (props) => {
                         </Table>
                     </TableContainer>
                     <div className={classes.placesFinishDiv}>
-                        <p><h4 className={classes.modalHeaders}>Puck up place:</h4>{orderDetails.stations.pickUpStation}</p>
-                        <p><h4 className={classes.modalHeaders}>Drop off place:</h4>{orderDetails.stations.dropOffStation}</p>
+                        <p><h4 className={classes.modalHeaders}>Puck up place:</h4>{orderDetails.pickupPlaceId}</p>
+                        <p><h4 className={classes.modalHeaders}>Drop off place:</h4>{orderDetails.returnPlaceId}</p>
                     </div>
                     <Link
                         variant="body2"
                         color="inherit"
-                        to={(isEmpty(LoggedInUser)) ? "/signin" : "/cars"}
+                        to={(isEmpty(LoggedInUser.userId)) ? "/signin" : "/cars"}
                         component={RouterLink}
                     >
                         <Button

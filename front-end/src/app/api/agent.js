@@ -59,7 +59,12 @@ const User = {
     verifyEmail: (verificationPath) => requests.post('./account/' + verificationPath)
 }
 
+const RentACarService = {
+    list: () => requests.get("./rentACarService/")
+}
+
 export default {
     Vehicles,
-    User
+    User,
+    RentACarService
 };

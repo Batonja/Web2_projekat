@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useEffect } from 'react'
 
 import { connect } from "react-redux";
@@ -24,6 +25,8 @@ import {
 } from "@material-ui/pickers";
 
 import CarOrdersModal from '../Utilities/CarOrdersModal'
+import { RentACarService } from 'app/models/rentACarService';
+import { Renting } from 'app/models/renting';
 
 
 
@@ -147,7 +150,7 @@ const CarServiceSearch = (props) => {
 
     let locationField = null;
     const [location, setLocation] = useState('');
-    const [selectedService, setSelectedService] = useState({});
+    const [selectedService, setSelectedService] = useState(new RentACarService("", "", "", 0, 0, "", "", "", 0, [], [], []));
     const [availableServices, setAvailableSerrvice] = useState([]);
     const [datesForLease, setdatesForLease] = useState({
         startDate: null,
@@ -157,8 +160,14 @@ const CarServiceSearch = (props) => {
     const [numberOfPessangers, setNumberOfPessangers] = useState(5)
     const [priceRange, setPriceRange] = useState([100, 200])
     const [stations, setStations] = useState({
-        pickUpStation: null,
-        dropOffStation: null
+        pickUpStation: {
+            id: null,
+            name: null,
+        },
+        dropOffStation: {
+            id:null,
+            name: null
+        },
 
     })
     const [service, setService] = useState('');
@@ -177,9 +186,11 @@ const CarServiceSearch = (props) => {
 
     const [toggleSearch, setToggleSearch] = useState(false)
     const [filteredCars, setFilteredCars] = useState([])
+    const [selectedServiceName, setSelectedServiceName] = useState("");
+
 
     const filteringCars = (car) => {
-        if (car.NumberOfSeats == numberOfPessangers && car.PriceADay >= priceRange[0] && car.PriceADay <= priceRange[1])
+        if (car.numberOfSeats == numberOfPessangers && car.priceADay >= priceRange[0] && car.priceADay <= priceRange[1])
             return true;
         // else if(priceRange[0] > car.PriceADay && priceRange[0] < car.PriceADay)
         //     return true
@@ -189,9 +200,10 @@ const CarServiceSearch = (props) => {
 
     }
 
+
     const defaultPropsLocation = {
         //Get distinct values
-        options: [...new Set(props.rentACarServices.map(x => x.City))],
+        options: props.rentACarServices.map(x => x.City),
         getOptionLabel: (option) => option,
     }
 
@@ -204,28 +216,33 @@ const CarServiceSearch = (props) => {
     }
 
     const handleSearch = () => {
-        var filtered = selectedService.Vehicles.filter(filteringCars);
+        console.log(  "",
+            datesForLease.startDate,
+            datesForLease.endDate,
+            stations.pickUpStation.id,
+            stations.dropOffStation.id)
+        var filtered = selectedService.vehicles.filter(filteringCars);
+        console.log(filtered)
         setFilteredCars(filtered);
-        setOrderDetails({
-            service: selectedService.Title,
-            datesForLease,
-            stations
-        })
-        setService(selectedService.Title)
-        setToggleSearch(true)
-        setLocation('');
-        setSelectedService({
-            Title: ''
-        });
-        setStations({
-            pickUpStation: null,
-            dropOffStation: null
-        })
-        setdatesForLease({
-            startDate: null,
-            tommorowFromStartDate: null,
-            endDate: null,
-        })
+        setSelectedServiceName(selectedService.name);
+        //setToggleSearch(true)
+        // console.log(toggleSearch)
+        // setLocation('');
+        // setSelectedService(new RentACarService("", "", "", 0, 0, "", "", "", 0, [], [], []));
+        // setStations({
+        //     pickUpStation: {
+        //         id: null,
+        //         name: null,
+        //     },
+        //     dropOffStation: {
+        //         id:null,
+        //         name: null
+        //     },})
+        // setdatesForLease({
+        //     startDate: null,
+        //     tommorowFromStartDate: null,
+        //     endDate: null,
+        // })
     }
     const handleChangeStartDate = (date) => {
         let tommorowFromStartDate = new Date()
@@ -238,16 +255,19 @@ const CarServiceSearch = (props) => {
 
     useEffect(() => {
         const { rentACarServices } = props
+        console.log(location)
         if (location !== '')
             setAvailableSerrvice(
                 rentACarServices.filter((service) => {
 
-                    return (service.City === location)
+                    return (service.city === location)
                 })
             )
     }, [location])
 
+    useEffect(() => {
 
+    }, [selectedService])
 
     useEffect(() => {
         locationField.focus()
@@ -260,6 +280,16 @@ const CarServiceSearch = (props) => {
     }, [datesForLease])
 
 
+    useEffect(()=>{
+        setToggleSearch(true)
+        console.log("POKUSAJ")
+    },[filteredCars])
+
+    useEffect(() => {
+        const { rentACarServices } = props
+        const { loggedInUser } = props
+        console.log(loggedInUser)
+    }, [props])
 
     const { classes } = props
     const todayDate = new Date()
@@ -272,13 +302,15 @@ const CarServiceSearch = (props) => {
                 </div>
 
                 <div className={classes.SearchSectionFlexContainerBox} style={{ margin: "5px" }}>
-                    <h6 className={classes.searchHeaders}>Step 1: Choose Rent A Car Service</h6>
+
+                    <h6 className={classes.searchHeaders}><br />Step 1: Choose Rent A Car Service</h6>
                     {/* <div className={classes.serviceBox}> */}
                     <>
                         <InputLabel >Choose Location</InputLabel>
                         <Autocomplete
                             className={classes.searchFormField}
-                            {...defaultPropsLocation}
+                            options={props.rentACarServices}
+                            getOptionLabel={(option) => option.city}
                             id="controlled-demo"
                             inputValue={location}
                             onChange={(event, newValue) => {
@@ -287,7 +319,7 @@ const CarServiceSearch = (props) => {
                                     setAvailableSerrvice(null)
                                     setLocation("")
                                 } else
-                                    setLocation(newValue)
+                                    setLocation(newValue.city)
                             }}
                             renderInput={(params) =>
                                 <TextField {...params} ref={setLocationRefernce} label="" margin="normal" />
@@ -301,15 +333,18 @@ const CarServiceSearch = (props) => {
                                         className={classes.searchFormField}
                                         labelId="demo-simple-select-outlined-label"
                                         id="demo-simple-select-outlined"
-                                        value={selectedService["Title"]}
+                                        value={selectedService["name"]}
                                         onChange={handleChangeSelectedService}
                                         label="Service"
-                                        renderValue={() => { return selectedService.Title }}
-
+                                        renderValue={(val) => {
+                                            
+                                            return val
+                                        }
+                                        }
                                     >
                                         {
                                             availableServices.map((service, index) =>
-                                                <MenuItem value={service} key={index} >{service.Title + ":" + service.Description}</MenuItem>
+                                                <MenuItem value={service} key={service.rentACarServiceId} >{service.name + ":" + service.description}</MenuItem>
                                             )
                                         }
                                     </Select>
@@ -412,7 +447,8 @@ const CarServiceSearch = (props) => {
                             <InputLabel >Price Range: initial (100-200)</InputLabel>
                             <Slider
                                 onChange={(e, val) => {
-                                    setPriceRange(val)
+                                   
+                                    setPriceRange(e.target.value)
 
                                 }}
 
@@ -431,7 +467,7 @@ const CarServiceSearch = (props) => {
                     </div>
 
                     <div className={classes.SearchSectionFlexContainerBox}>
-                        {(selectedService.Stations != null)
+                        {(selectedService.branchOffices != null)
                             ? (
                                 <>
                                     <InputLabel >Available pick up stations</InputLabel>
@@ -440,16 +476,22 @@ const CarServiceSearch = (props) => {
                                         labelId="demo-simple-select-outlined-label"
                                         id="demo-simple-select-outlined"
                                         value={stations.pickUpStation}
-                                        onChange={(e) =>
-                                            setStations({ ...stations, pickUpStation: e.target.value })
-                                        }
+                                        onChange={(e) => {
+                                            console.log("PICKUP", e.target.value)
+                                            setStations({
+                                                ...stations, pickUpStation : {
+                                                    id: e.target.value.branchOfficeId,
+                                                    name: e.target.value.city + ": " + e.target.value.place
+                                                }
+                                            })
+                                        }}
 
                                         label="Service"
-                                        renderValue={() => { return stations.pickUpStation }}
+                                        renderValue={() => { return stations.pickUpStation.name }}
                                     >
                                         {
-                                            selectedService.Stations.map((station, index) =>
-                                                <MenuItem value={station} key={index} >{station}</MenuItem>
+                                            selectedService.branchOffices.map((office, index) =>
+                                                <MenuItem value={office} key={office.branchOfficeId} >{office.city + ": " + office.place}</MenuItem>
                                             )
                                         }
                                     </Select>
@@ -475,7 +517,7 @@ const CarServiceSearch = (props) => {
                             )
                         }
 
-                        {(selectedService.Stations != null)
+                        {(selectedService.branchOffices != null)
                             ? (
                                 <>
                                     <InputLabel >Available drop off stations</InputLabel>
@@ -483,17 +525,23 @@ const CarServiceSearch = (props) => {
                                         className={classes.searchFormField}
                                         labelId="demo-simple-select-outlined-label"
                                         id="demo-simple-select-outlined"
-                                        value={stations.pickUpStation}
-                                        onChange={(e) =>
-                                            setStations({ ...stations, dropOffStation: e.target.value })
-                                        }
+                                        value={stations.dropOffStation}
+                                        onChange={(e) => {
+                                            console.log("DROP-OFF", e.target.value)
+                                            setStations({
+                                                ...stations, dropOffStation: {
+                                                    id: e.target.value.branchOfficeId,
+                                                    name: e.target.value.city + ": " + e.target.value.place
+                                                }
+                                            })
+                                        }}
 
                                         label="Service"
-                                        renderValue={() => { return stations.dropOffStation }}
+                                        renderValue={() => { return stations.dropOffStation.name }}
                                     >
                                         {
-                                            selectedService.Stations.map((station, index) =>
-                                                <MenuItem value={station} key={index} >{station}</MenuItem>
+                                            selectedService.branchOffices.map((office, index) =>
+                                                <MenuItem value={office} key={office.branchOfficeId} >{office.city + ": " + office.place}</MenuItem>
                                             )
                                         }
                                     </Select>
@@ -522,7 +570,10 @@ const CarServiceSearch = (props) => {
 
                     <Button
                         variant="contained"
-                        onClick={handleSearch}
+                        onClick={()=> {
+                            handleSearch()
+                            setToggleSearch(true)
+                            }}
                         className={classes.orderButton}
                         disabled={
                             (location !== '' &&
@@ -530,7 +581,7 @@ const CarServiceSearch = (props) => {
                                 //datesForLease LOGIC ELIMINATION - Todo
                                 ((datesForLease.startDate !== null && datesForLease.endDate !== null)) &&
                                 numberOfPessangers <= 10 &&
-                                (stations.pickUpStation != null && stations.dropOffStation != null)
+                                (stations.pickUpStation.id != null && stations.dropOffStation.id != null)
                             ) ? (false) : (true)}>
                         Search
                 </Button>
@@ -548,11 +599,20 @@ const CarServiceSearch = (props) => {
             </div>
 
             <div className={classes.componentSearchFlexContainer}>
-                {(toggleSearch === true)
+                {(toggleSearch)
                     ? (
-                        filteredCars.map((car, index) => (
-                            <CarOrdersModal key={index} vehicle={car} orderDetails={orderDetails} setToggleSearch={setToggleSearch} />
-                        ), selectedService.Vehicles)
+                        filteredCars.map((car, index) =>{
+                        console.log("Radi")
+                        return(
+                            <CarOrdersModal key={car.id} vehicle={car} orderDetails={new Renting(
+                                (props.loggedInUser.userId != null) ? props.loggedInUser.userId : null,
+                                car.id,
+                                datesForLease.startDate,
+                                datesForLease.endDate,
+                                stations.pickUpStation.id,
+                                stations.dropOffStation.id
+                            )} setToggleSearch={setToggleSearch} selectedServiceName ={selectedServiceName} />
+                        )}, selectedService.vehicles)
                     ) : (<></>)
 
                 }
@@ -562,7 +622,8 @@ const CarServiceSearch = (props) => {
 }
 
 const mapStateToProps = (state) => ({
-    rentACarServices: state.carsReducer.rentACarServices
+    rentACarServices: state.carsReducer.rentACarServices,
+    loggedInUser: state.userReducer.LoggedInUser
 });
 
 

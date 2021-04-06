@@ -12,7 +12,7 @@ export default function signIn(email, password, history) {
     const user = agent.User.login(userLogin)
       .catch(e => console.log(e))
       .then(response => {
-        console.log(response)
+
         var base64Url = response.token.split('.')[1];
         var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
         var jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
@@ -21,8 +21,8 @@ export default function signIn(email, password, history) {
         var tokenClaims = JSON.parse(jsonPayload);
         //console.log(tokenClaims)
         response.userId = tokenClaims.nameid
-        response.role = tokenClaims.role 
-        console.log("payload",response)       
+        response.role = tokenClaims.role
+
         return (history.push("/cars"),
           dispatch({ type: SIGN_IN, payload: response }))
       })

@@ -14,7 +14,7 @@ export const ROLES = {
 };
 
 const initialState = {
-  LoggedInUser: new User(null, null, null,null),
+  LoggedInUser: new User(null, null, null,null,null, !null),
   ROLES: {
     FLIGHT_ADMIN: "FlightManager",
     CAR_ADMIN: "CarManager",
@@ -30,30 +30,18 @@ export default function userReducer(state = initialState, { type, payload }) {
     case SIGN_UP:
       return {...state};
     case SIGN_IN:
-      console.log(type, payload)
+      
       return {...state, LoggedInUser: new User(payload.userId,payload.role,payload.displayName,payload.token,payload.username, payload.image) };
       break;
     case FB_SIGN_IN:
 
     break;
     case LOG_OFF:
-      return { ...state, LoggedInUser: new User(null, null, null,null) };
+      return { ...state, LoggedInUser: new User(null, null, null,null,null,null) };
     case CAR_ORDER_TO_PROFILE:
-      for (var userIndex = 0; userIndex < state.AllUsers.length; userIndex++) {
-        // if (state.AllUsers[userIndex].Email === payload.userEmail) {
-        //   var editedUser = state.AllUsers[userIndex];
-        //   editedUser.CarOrders.push(payload.order);
-        //   return {
-        //     ...state,
-        //     AllUsers: [
-        //       ...state.AllUsers.slice(0, userIndex),
-        //       editedUser,
-        //       state.AllUsers.slice(userIndex),
-        //     ],
-        //     LoggedInUser: editedUser,
-        //   };
-        //}
-      }
+        console.log("REZERVACIJA", payload)
+        
+       return {...state};
     case ADD_FRIEND_TO_LIST:
       // console.log(payload);
       // for (var userIndex = 0; userIndex < state.AllUsers.length; userIndex++) {
