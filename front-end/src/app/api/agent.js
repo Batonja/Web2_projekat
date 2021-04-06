@@ -54,6 +54,7 @@ const Vehicles = {
 
 const User = {
     login: (user) => requests.post('./account/login',user),
+    fbLogin: (accessToken) => requests.post(`./account/fbLogin?accessToken=${accessToken}`,{}),
     register: (user) => requests.post('./account/register',user),
     verifyEmail: (verificationPath) => requests.post('./account/' + verificationPath)
 }

@@ -1,19 +1,23 @@
-import React, { Component, useState,useEffect } from "react";
+// @ts-nocheck
+import React, { Component, useState, useEffect } from "react";
 import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import Button from "@material-ui/core/Button";
 import { connect } from "react-redux";
 import signIn from "../../actions/User/signIn";
 import GoogleLogin from "react-google-login";
 import { withStyles } from "@material-ui/core/styles";
-import config from "../../config.json";
 import agent from "../../app/api/agent"
-import {UserLogin} from '../../app/models/user'
+import { UserLogin } from '../../app/models/user'
 import userAvatar from '../../logo.png'
+import { Divider } from "material-ui";
+import fbSignIn from "actions/User/fbSignIn";
+import FacebookIcon from '@material-ui/icons/Facebook';
 
 const styles = (theme) => ({
   signIn: {
     with: "100%",
     display: "flex",
+    alignItems: "center",
     flexDirection: "column",
     justifyContent: "center",
   },
@@ -76,19 +80,19 @@ const styles = (theme) => ({
   },
 });
 
- 
+
 
 const LoginForm = (props) => {
-   
-const { classes } = props
 
-const [state, setState] = useState({} );
+  const { classes } = props
 
-useEffect(() => {
- setState(new UserLogin("", ""))
-}, [])
+  const [state, setState] = useState(new UserLogin("", ""));
 
- const handleChange = (e) => {
+  useEffect(() => {
+    setState(new UserLogin("", ""))
+  }, [])
+
+  const handleChange = (e) => {
     setState({
       ...state,
       [e.target.name]: e.target.value,
@@ -103,61 +107,75 @@ useEffect(() => {
       props.history
     );
   }
-return (
-      <div className={classes.signIn}>
-        <div className={classes.signInForm}>
-          <div className={classes.logoImgDiv}>
-            <img alt='User Avatar Image' className={classes.logoImg} src={userAvatar} />
-          </div>
-          <ValidatorForm onError={(errors) => console.log(errors)}>
-            <TextValidator
-              className={classes.signInFormField}
-              label="Email"
-              id="email-form"
-              name="email"
-              validators={["required", "isEmail"]}
-              errorMessages={["this field is required", "email is not valid"]}
-              onChange={handleChange}
-            />
-            <br />
-            <TextValidator
-              className={classes.signInFormField}
-              label="Password"
-              type="password"
-              id="password-form"
-              name="password"
-              validators={["required"]}
-              errorMessages={["Password field is required"]}
-              onChange={handleChange}
-            />
-            <br />
 
-            <div className="signInBtn">
-              <Button
-                className={classes.loginButton}
-                disabled = {(state.email === "" || state.password == "")}
-                variant="contained"
-                id="searchButton"
-                onClick={handleSubmit}
-                color="primary"
-              >
-                Log In
+  const handleFBLogin = () => {
+    //  if(window.FB != undefined)
+    props.fbLogin()
+  }
+
+
+  return (
+    <div className={classes.signIn}>
+      <div className={classes.signInForm}>
+        <div className={classes.logoImgDiv}>
+          <img alt='User Avatar Image' className={classes.logoImg} src={userAvatar} />
+        </div>
+        <ValidatorForm onError={(errors) => console.log(errors)}>
+          <TextValidator
+            className={classes.signInFormField}
+            label="Email"
+            id="email-form"
+            name="email"
+            validators={["required", "isEmail"]}
+            errorMessages={["this field is required", "email is not valid"]}
+            onChange={handleChange}
+          />
+          <br />
+          < TextValidator
+            className={classes.signInFormField}
+            label="Password"
+            type="password"
+            id="password-form"
+            name="password"
+            validators={["required"]}
+            errorMessages={["Password field is required"]}
+            onChange={handleChange}
+          />
+          <br />
+
+          <div className="signInBtn">
+            <Button
+              className={classes.loginButton}
+              disabled={(state.email === "" || state.password == "")}
+              variant="contained"
+              id="searchButton"
+              onClick={handleSubmit}
+              color="primary"
+            >
+              Log In
               </Button>
-            </div>
-          </ValidatorForm>
-        </div>
-        <div className={classes.socialsLogin}>
-         
-        </div>
+          </div>
+        </ValidatorForm>
       </div>
-    );
-}
- 
 
-  
+      <hr style={{background:"lightgray", height:"2px", width:"300px"}}/>
+      <Button
+        
+        color="primary"
+        style={{width:"auto",}}
+        onClick={handleFBLogin}
+      ><FacebookIcon/>  Login</Button>
+
+    </div>
+  );
+}
+
+
+
 const mapDispatchToProps = (dispatch) => ({
   OnLogIn: (email, password, history) => dispatch(signIn(email, password, history)),
-
+  fbLogin: () => dispatch(fbSignIn())
 });
 
+// @ts-ignore
 export default connect(null, mapDispatchToProps)(withStyles(styles)(LoginForm));

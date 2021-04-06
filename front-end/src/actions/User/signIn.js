@@ -1,11 +1,4 @@
-import axios from "axios";
-import loadingData from "../Loading/loadingData";
-import finishedLoading from "../Loading/finishedLoading";
-
 import agent from '../../app/api/agent'
-
-import { ConnectTo } from "../../common/constants";
-import { toast } from "react-toastify";
 import { UserLogin } from "app/models/user";
 export const SIGN_IN = "user:signIn";
 
@@ -19,7 +12,7 @@ export default function signIn(email, password, history) {
     const user = agent.User.login(userLogin)
       .catch(e => console.log(e))
       .then(response => {
-        
+        console.log(response)
         var base64Url = response.token.split('.')[1];
         var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
         var jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {

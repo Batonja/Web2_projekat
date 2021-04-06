@@ -1,10 +1,8 @@
 import { SIGN_IN } from "../actions/User/signIn";
 import { SIGN_UP } from "../actions/User/signUp";
+import { FB_SIGN_IN } from "../actions/User/fbSignIn";
 import { LOG_OFF } from "../actions/User/logOff";
-import { ORDER_FLIGHT } from "../actions/User/orderFlight";
 import { CAR_ORDER_TO_PROFILE } from "../actions/User/carOrderToProfile";
-import { CANCEL_ALL_FLIGHT_ORDERS } from "../actions/User/cancelAllFlightOrders";
-import cloneDeep from "lodash/cloneDeep";
 import { ADD_FRIEND_TO_LIST } from "../actions/User/addFriend";
 import {User} from '../app/models/user'
 
@@ -33,10 +31,11 @@ export default function userReducer(state = initialState, { type, payload }) {
       return {...state};
     case SIGN_IN:
       console.log(type, payload)
-
       return {...state, LoggedInUser: new User(payload.userId,payload.role,payload.displayName,payload.token,payload.username, payload.image) };
-
       break;
+    case FB_SIGN_IN:
+
+    break;
     case LOG_OFF:
       return { ...state, LoggedInUser: new User(null, null, null,null) };
     case CAR_ORDER_TO_PROFILE:
