@@ -221,20 +221,29 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-image: url("../siteBackground1.jpg");
+  background-position: center;
+  /* Center the image */
+  background-repeat: repeat-y;
+  /*Do not repeat the image */
+  background-size: cover;
+  /*  Resize the background image to cover the entire container */
+  height: fit-content;
+  background-size: 100% auto;
+  /* */
+  opacity: 1;
+  /* */
+  background-attachment: fixed;
+  /**/
+  color: white;
+  /* */
 }
 
-/* #root{
-  background-image:url("../siteBackground.jpg") ;
-  background-position: center; /* Center the image */
-/* background-repeat: repeat-y; Do not repeat the image */
-/* background-size: cover; Resize the background image to cover the entire container */
-/* height: 2000px; You must set a specified height */
-/* width: 100; */
-/* opacity: 1; */
-/* background-attachment: fixed; */
-/* color: white; */
-/* } */
-*/ code {
+#root {
+
+}
+
+code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }

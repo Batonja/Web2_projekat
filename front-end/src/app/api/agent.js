@@ -63,6 +63,10 @@ const RentACarService = {
     list: () => requests.get("./rentACarService/")
 }
 
+const Renting = {
+    availableVehicles: (searchParameters) => requests.post("/renting",searchParameters),
+}
+
 export default {
     Vehicles,
     User,

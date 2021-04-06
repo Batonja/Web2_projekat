@@ -14,8 +14,15 @@ import fbSignIn from "actions/User/fbSignIn";
 import FacebookIcon from '@material-ui/icons/Facebook';
 
 const styles = (theme) => ({
+  signInPage:{
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    flexDirection: "column",
+    justifyContent: "center",
+  },
   signIn: {
-    with: "100%",
+    width: "40%",
     display: "flex",
     alignItems: "center",
     flexDirection: "column",
@@ -28,6 +35,9 @@ const styles = (theme) => ({
     justifyContent: "center",
     textAlign: "center",
     alignItems: "center",
+    background: "#a6b2dd",
+    borderRadius: "10px",
+    marginTop: "40px"
   },
   signInHeader: {
     //textAlign: 'center'
@@ -35,6 +45,8 @@ const styles = (theme) => ({
   signInFormField: {
     margin: "5px 5px 5px 5px",
     width: "300px",
+    textColor: "white"
+
   },
   loginButton: {
     width: "50%",
@@ -67,14 +79,16 @@ const styles = (theme) => ({
     width: "150px",
     height: "40px",
     textAlign: "center",
+    margin: "0 0 0 30px"
   },
   logoImgDiv: {
     marginTop: "50px",
     width: "100%",
     height: "30vh",
+    margin: "0 30px 0 30px"
   },
   logoImg: {
-
+    
     maxWidth: "100%",
     maxHeight: "100%",
   },
@@ -115,58 +129,63 @@ const LoginForm = (props) => {
 
 
   return (
-    <div className={classes.signIn}>
-      <div className={classes.signInForm}>
-        <div className={classes.logoImgDiv}>
-          <img alt='User Avatar Image' className={classes.logoImg} src={userAvatar} />
-        </div>
-        <ValidatorForm onError={(errors) => console.log(errors)}>
-          <TextValidator
-            className={classes.signInFormField}
-            label="Email"
-            id="email-form"
-            name="email"
-            validators={["required", "isEmail"]}
-            errorMessages={["this field is required", "email is not valid"]}
-            onChange={handleChange}
-          />
-          <br />
-          < TextValidator
-            className={classes.signInFormField}
-            label="Password"
-            type="password"
-            id="password-form"
-            name="password"
-            validators={["required"]}
-            errorMessages={["Password field is required"]}
-            onChange={handleChange}
-          />
-          <br />
-
-          <div className="signInBtn">
-            <Button
-              className={classes.loginButton}
-              disabled={(state.email === "" || state.password == "")}
-              variant="contained"
-              id="searchButton"
-              onClick={handleSubmit}
-              color="primary"
-            >
-              Log In
-              </Button>
+    <div className={classes.signInPage}>
+      <div className={classes.signIn}>
+        <div className={classes.signInForm}>
+          <div className={classes.logoImgDiv}>
+            <img alt='User Avatar Image' className={classes.logoImg} src={userAvatar} />
           </div>
-        </ValidatorForm>
+          <ValidatorForm onError={(errors) => console.log(errors)}>
+            <TextValidator
+              className={classes.signInFormField}
+              label="Email"
+              id="email-form"
+              name="email"
+              validators={["required", "isEmail"]}
+              errorMessages={["this field is required", "email is not valid"]}
+              onChange={handleChange}
+            />
+            <br />
+            < TextValidator
+              className={classes.signInFormField}
+              label="Password"
+              type="password"
+              id="password-form"
+              name="password"
+              style={{ color: "white" }}
+              validators={["required"]}
+              errorMessages={["Password field is required"]}
+              onChange={handleChange}
+            />
+            <br />
+
+            <div className="signInBtn">
+              <Button
+                className={classes.loginButton}
+                disabled={(state.email === "" || state.password == "")}
+                variant="contained"
+                id="searchButton"
+                onClick={handleSubmit}
+                color="primary"
+              >
+                Log In
+              </Button>
+            </div>
+          </ValidatorForm>
+          <hr style={{ background: "lightgray", height: "2px", width: "300px" }} />
+          <Button
+
+            color="primary"
+            style={{ width: "40%", margin: "0 0 10px 0" }}
+            onClick={handleFBLogin}
+          ><FacebookIcon />  Login</Button>
+        </div>
+
+
+
       </div>
-
-      <hr style={{background:"lightgray", height:"2px", width:"300px"}}/>
-      <Button
-        
-        color="primary"
-        style={{width:"auto",}}
-        onClick={handleFBLogin}
-      ><FacebookIcon/>  Login</Button>
-
     </div>
+
   );
 }
 

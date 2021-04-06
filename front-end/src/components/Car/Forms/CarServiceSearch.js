@@ -289,6 +289,7 @@ const CarServiceSearch = (props) => {
         const { rentACarServices } = props
         const { loggedInUser } = props
         console.log(loggedInUser)
+        setPriceRange([100, 200])
     }, [props])
 
     const { classes } = props

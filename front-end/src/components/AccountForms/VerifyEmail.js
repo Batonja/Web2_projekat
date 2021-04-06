@@ -6,8 +6,6 @@ import { toast } from "react-toastify";
 
 const VerifyEmail = (props) => {
     
- 
-    
     const handleVerify = () => {
         var fullPath = window.location.href;
 
@@ -26,11 +24,11 @@ const VerifyEmail = (props) => {
         
     }
     return (
-        <div style={{ color: "blue", textAlign: "center", alignItems: "center" }}>
+        <div style={{ color: "white", textAlign: "center", alignItems: "center" }}>
+            <h1>Click below for verification</h1>
             <div>
                 <img alt="info" src={info} ></img>
             </div>
-            <h1>Click below for verification</h1>
             <Button variant="contained" style={{ color: "#ff4d07", fontWeight: "bold", backgroundColor: "#3f51b5" }} onClick={handleVerify}>Verify mail</Button>
         </div>
     )

@@ -11,12 +11,13 @@ import { UserRegistration } from "app/models/user";
 
 const styles = (theme) => ({
   register: {
-    marginTop: "50px",
-    with: '100%',
+    marginTop: "100px",
+    width: '100%',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-
+  
+    borderRadius: "10px"
   },
   registerForm: {
     display: 'flex',
@@ -25,13 +26,14 @@ const styles = (theme) => ({
     justifyContent: 'center',
     textAlign: 'center',
     alignItems: 'center',
+    
     //margin: '5px 5px 5px 5px',
   },
   registerHeader: {
     //textAlign: 'center'
   },
   registerFormField: {
-    margin: '5px 5px 5px 5px',
+    margin: '5px 20px 5px 20px',
     width: "300px"
   },
   registerButton: {
@@ -177,6 +179,7 @@ const RegistrationForm = (props) => {
         </div>
         <ValidatorForm
           onSubmit={handleSubmit}
+          style ={{background: "#a6b2dd",color:"white",borderRadius:"10px"}}
           onError={(errors) => console.log(errors)}
         >
           <br />
