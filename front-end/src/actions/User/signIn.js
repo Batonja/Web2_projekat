@@ -23,7 +23,7 @@ export default function signIn(email, password, history) {
         response.userId = tokenClaims.nameid
         response.role = tokenClaims.role
 
-        return (history.push("/cars"),
+        return (history.push("/"),
           dispatch({ type: SIGN_IN, payload: response }))
       })
 

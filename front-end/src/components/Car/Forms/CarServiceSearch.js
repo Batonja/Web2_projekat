@@ -14,6 +14,8 @@ import Slider from "@material-ui/core/Slider";
 import { Link } from "react-router-dom";
 //ANIMATION
 import { useSpring, animated } from 'react-spring'
+//ACTIONS
+import searchAvailableCars from "../../../actions/Renting/searchAvailableCars";
 
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
@@ -24,9 +26,13 @@ import {
 
 } from "@material-ui/pickers";
 
+
+
 import CarOrdersModal from '../Utilities/CarOrdersModal'
 import { RentACarService } from 'app/models/rentACarService';
 import { Renting } from 'app/models/renting';
+import { SearchParametars } from 'app/models/renting';
+import agent from 'app/api/agent';
 
 
 
@@ -165,12 +171,12 @@ const CarServiceSearch = (props) => {
             name: null,
         },
         dropOffStation: {
-            id:null,
+            id: null,
             name: null
         },
 
     })
-    const [service, setService] = useState('');
+
 
 
     const [orderDetails, setOrderDetails] = useState({})
@@ -200,15 +206,8 @@ const CarServiceSearch = (props) => {
 
     }
 
-
-    const defaultPropsLocation = {
-        //Get distinct values
-        options: props.rentACarServices.map(x => x.City),
-        getOptionLabel: (option) => option,
-    }
-
     const handleChangeSelectedService = (event) => {
-        setService(event.target.value.Title)
+        setSelectedServiceName(event.target.value.name)
         setSelectedService(event.target.value);
     };
     const setLocationRefernce = (inputElement) => {
@@ -216,18 +215,25 @@ const CarServiceSearch = (props) => {
     }
 
     const handleSearch = () => {
-        console.log(  "",
+
+        //var filtered = selectedService.vehicles.filter(filteringCars);
+
+        //setFilteredCars(filtered);
+        var searchParams = new SearchParametars(selectedService.rentACarServiceId,
             datesForLease.startDate,
             datesForLease.endDate,
-            stations.pickUpStation.id,
-            stations.dropOffStation.id)
-        var filtered = selectedService.vehicles.filter(filteringCars);
-        console.log(filtered)
-        setFilteredCars(filtered);
-        setSelectedServiceName(selectedService.name);
+            priceRange[0],
+            priceRange[1],
+            numberOfPessangers
+        )
+
+        console.log(searchParams)
+        props.SearchAvailableCars(searchParams)
+        setFilteredCars(props.AvailableCars)
+        //setSelectedServiceName(selectedService.name);
         //setToggleSearch(true)
-        // console.log(toggleSearch)
-        // setLocation('');
+
+        // setLocation(null);
         // setSelectedService(new RentACarService("", "", "", 0, 0, "", "", "", 0, [], [], []));
         // setStations({
         //     pickUpStation: {
@@ -235,9 +241,10 @@ const CarServiceSearch = (props) => {
         //         name: null,
         //     },
         //     dropOffStation: {
-        //         id:null,
+        //         id: null,
         //         name: null
-        //     },})
+        //     },
+        // })
         // setdatesForLease({
         //     startDate: null,
         //     tommorowFromStartDate: null,
@@ -260,7 +267,7 @@ const CarServiceSearch = (props) => {
             setAvailableSerrvice(
                 rentACarServices.filter((service) => {
 
-                    return (service.city === location)
+                    return (service.city === location.split(':')[1] && service.state === location.split(':')[0])
                 })
             )
     }, [location])
@@ -280,20 +287,34 @@ const CarServiceSearch = (props) => {
     }, [datesForLease])
 
 
-    useEffect(()=>{
+    useEffect(() => {
         setToggleSearch(true)
-        console.log("POKUSAJ")
-    },[filteredCars])
+
+    }, [filteredCars])
 
     useEffect(() => {
         const { rentACarServices } = props
         const { loggedInUser } = props
-        console.log(loggedInUser)
+        const { AvailableCars } = props
+
+        if (AvailableCars.length > 0)
+            setFilteredCars(AvailableCars)
+
+
+    }, [props.AvailableCars, props.rentACarServices, props.loggedInUser])
+
+
+
+    useEffect(() => {
         setPriceRange([100, 200])
-    }, [props])
+        setLocation("")
+        setToggleSearch(false)
+    }, [])
 
     const { classes } = props
     const todayDate = new Date()
+
+
 
     return (
         <animated.div style={spring} className={classes.componentSearchFlexContainer}>
@@ -311,17 +332,19 @@ const CarServiceSearch = (props) => {
                         <Autocomplete
                             className={classes.searchFormField}
                             options={props.rentACarServices}
-                            getOptionLabel={(option) => option.city}
+                            getOptionLabel={(option) => option.state + ":" + option.city}
+
                             id="controlled-demo"
-                            inputValue={location}
+
                             onChange={(event, newValue) => {
 
-                                if (newValue === null) {
+                                if (newValue == null) {
                                     setAvailableSerrvice(null)
                                     setLocation("")
                                 } else
-                                    setLocation(newValue.city)
+                                    setLocation(newValue.state + ":" + newValue.city)
                             }}
+
                             renderInput={(params) =>
                                 <TextField {...params} ref={setLocationRefernce} label="" margin="normal" />
                             }
@@ -338,7 +361,7 @@ const CarServiceSearch = (props) => {
                                         onChange={handleChangeSelectedService}
                                         label="Service"
                                         renderValue={(val) => {
-                                            
+
                                             return val
                                         }
                                         }
@@ -448,9 +471,7 @@ const CarServiceSearch = (props) => {
                             <InputLabel >Price Range: initial (100-200)</InputLabel>
                             <Slider
                                 onChange={(e, val) => {
-                                   
-                                    setPriceRange(e.target.value)
-
+                                    setPriceRange(val)
                                 }}
 
                                 orientation="horizontal"
@@ -478,9 +499,9 @@ const CarServiceSearch = (props) => {
                                         id="demo-simple-select-outlined"
                                         value={stations.pickUpStation}
                                         onChange={(e) => {
-                                            console.log("PICKUP", e.target.value)
+
                                             setStations({
-                                                ...stations, pickUpStation : {
+                                                ...stations, pickUpStation: {
                                                     id: e.target.value.branchOfficeId,
                                                     name: e.target.value.city + ": " + e.target.value.place
                                                 }
@@ -528,7 +549,7 @@ const CarServiceSearch = (props) => {
                                         id="demo-simple-select-outlined"
                                         value={stations.dropOffStation}
                                         onChange={(e) => {
-                                            console.log("DROP-OFF", e.target.value)
+
                                             setStations({
                                                 ...stations, dropOffStation: {
                                                     id: e.target.value.branchOfficeId,
@@ -571,10 +592,10 @@ const CarServiceSearch = (props) => {
 
                     <Button
                         variant="contained"
-                        onClick={()=> {
+                        onClick={() => {
                             handleSearch()
                             setToggleSearch(true)
-                            }}
+                        }}
                         className={classes.orderButton}
                         disabled={
                             (location !== '' &&
@@ -602,18 +623,19 @@ const CarServiceSearch = (props) => {
             <div className={classes.componentSearchFlexContainer}>
                 {(toggleSearch)
                     ? (
-                        filteredCars.map((car, index) =>{
-                        console.log("Radi")
-                        return(
-                            <CarOrdersModal key={car.id} vehicle={car} orderDetails={new Renting(
-                                (props.loggedInUser.userId != null) ? props.loggedInUser.userId : null,
-                                car.id,
-                                datesForLease.startDate,
-                                datesForLease.endDate,
-                                stations.pickUpStation.id,
-                                stations.dropOffStation.id
-                            )} setToggleSearch={setToggleSearch} selectedServiceName ={selectedServiceName} />
-                        )}, selectedService.vehicles)
+                        filteredCars.map((car, index) => {
+
+                            return (
+                                <CarOrdersModal key={car.id} vehicle={car} orderDetails={new Renting(
+                                    (props.loggedInUser.userId != null) ? props.loggedInUser.userId : null,
+                                    car.id,
+                                    datesForLease.startDate,
+                                    datesForLease.endDate,
+                                    stations.pickUpStation.id,
+                                    stations.dropOffStation.id
+                                )} setToggleSearch={setToggleSearch} selectedServiceName={selectedServiceName} selectedService={selectedService} />
+                            )
+                        }, selectedService.vehicles)
                     ) : (<></>)
 
                 }
@@ -624,12 +646,16 @@ const CarServiceSearch = (props) => {
 
 const mapStateToProps = (state) => ({
     rentACarServices: state.carsReducer.rentACarServices,
-    loggedInUser: state.userReducer.LoggedInUser
+    loggedInUser: state.userReducer.LoggedInUser,
+    AvailableCars: state.rentingReducer.AvailableCars
 });
 
+const mapDispatchToProps = (dispatch) => ({
+    SearchAvailableCars: (email, password, history) => dispatch(searchAvailableCars(email, password, history)),
 
+});
 
-export default connect(mapStateToProps)(withStyles(styles)(CarServiceSearch))
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(CarServiceSearch))
 
 
 

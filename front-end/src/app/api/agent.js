@@ -26,6 +26,7 @@ axios.interceptors.response.use(undefined, error => {
 
 axios.interceptors.request.use((config) =>{
     const token = window.localStorage.getItem('jwt');
+    console.log(token)
     if (token) config.headers.Authorization = `Bearer ${token}`
     return config;
         
@@ -35,9 +36,8 @@ axios.interceptors.request.use((config) =>{
 
 const responseBody = (response) => response.data;
 
-
 const requests = {
-    get: (url) => axios.get(url).then(responseBody),
+    get: (url) =>  axios.get(url).then(responseBody),
     post: (url, body) => axios.post(url, body).then(responseBody),
     put: (url, body) => axios.put(url, body).then(responseBody),
     del: (url) => axios.delete(url).then(responseBody),
@@ -64,11 +64,13 @@ const RentACarService = {
 }
 
 const Renting = {
-    availableVehicles: (searchParameters) => requests.post("/renting",searchParameters),
+    availableVehicles: (searchParametars) => requests.post('./Renting/availableVehicles',searchParametars),
+    create: (renting) => requests.post("./Renting/create",renting)
 }
 
 export default {
     Vehicles,
     User,
-    RentACarService
+    RentACarService,
+    Renting
 };

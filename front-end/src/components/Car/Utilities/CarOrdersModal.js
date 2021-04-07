@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
-import carOrderToProfile from '../../../actions/User/carOrderToProfile.js'
+import createRenting from '../../../actions/Renting/createRenting.js'
 import { Redirect } from 'react-router-dom'
 import Link from "@material-ui/core/Link";
 import { Link as RouterLink } from "react-router-dom";
@@ -39,7 +39,7 @@ import carImage from '../template-images/add-car-form.png'
 const styles = (theme) => ({
     //------Level0
     carOrderModalContainer: {
-        width: "70%",
+        width: "65%",
         height: "400px",
         display: "flex",
         margin: "20px",
@@ -198,6 +198,10 @@ const StyledTableRow = withStyles((theme) => ({
 const CarOrdersModal = (props) => {
     const [totalPrice, setTotalPrice] = useState(0)
     const purchaseOverlayModalRef = React.useRef(null)
+    const [places, setPlaces] = useState({
+        pickUpPlace: {},
+        returnPlace: {},
+    })
     const spring = useSpring({
 
         config: {
@@ -208,10 +212,23 @@ const CarOrdersModal = (props) => {
     })
 
     React.useEffect(() => {
-        const { orderDetails } = props
+        const { orderDetails,selectedService } = props
         const diffTime = Math.abs(orderDetails.pickUpDate - orderDetails.returnDate);
         const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
         setTotalPrice(vehicle.priceADay * diffDays)
+        var pickUpPlace = selectedService.branchOffices.filter(office=>{
+            return office.branchOfficeId ===  props.orderDetails.pickupPlaceId
+        })[0]
+        var returnPlace = selectedService.branchOffices.filter(office=>{
+            return office.branchOfficeId ===  props.orderDetails.returnPlaceId
+        })[0]
+        
+
+        setPlaces({
+            pickUpPlace: pickUpPlace,
+            returnPlace: returnPlace
+        })
+        
     }, [])
 
     const onPurchaseOverlayModal = () => {
@@ -220,21 +237,18 @@ const CarOrdersModal = (props) => {
     }
     const onFinishOrder = () => {
         const { LoggedInUser } = props
-        const { carOrderToProfile } = props
+        
         const { orderDetails } = props
         const { vehicle } = props
-        const order = {
-            orderDetails,//service, datesForLease, stations
-            vehicle,
-            totalPrice
-        }
+     
         props.setToggleSearch(false)
-        if (isEmpty(LoggedInUser)) {
+        
+        if (LoggedInUser.userId == null) {
             console.log("Not Logged in: ", LoggedInUser)
 
         } else {
             console.log("Logged in: ", LoggedInUser)
-            carOrderToProfile(order, LoggedInUser.id)
+            props.CarOrderToProfile(orderDetails)
         }
     }
 
@@ -243,16 +257,16 @@ const CarOrdersModal = (props) => {
         node.style.display = "none";
     }
     const dateConversion = (date) => {
-        return date.toLocaleDateString('en-US');
+        if (date != null)
+            return date.toLocaleDateString('en-US');
     }
     const { classes } = props
     const { orderDetails } = props
     const { selectedServiceName} = props
     const { vehicle } = props
     const { LoggedInUser } = props
-    
-    return (
-        <>
+
+        return (<>
             <div className={classes.carOrderModalContainer}>
                 <div className={classes.carNameHeaderModal}>
                     <h4 className={classes.modalHeaders}>{vehicle.carModel}</h4>
@@ -296,11 +310,11 @@ const CarOrdersModal = (props) => {
                                             title="Gearbox type"
                                             size={1}
                                             color="black"
-                                        />: {vehicle.gearboxType}
+                                        />: {vehicle.gearboxType.split(' ')[0]}
                                     </li>
                                     <li>
                                         <Icon path={mdiAirConditioner}
-                                            title="Air cooling"
+                                            title="Cooling"
                                             size={1}
                                             color="black"
                                         />: {vehicle.isAirCondition ? "Air condition" : "Air cooling"}
@@ -329,7 +343,7 @@ const CarOrdersModal = (props) => {
                             className={classes.orderButton}
                             endIcon={<SendRoundedIcon />}
                         >
-                            Order
+                            RENT
                 </Button>
 
                     </div>
@@ -368,8 +382,9 @@ const CarOrdersModal = (props) => {
                         </Table>
                     </TableContainer>
                     <div className={classes.placesFinishDiv}>
-                        <p><h4 className={classes.modalHeaders}>Puck up place:</h4>{orderDetails.pickupPlaceId}</p>
-                        <p><h4 className={classes.modalHeaders}>Drop off place:</h4>{orderDetails.returnPlaceId}</p>
+                        <p><h4 className={classes.modalHeaders}>Puck up place:</h4>{places.pickUpPlace.city + ":" +places.pickUpPlace.place }</p>
+                        <p><h4 className={classes.modalHeaders}>Drop off place:</h4>{places.returnPlace
+                        .city + ":" +places.returnPlace.place}</p>
                     </div>
                     <Link
                         variant="body2"
@@ -399,11 +414,13 @@ const CarOrdersModal = (props) => {
 
 
 const mapStateToProps = (state) => ({
-    LoggedInUser: state.userReducer.LoggedInUser
+    LoggedInUser: state.userReducer.LoggedInUser,
+
 })
 
 const mapDispatchToProps = (dispatch) => ({
-    carOrderToProfile: (order, userEmail) => dispatch(carOrderToProfile(order, userEmail))
+    CarOrderToProfile: (order) => dispatch(createRenting(order)),
 })
 
+// @ts-ignore
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(CarOrdersModal))
