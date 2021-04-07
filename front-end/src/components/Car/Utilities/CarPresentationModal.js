@@ -14,13 +14,13 @@ import { mdiBriefcase } from '@mdi/js';
 import { mdiCarShiftPattern } from '@mdi/js'; //Manual
 import { mdiAirConditioner } from '@mdi/js';
 import Box from '@material-ui/core/Box';
-
+import templateCar from "../template-images/add-car-form.png"
 
 
 const styles = (theme) => ({
     //------Level0
     carOrderModalContainer: {
-        width: "100%",
+        width: "50%",
         height: "400px",
         display: "flex",
         margin: "20px",
@@ -122,14 +122,14 @@ const CarPresentationModal = (props) => {
     return (
         <div className={classes.carOrderModalContainer}>
             <div className={classes.carNameHeaderModal}>
-                <h4 className={classes.modalHeaders}>{vehicle.CarModel}</h4>
+                <h4 className={classes.modalHeaders}>{vehicle.carModel}</h4>
             </div>
             <div className={classes.contentContainer}>
                 <div className={classes.infoAndImageFlex}>
                     <div className={classes.carImageOrderModal}>
-                        <img src={require('../template-images/add-car-form.png')} alt="car aimage" style={{ height: "90%" }} />
+                        <img src={templateCar} alt="car aimage" style={{ height: "90%" }} />
                         <div>
-                            <h6 className={classes.modalHeaders}>{vehicle.CarModel}</h6>
+                            <h6 className={classes.modalHeaders}>{vehicle.carModel}</h6>
                         </div>
                     </div>
                     <div className={classes.carOrderInfoModal}>
@@ -141,35 +141,35 @@ const CarPresentationModal = (props) => {
                                         title="Number of passengers"
                                         size={1}
                                         color="black"
-                                    />: {vehicle.NumberOfSeats}
+                                    />: {vehicle.numberOfSeats}
                                 </li>
                                 <li>
                                     <Icon path={mdiCarDoor}
                                         title="Number of doors"
                                         size={1}
                                         color="black"
-                                    />: {vehicle.NumberOfDoors}
+                                    />: {vehicle.numberOfDoors}
                                 </li>
                                 <li>
                                     <Icon path={mdiBriefcase}
                                         title="Number of suitcases"
                                         size={1}
                                         color="black"
-                                    />: {vehicle.NumberOfSuitcases}
+                                    />: {vehicle.numberOfSuitcases}
                                 </li>
                                 <li>
                                     <Icon path={mdiCarShiftPattern}
                                         title="Gearbox type"
                                         size={1}
                                         color="black"
-                                    />: {vehicle.GearboxType}
+                                    />: {vehicle.gearboxType.split(' ')[0]}
                                 </li>
                                 <li>
                                     <Icon path={mdiAirConditioner}
                                         title="Air cooling"
                                         size={1}
                                         color="black"
-                                    />: {vehicle.CoolingType}
+                                    />: {vehicle.isAirCondition ? "Aicondition" : "Air"}
                                 </li>
                                 <li>
 
@@ -179,7 +179,7 @@ const CarPresentationModal = (props) => {
                             </ul>
                             <h6 className={classes.modalHeaders}>Customer Ratings:</h6>
                             <Box component="fieldset" mb={3} borderColor="transparent" textAlign={"center"}>
-                                <Rating value={vehicle.AverageCarGrade} readOnly />
+                                <Rating value={vehicle.averageCarGrade} readOnly />
                             </Box>
                         </div>
                     </div>

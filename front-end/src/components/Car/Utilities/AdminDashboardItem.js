@@ -14,7 +14,8 @@ const styles = (theme) => ({
         height: '80%',
         background: '#27293D',
         borderRadius: '10px',
-        margin: '20px'
+
+        marginLeft: "40px"
     },
     dashboarItemInfoContent: {
         width: '100%',
@@ -27,7 +28,7 @@ const styles = (theme) => ({
     },
     itemInfo: {
         width: '70%',
-        fontSize: '3vh',
+        fontSize: '2.3vh',
         display: 'flex',
         alignText: 'right',
         justifyContent: 'right',
@@ -71,9 +72,10 @@ const AdminDashboardItem = (props) => {
 
     const { itemInfo } = props
     const { classes } = props
+
     return (
 
-        <div className={classes.dashboardItem}>
+        <div className={classes.dashboardItem} style={{ width: itemInfo.width, height: itemInfo.height, background: "black", marginLeft: "10px", position:"relative", left: "30px" }}>
             <div className={classes.dashboarItemInfoContent}>
                 <div className={classes.avatarContainer}>
                     <Avatar className={classes.avatarStyle}>

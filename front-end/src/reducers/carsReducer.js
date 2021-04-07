@@ -5,11 +5,10 @@ const initialState = {
     rentACarServices: []
 
 }
-export default function userReducer(state = initialState, {type, payload}) {
+export default function carsReducer(state = initialState, {type, payload}) {
 
     switch (type) {
         case POPULATE:
-           
             return {...state, rentACarServices: payload}
         break;
         default:
